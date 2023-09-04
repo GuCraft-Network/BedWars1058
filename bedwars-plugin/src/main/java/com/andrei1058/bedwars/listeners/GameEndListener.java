@@ -20,11 +20,6 @@ public class GameEndListener implements Listener {
             return;
         }
 
-        // clear inventories
-        for (UUID p : event.getAliveWinners()) {
-            Bukkit.getPlayer(p).getInventory().clear();
-        }
-
         // clear dropped items
         World game = event.getArena().getWorld();
         for (Entity item : game.getEntities()) {
