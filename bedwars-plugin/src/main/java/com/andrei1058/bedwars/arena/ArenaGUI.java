@@ -29,7 +29,6 @@ import com.andrei1058.bedwars.configuration.Sounds;
 import com.andrei1058.bedwars.listeners.arenaselector.ArenaSelectorListener;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -47,152 +46,120 @@ import java.util.UUID;
 
 public class ArenaGUI {
 
-    //Object[0] = inventory, Object[1] = group
-    //private static HashMap<Player, Object[]> refresh = new HashMap<>();
-    private static YamlConfiguration yml = BedWars.config.getYml();
+    private static final YamlConfiguration yml = BedWars.config.getYml();
 
-    private static HashMap<UUID, Long> antiCalledTwice = new HashMap<>();
+    private static final HashMap<UUID, Long> antiCalledTwice = new HashMap<>();
 
-    //Object[0] = inventory, Object[1] = group
-    public static void refreshInv(Player p, IArena arena, int players) {
-        if (p == null) return;
-        if (p.getOpenInventory() == null) return;
-        if (!(p.getOpenInventory().getTopInventory().getHolder() instanceof ArenaSelectorHolder)) return;
-        ArenaSelectorHolder ash = ((ArenaSelectorHolder) p.getOpenInventory().getTopInventory().getHolder());
+    public static void refreshInv(Player player, IArena arena, int players) {
+        if (player == null || player.getOpenInventory() == null || !(player.getOpenInventory().getTopInventory().getHolder() instanceof ArenaSelectorHolder)) {
+            return;
+        }
+        ArenaSelectorHolder arenaSelectorHolder = ((ArenaSelectorHolder) player.getOpenInventory().getTopInventory().getHolder());
 
         List<IArena> arenas;
-        if (ash.getGroup().equalsIgnoreCase("default")) {
+        if (arenaSelectorHolder.getGroup().equalsIgnoreCase("default")) {
             arenas = new ArrayList<>(Arena.getArenas());
         } else {
             arenas = new ArrayList<>();
             for (IArena a : Arena.getArenas()) {
-                if (a.getGroup().equalsIgnoreCase(ash.getGroup())) arenas.add(a);
+                if (a.getGroup().equalsIgnoreCase(arenaSelectorHolder.getGroup())) arenas.add(a);
             }
         }
 
         arenas = Arena.getSorted(arenas);
 
-        int arenaKey = 0;
-        for (Integer slot : getUsedSlots()) {
-            ItemStack i;
-            p.getOpenInventory().getTopInventory().setItem(slot, new ItemStack(Material.AIR));
-            if (arenaKey >= arenas.size()) {
-                continue;
-            }
+        List<Integer> usedSlots = getUsedSlots();
+        for (int i = 0; i < usedSlots.size() && i < arenas.size(); i++) {
+            IArena currentArena = arenas.get(i);
+            String status = currentArena.getStatus().toString().toLowerCase();
 
-            String status;
-            switch (arenas.get(arenaKey).getStatus()) {
-                case waiting:
-                    status = "waiting";
-                    break;
-                case playing:
-                    status = "playing";
-                    break;
-                case starting:
-                    status = "starting";
-                    break;
-                default:
-                    continue;
-            }
+            ItemStack item;
 
-            i = BedWars.nms.createItemStack(yml.getString(ConfigPath.GENERAL_CONFIGURATION_ARENA_SELECTOR_STATUS_MATERIAL.replace("%path%", status)),
+            item = BedWars.nms.createItemStack(yml.getString(ConfigPath.GENERAL_CONFIGURATION_ARENA_SELECTOR_STATUS_MATERIAL.replace("%path%", status)),
                     1, (short) yml.getInt(ConfigPath.GENERAL_CONFIGURATION_ARENA_SELECTOR_STATUS_DATA.replace("%path%", status)));
             if (yml.getBoolean(ConfigPath.GENERAL_CONFIGURATION_ARENA_SELECTOR_STATUS_ENCHANTED.replace("%path%", status))) {
-                ItemMeta im = i.getItemMeta();
+                ItemMeta im = item.getItemMeta();
                 im.addEnchant(Enchantment.LURE, 1, true);
                 im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                i.setItemMeta(im);
+                item.setItemMeta(im);
             }
 
 
-            ItemMeta im = i.getItemMeta();
-            im.setDisplayName(Language.getMsg(p, Messages.ARENA_GUI_ARENA_CONTENT_NAME).replace("{name}", arenas.get(arenaKey).getDisplayName()).replace("{map_name}", arenas.get(arenaKey).getArenaName()));
+            ItemMeta im = item.getItemMeta();
+            im.setDisplayName(Language.getMsg(player, Messages.ARENA_GUI_ARENA_CONTENT_NAME).replace("{name}", arenas.get(i).getDisplayName()).replace("{map_name}", arenas.get(i).getArenaName()));
             List<String> lore = new ArrayList<>();
-            for (String s : Language.getList(p, Messages.ARENA_GUI_ARENA_CONTENT_LORE)) {
-                if (!(s.contains("{group}") && arenas.get(arenaKey).getGroup().equalsIgnoreCase("default"))) {
-                    lore.add(s.replace("{on}", String.valueOf(arena != null ? arena == arenas.get(arenaKey) ? players : arenas.get(arenaKey).getPlayers().size() : arenas.get(arenaKey).getPlayers().size())).replace("{max}",
-                            String.valueOf(arenas.get(arenaKey).getMaxPlayers())).replace("{status}", arenas.get(arenaKey).getDisplayStatus(Language.getPlayerLanguage(p)))
-                            .replace("{group}", arenas.get(arenaKey).getDisplayGroup(p)));
+            for (String loreLine : Language.getList(player, Messages.ARENA_GUI_ARENA_CONTENT_LORE)) {
+                if (!(loreLine.contains("{group}") && currentArena.getGroup().equalsIgnoreCase("default"))) {
+                    String arenaStatus = currentArena.getDisplayStatus(Language.getPlayerLanguage(player));
+                    String arenaGroup = currentArena.getDisplayGroup(player);
+                    int currentPlayers = (arena != null && arena == currentArena) ? players : currentArena.getPlayers().size();
+                    lore.add(loreLine
+                            .replace("{on}", String.valueOf(currentPlayers))
+                            .replace("{max}", String.valueOf(currentArena.getMaxPlayers()))
+                            .replace("{status}", arenaStatus)
+                            .replace("{group}", arenaGroup)
+                    );
                 }
             }
             im.setLore(lore);
-            i.setItemMeta(im);
-            i = BedWars.nms.addCustomData(i, ArenaSelectorListener.ARENA_SELECTOR_GUI_IDENTIFIER + arenas.get(arenaKey).getArenaName());
-            p.getOpenInventory().getTopInventory().setItem(slot, i);
-            arenaKey++;
+            item.setItemMeta(im);
+            item = BedWars.nms.addCustomData(item, ArenaSelectorListener.ARENA_SELECTOR_GUI_IDENTIFIER + currentArena.getArenaName());
+
+            int slot = usedSlots.get(i);
+            player.getOpenInventory().getTopInventory().setItem(slot, item);
         }
-        p.updateInventory();
+        player.updateInventory();
     }
 
-    public static void openGui(Player p, String group) {
-        if (preventCalledTwice(p)) return;
-        updateCalledTwice(p);
+    public static void openGui(Player player, String group) {
+        if (preventCalledTwice(player)) return;
+        updateCalledTwice(player);
+
         int size = BedWars.config.getYml().getInt(ConfigPath.GENERAL_CONFIGURATION_ARENA_SELECTOR_SETTINGS_SIZE);
-        if (size % 9 != 0) size = 27;
-        if (size > 54) size = 54;
-        ArenaSelectorHolder ash = new ArenaSelectorHolder(group);
-        Inventory inv = Bukkit.createInventory(ash, size, Language.getMsg(p, Messages.ARENA_GUI_INV_NAME));
-        //ash.setInv(inv);
+        if (size % 9 != 0) size = 27; // Ensure size is a multiple of 9 otherwise set to 27
+        if (size > 54) size = 54; // Limit size to maximum 54
+        ArenaSelectorHolder arenaSelectorHolder = new ArenaSelectorHolder(group);
+        Inventory inventory = Bukkit.createInventory(arenaSelectorHolder, size, Language.getMsg(player, Messages.ARENA_GUI_INV_NAME));
 
         String skippedSlotMaterial = BedWars.config.getString(ConfigPath.GENERAL_CONFIGURATION_ARENA_SELECTOR_STATUS_MATERIAL.replace("%path%", "skipped-slot"));
-        if(!skippedSlotMaterial.equalsIgnoreCase("none") && !skippedSlotMaterial.equalsIgnoreCase("air")) {
-            ItemStack i = BedWars.nms.createItemStack(skippedSlotMaterial,
-                    1, (byte) BedWars.config.getInt(ConfigPath.GENERAL_CONFIGURATION_ARENA_SELECTOR_STATUS_DATA.replace("%path%", "skipped-slot")));
-            i = BedWars.nms.addCustomData(i, "RUNCOMMAND_bw join random");
-            ItemMeta im = i.getItemMeta();
-            assert im != null;
-            im.setDisplayName(ChatColor.translateAlternateColorCodes(
-                    '&',
-                    Language.getMsg(p, Messages.ARENA_GUI_SKIPPED_ITEM_NAME)
-                            .replaceAll("\\{serverIp}", BedWars.config.getString(ConfigPath.GENERAL_CONFIG_PLACEHOLDERS_REPLACEMENTS_SERVER_IP))
-            ));
-            List<String> lore = new ArrayList<>();
-            for(String s : Language.getList(p, Messages.ARENA_GUI_SKIPPED_ITEM_LORE)) {
-                lore.add(
-                        s
+        if (!skippedSlotMaterial.equalsIgnoreCase("none") && !skippedSlotMaterial.equalsIgnoreCase("air")) {
+            ItemStack skippedSlotItem = BedWars.nms.createItemStack(
+                    skippedSlotMaterial,
+                    1,
+                    (byte) BedWars.config.getInt(ConfigPath.GENERAL_CONFIGURATION_ARENA_SELECTOR_STATUS_DATA.replace("%path%", "skipped-slot"))
+            );
+            skippedSlotItem = BedWars.nms.addCustomData(skippedSlotItem, "RUNCOMMAND_bw join random");
+            ItemMeta itemMeta = skippedSlotItem.getItemMeta();
+            if (itemMeta != null) {
+                String translatedDisplayName = ChatColor.translateAlternateColorCodes(
+                        '&',
+                        Language.getMsg(player, Messages.ARENA_GUI_SKIPPED_ITEM_NAME)
                                 .replaceAll("\\{serverIp}", BedWars.config.getString(ConfigPath.GENERAL_CONFIG_PLACEHOLDERS_REPLACEMENTS_SERVER_IP))
                 );
+                itemMeta.setDisplayName(translatedDisplayName);
+
+                List<String> lore = new ArrayList<>();
+                for (String loreLine : Language.getList(player, Messages.ARENA_GUI_SKIPPED_ITEM_LORE)) {
+                    lore.add(loreLine.replaceAll("\\{serverIp}", BedWars.config.getString(ConfigPath.GENERAL_CONFIG_PLACEHOLDERS_REPLACEMENTS_SERVER_IP)));
+                }
+                if (!lore.isEmpty()) {
+                    itemMeta.setLore(lore);
+                }
+                itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                skippedSlotItem.setItemMeta(itemMeta);
+
+                List<Integer> usedSlots = getUsedSlots();
+                for (int x = 0; x < inventory.getSize(); x++) {
+                    if (!usedSlots.contains(x)) {
+                        inventory.setItem(x, skippedSlotItem);
+                    }
+                }
             }
-            if(lore.size() > 0) {
-                im.setLore(lore);
-            }
-            im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-            i.setItemMeta(im);
-
-            List<Integer> used = getUsedSlots();
-            for (int x = 0; x < inv.getSize(); x++) {
-                if (used.contains(x)) continue;
-                inv.setItem(x, i);
-            }
         }
 
-        p.openInventory(inv);
-        refreshInv(p, null, 0);
-        //refresh.put(p, new Object[]{inv, group});
-        Sounds.playSound("arena-selector-open", p);
-    }
-
-    public static class ArenaSelectorHolder implements InventoryHolder {
-
-        private String group;
-        //private Inventory inv;
-
-        public ArenaSelectorHolder(String group){
-            this.group = group;
-        }
-
-        public String getGroup() {
-            return group;
-        }
-
-        @Override
-        public Inventory getInventory() {
-            return null;
-        }
-
-        /*public void setInv(Inventory inv) {
-            this.inv = inv;
-        }*/
+        player.openInventory(inventory);
+        refreshInv(player, null, 0);
+        Sounds.playSound("arena-selector-open", player);
     }
 
     @NotNull
@@ -218,5 +185,24 @@ public class ArenaGUI {
         } else {
             antiCalledTwice.put(player.getUniqueId(), System.currentTimeMillis() + 2000);
         }
+    }
+
+    public static class ArenaSelectorHolder implements InventoryHolder {
+
+        private final String group;
+
+        public ArenaSelectorHolder(String group) {
+            this.group = group;
+        }
+
+        public String getGroup() {
+            return group;
+        }
+
+        @Override
+        public Inventory getInventory() {
+            return null;
+        }
+
     }
 }
