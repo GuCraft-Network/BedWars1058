@@ -147,6 +147,7 @@ public class DamageDeathMove implements Listener {
         IArena a = Arena.getArenaByPlayer(p);
         if (a == null) return;
         if (a.getStatus() != GameState.playing) return;
+        if (e.getEntityType() == EntityType.ENDER_PEARL) return; // 如果是末影珍珠造成的伤害则返回
 
         // projectile hit message #696, #711
         ITeam team = a.getTeam(p);

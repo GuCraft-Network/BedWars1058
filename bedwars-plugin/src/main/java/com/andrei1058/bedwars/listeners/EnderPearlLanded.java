@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class EnderPearlLanded implements Listener {
 
@@ -20,8 +21,20 @@ public class EnderPearlLanded implements Listener {
         Player player = (Player) e.getEntity().getShooter();
         IArena iArena = Arena.getArenaByPlayer(player);
 
-        if (!Arena.isInArena(player) || iArena.isSpectator(player)) return;
+        if (!Arena.isInArena(player) || iArena.isSpectator(player) || iArena.isReSpawning(player))
+            return;//isRespawning 旁观者或重生时不播放珍珠音效
 
         Sounds.playSound("ender-pearl-landed", iArena.getPlayers());
     }
+
+    //旁观者或重生时不传送
+    @EventHandler
+    public void onPearlTeleport(PlayerTeleportEvent e) {
+        Player p = e.getPlayer();
+        if (p == null) return;
+        if (e.getCause() != PlayerTeleportEvent.TeleportCause.ENDER_PEARL) return;
+        IArena iArena = Arena.getArenaByPlayer(p);
+        if (iArena.isSpectator(p) || iArena.isReSpawning(p)) e.setCancelled(true);
+    }
+
 }
