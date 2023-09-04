@@ -306,9 +306,6 @@ public class BedWars extends JavaPlugin {
 
         generators = new GeneratorsConfig(this, "generators", this.getDataFolder().getPath());
         // Initialize signs config after the main config
-        if (getServerType() != ServerType.BUNGEE) {
-            signs = new SignsConfig(this, "signs", this.getDataFolder().getPath());
-        }
     }
 
     @Override
