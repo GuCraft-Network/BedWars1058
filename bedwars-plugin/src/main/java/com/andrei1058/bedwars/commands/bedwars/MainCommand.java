@@ -31,7 +31,6 @@ import com.andrei1058.bedwars.commands.bedwars.subcmds.regular.*;
 import com.andrei1058.bedwars.commands.bedwars.subcmds.sensitive.Level;
 import com.andrei1058.bedwars.commands.bedwars.subcmds.sensitive.Reload;
 import com.andrei1058.bedwars.commands.bedwars.subcmds.sensitive.setup.*;
-import com.andrei1058.bedwars.support.citizens.JoinNPC;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -106,9 +105,6 @@ public class MainCommand extends BukkitCommand implements ParentCommand {
         new RemoveGenerator(this, "removeGenerator");
         new com.andrei1058.bedwars.commands.bedwars.subcmds.sensitive.setup.SetType(this, "setType");
         new com.andrei1058.bedwars.commands.bedwars.subcmds.sensitive.setup.Save(this, "save");
-        if (JoinNPC.isCitizensSupport() && BedWars.getServerType() != ServerType.BUNGEE) {
-            new com.andrei1058.bedwars.commands.bedwars.subcmds.sensitive.NPC(this, "npc");
-        }
         new CmdTpStaff(this, "tp");
         new CmdUpgrades(this, "upgradesmenu");
         new SetKillDropsLoc(this, "setKillDrops");
