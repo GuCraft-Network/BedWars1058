@@ -131,7 +131,6 @@ If you are not a programmer you can help answering people in the [Issues](https:
 [Translation Chart](https://badges.awesome-crowdin.com/translation-12780139-594479.png)
 
 # 3rd party libraries
-- [bStats](https://bstats.org/getting-started/include-metrics)
 - [SidebarLib](https://github.com/andrei1058/SiderbarLib)
 - [Commons IO](https://mvnrepository.com/artifact/commons-io/commons-io)
 - [HikariCP](https://mvnrepository.com/artifact/com.zaxxer/HikariCP)
