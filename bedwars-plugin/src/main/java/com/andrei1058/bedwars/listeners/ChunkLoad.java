@@ -32,22 +32,22 @@ import org.bukkit.event.world.ChunkLoadEvent;
 public class ChunkLoad implements Listener {
 
     @EventHandler
-    public void onChunkLoadEvent(ChunkLoadEvent e){
+    public void onChunkLoadEvent(ChunkLoadEvent e) {
         if (e == null) return;
         if (e.getChunk() == null) return;
         if (e.getChunk().getEntities() == null) return;
-        Bukkit.getScheduler().runTaskAsynchronously(BedWars.plugin, ()-> {
-            for (Entity entity : e.getChunk().getEntities()){
-                if (entity instanceof ArmorStand){
-                    if (entity.hasMetadata("bw1058-setup")){
+        Bukkit.getScheduler().runTaskAsynchronously(BedWars.plugin, () -> {
+            for (Entity entity : e.getChunk().getEntities()) {
+                if (entity instanceof ArmorStand) {
+                    if (entity.hasMetadata("bw1058-setup")) {
                         Bukkit.getScheduler().runTask(BedWars.plugin, entity::remove);
                         continue;
                     }
-                    if (!((ArmorStand)entity).isVisible()){
-                        if (((ArmorStand)entity).isMarker()){
+                    if (!((ArmorStand) entity).isVisible()) {
+                        if (((ArmorStand) entity).isMarker()) {
                             //if (!entity.hasGravity()){
-                            if (entity.isCustomNameVisible()){
-                                if (ChatColor.stripColor(entity.getCustomName()).contains(" SET") || ChatColor.stripColor(entity.getCustomName()).contains(" set")){
+                            if (entity.isCustomNameVisible()) {
+                                if (ChatColor.stripColor(entity.getCustomName()).contains(" SET") || ChatColor.stripColor(entity.getCustomName()).contains(" set")) {
                                     Bukkit.getScheduler().runTask(BedWars.plugin, entity::remove);
                                 }
                             }

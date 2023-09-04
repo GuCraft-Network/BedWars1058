@@ -50,6 +50,21 @@ import static org.bukkit.event.inventory.InventoryAction.MOVE_TO_OTHER_INVENTORY
 
 public class Inventory implements Listener {
 
+    /**
+     * Check if an item is command-item
+     */
+    private static boolean isCommandItem(ItemStack i) {
+        if (i == null) return false;
+        if (i.getType() == Material.AIR) return false;
+        if (nms.isCustomBedWarsItem(i)) {
+            String[] customData = nms.getCustomData(i).split("_");
+            if (customData.length >= 2) {
+                return customData[0].equals("RUNCOMMAND");
+            }
+        }
+        return false;
+    }
+
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
         Player p = (Player) e.getPlayer();
@@ -210,24 +225,9 @@ public class Inventory implements Listener {
         }
     }
 
-    /**
-     * Check if an item is command-item
-     */
-    private static boolean isCommandItem(ItemStack i) {
-        if (i == null) return false;
-        if (i.getType() == Material.AIR) return false;
-        if (nms.isCustomBedWarsItem(i)) {
-            String[] customData = nms.getCustomData(i).split("_");
-            if (customData.length >= 2) {
-                return customData[0].equals("RUNCOMMAND");
-            }
-        }
-        return false;
-    }
-
     @EventHandler
     public void onGameEnd(GameStateChangeEvent e) {
-        if(e.getNewState() != GameState.restarting) return;
+        if (e.getNewState() != GameState.restarting) return;
         e.getArena().getPlayers().forEach(Player::closeInventory); // close any open guis when the game ends (e.g. shop)
     }
 }

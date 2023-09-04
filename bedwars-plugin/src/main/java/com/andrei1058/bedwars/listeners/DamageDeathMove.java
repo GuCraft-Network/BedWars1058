@@ -82,6 +82,15 @@ public class DamageDeathMove implements Listener {
         this.tntDamageOthers = config.getYml().getDouble(ConfigPath.GENERAL_TNT_JUMP_DAMAGE_OTHERS);
     }
 
+    @SuppressWarnings("unused")
+    private static void spawnUtility(String s, Location loc, ITeam t, Player p) {
+        if ("silverfish".equalsIgnoreCase(s)) {
+            nms.spawnSilverfish(loc, t, shop.getYml().getDouble(ConfigPath.SHOP_SPECIAL_SILVERFISH_SPEED), shop.getYml().getDouble(ConfigPath.SHOP_SPECIAL_SILVERFISH_HEALTH),
+                    shop.getInt(ConfigPath.SHOP_SPECIAL_SILVERFISH_DESPAWN),
+                    BedWars.shop.getYml().getDouble(ConfigPath.SHOP_SPECIAL_SILVERFISH_DAMAGE));
+        }
+    }
+
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
         if (e.getEntity() instanceof Player) {
@@ -126,7 +135,7 @@ public class DamageDeathMove implements Listener {
     // show player health on bow hit
     @EventHandler(priority = EventPriority.MONITOR)
     public void onBowHit(EntityDamageByEntityEvent e) {
-        if(e.isCancelled()) return;
+        if (e.isCancelled()) return;
         if (e.getEntity().getType() != EntityType.PLAYER) return;
         if (!(e.getDamager() instanceof Projectile)) return;
         Projectile projectile = (Projectile) e.getDamager();
@@ -440,7 +449,7 @@ public class DamageDeathMove implements Listener {
             String finalMessage = message;
             PlayerKillEvent playerKillEvent = new PlayerKillEvent(a, victim, killer, player -> Language.getMsg(player, finalMessage), cause);
             Bukkit.getPluginManager().callEvent(playerKillEvent);
-            if(killer != null && playerKillEvent.playSound()) {
+            if (killer != null && playerKillEvent.playSound()) {
                 Sounds.playSound(ConfigPath.SOUNDS_KILL, killer);
             }
             for (Player on : a.getPlayers()) {
@@ -489,7 +498,7 @@ public class DamageDeathMove implements Listener {
             }
 
 
-            if (victimsTeam.isBedDestroyed() && victimsTeam.getSize() == 1 &&  a.getConfig().getBoolean(ConfigPath.ARENA_DISABLE_GENERATOR_FOR_EMPTY_TEAMS)) {
+            if (victimsTeam.isBedDestroyed() && victimsTeam.getSize() == 1 && a.getConfig().getBoolean(ConfigPath.ARENA_DISABLE_GENERATOR_FOR_EMPTY_TEAMS)) {
                 for (IGenerator g : victimsTeam.getGenerators()) {
                     g.disable();
                 }
@@ -645,7 +654,7 @@ public class DamageDeathMove implements Listener {
                         if (bwt != null) {
                             PaperSupport.teleport(e.getPlayer(), bwt.getSpawn());
                         } else {
-                           PaperSupport.teleport(e.getPlayer(), a.getSpectatorLocation());
+                            PaperSupport.teleport(e.getPlayer(), a.getSpectatorLocation());
                         }
                     }
                 }
@@ -712,15 +721,6 @@ public class DamageDeathMove implements Listener {
             if (Arena.getArenaByIdentifier(e.getPlayer().getWorld().getName()) != null) {
                 e.setCancelled(true);
             }
-        }
-    }
-
-    @SuppressWarnings("unused")
-    private static void spawnUtility(String s, Location loc, ITeam t, Player p) {
-        if ("silverfish".equalsIgnoreCase(s)) {
-            nms.spawnSilverfish(loc, t, shop.getYml().getDouble(ConfigPath.SHOP_SPECIAL_SILVERFISH_SPEED), shop.getYml().getDouble(ConfigPath.SHOP_SPECIAL_SILVERFISH_HEALTH),
-                    shop.getInt(ConfigPath.SHOP_SPECIAL_SILVERFISH_DESPAWN),
-                    BedWars.shop.getYml().getDouble(ConfigPath.SHOP_SPECIAL_SILVERFISH_DAMAGE));
         }
     }
 }

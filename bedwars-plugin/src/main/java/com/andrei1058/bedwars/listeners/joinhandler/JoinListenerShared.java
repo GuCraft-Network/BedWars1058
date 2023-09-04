@@ -35,7 +35,7 @@ import static com.andrei1058.bedwars.BedWars.plugin;
 public class JoinListenerShared implements Listener {
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent e){
+    public void onJoin(PlayerJoinEvent e) {
         final Player p = e.getPlayer();
 
         JoinHandlerCommon.displayCustomerDetails(p);
@@ -49,7 +49,7 @@ public class JoinListenerShared implements Listener {
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             // Hide new player to players and spectators, and vice versa
-            for (Player inArena : Arena.getArenaByPlayer().keySet()){
+            for (Player inArena : Arena.getArenaByPlayer().keySet()) {
                 if (inArena.equals(p)) continue;
                 BedWars.nms.spigotHidePlayer(p, inArena);
                 BedWars.nms.spigotHidePlayer(inArena, p);

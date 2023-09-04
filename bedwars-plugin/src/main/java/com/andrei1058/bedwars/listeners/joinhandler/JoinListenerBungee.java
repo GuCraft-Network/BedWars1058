@@ -134,7 +134,7 @@ public class JoinListenerBungee implements Listener {
                     PaperSupport.teleportC(p, mainWorld.getSpawnLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
                 }
                 // hide admin to in game users
-                for (Player inGame : Bukkit.getOnlinePlayers()){
+                for (Player inGame : Bukkit.getOnlinePlayers()) {
                     if (inGame.equals(p)) continue;
                     if (Arena.isInArena(inGame)) {
                         BedWars.nms.spigotHidePlayer(p, inGame);

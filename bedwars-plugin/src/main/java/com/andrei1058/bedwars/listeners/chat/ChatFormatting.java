@@ -47,6 +47,47 @@ import static com.andrei1058.bedwars.api.language.Language.getPlayerLanguage;
 
 public class ChatFormatting implements Listener {
 
+    private static String parsePHolders(String content, Player player, @Nullable ITeam team) {
+        content = content
+                .replace("{vPrefix}", getChatSupport().getPrefix(player))
+                .replace("{vSuffix}", getChatSupport().getSuffix(player))
+                .replace("{playername}", player.getName())
+                .replace("{level}", getLevelSupport().getLevel(player))
+                .replace("{player}", player.getDisplayName());
+        if (team != null) {
+            String teamFormat = getMsg(player, Messages.FORMAT_PAPI_PLAYER_TEAM_TEAM)
+                    .replace("{TeamColor}", team.getColor().chat() + "")
+                    .replace("{TeamName}", team.getDisplayName(Language.getPlayerLanguage(player)).toUpperCase());
+            content = content.replace("{team}", teamFormat);
+        }
+        return SupportPAPI.getSupportPAPI().replace(player, content).replace("{message}", "%2$s");
+    }
+
+    private static boolean isShouting(String msg, Language lang) {
+        return msg.startsWith("!") || msg.startsWith("shout") ||
+                msg.startsWith("SHOUT") || msg.startsWith(lang.m(Messages.MEANING_SHOUT));
+    }
+
+    private static String clearShout(String msg, Language lang) {
+        if (msg.startsWith("!")) msg = msg.replaceFirst("!", "");
+        if (msg.startsWith("SHOUT")) msg = msg.replaceFirst("SHOUT", "");
+        if (msg.startsWith("shout")) msg = msg.replaceFirst("shout", "");
+        if (msg.startsWith(lang.m(Messages.MEANING_SHOUT))) {
+            msg = msg.replaceFirst(lang.m(Messages.MEANING_SHOUT), "");
+        }
+        return msg.trim();
+    }
+
+    @SafeVarargs
+    public static void setRecipients(AsyncPlayerChatEvent event, List<Player>... target) {
+        if (!config.getBoolean(ConfigPath.GENERAL_CHAT_GLOBAL)) {
+            event.getRecipients().clear();
+            for (List<Player> list : target) {
+                event.getRecipients().addAll(list);
+            }
+        }
+    }
+
     @EventHandler(ignoreCancelled = true)
     public void onChat(AsyncPlayerChatEvent e) {
         if (e == null) return;
@@ -129,46 +170,5 @@ public class ChatFormatting implements Listener {
 
         // multi arena lobby chat
         e.setFormat(parsePHolders(language.m(Messages.FORMATTING_CHAT_LOBBY), p, null));
-    }
-
-    private static String parsePHolders(String content, Player player, @Nullable ITeam team) {
-        content = content
-                .replace("{vPrefix}", getChatSupport().getPrefix(player))
-                .replace("{vSuffix}", getChatSupport().getSuffix(player))
-                .replace("{playername}", player.getName())
-                .replace("{level}", getLevelSupport().getLevel(player))
-                .replace("{player}", player.getDisplayName());
-        if (team != null) {
-            String teamFormat = getMsg(player, Messages.FORMAT_PAPI_PLAYER_TEAM_TEAM)
-                    .replace("{TeamColor}", team.getColor().chat() + "")
-                    .replace("{TeamName}", team.getDisplayName(Language.getPlayerLanguage(player)).toUpperCase());
-            content = content.replace("{team}", teamFormat);
-        }
-        return SupportPAPI.getSupportPAPI().replace(player, content).replace("{message}", "%2$s");
-    }
-
-    private static boolean isShouting(String msg, Language lang) {
-        return msg.startsWith("!") || msg.startsWith("shout") ||
-                msg.startsWith("SHOUT") || msg.startsWith(lang.m(Messages.MEANING_SHOUT));
-    }
-
-    private static String clearShout(String msg, Language lang) {
-        if (msg.startsWith("!")) msg = msg.replaceFirst("!", "");
-        if (msg.startsWith("SHOUT")) msg = msg.replaceFirst("SHOUT", "");
-        if (msg.startsWith("shout")) msg = msg.replaceFirst("shout", "");
-        if (msg.startsWith(lang.m(Messages.MEANING_SHOUT))) {
-            msg = msg.replaceFirst(lang.m(Messages.MEANING_SHOUT), "");
-        }
-        return msg.trim();
-    }
-
-    @SafeVarargs
-    public static void setRecipients(AsyncPlayerChatEvent event, List<Player>... target) {
-        if (!config.getBoolean(ConfigPath.GENERAL_CHAT_GLOBAL)) {
-            event.getRecipients().clear();
-            for (List<Player> list : target) {
-                event.getRecipients().addAll(list);
-            }
-        }
     }
 }

@@ -202,7 +202,7 @@ public class Interact implements Listener {
 
                         e.setCancelled(true);
 
-                        if(System.currentTimeMillis() - a.getFireballCooldowns().getOrDefault(p.getUniqueId(), 0L) > (fireballCooldown*1000)) {
+                        if (System.currentTimeMillis() - a.getFireballCooldowns().getOrDefault(p.getUniqueId(), 0L) > (fireballCooldown * 1000)) {
                             a.getFireballCooldowns().put(p.getUniqueId(), System.currentTimeMillis());
                             Fireball fb = p.launchProjectile(Fireball.class);
                             Vector direction = p.getEyeLocation().getDirection();
@@ -219,7 +219,6 @@ public class Interact implements Listener {
             }
         }
     }
-
 
 
     @EventHandler

@@ -36,11 +36,11 @@ import com.andrei1058.bedwars.api.server.ServerType;
 import com.andrei1058.bedwars.api.util.BlastProtectionUtil;
 import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.configuration.Sounds;
-import com.andrei1058.bedwars.support.paper.PaperSupport;
 import com.andrei1058.bedwars.popuptower.TowerEast;
 import com.andrei1058.bedwars.popuptower.TowerNorth;
 import com.andrei1058.bedwars.popuptower.TowerSouth;
 import com.andrei1058.bedwars.popuptower.TowerWest;
+import com.andrei1058.bedwars.support.paper.PaperSupport;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -63,7 +63,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import static com.andrei1058.bedwars.BedWars.*;
 import static com.andrei1058.bedwars.api.language.Language.getMsg;
@@ -77,6 +79,18 @@ public class BreakPlace implements Listener {
     public BreakPlace() {
         allowFireBreak = config.getBoolean(ConfigPath.GENERAL_CONFIGURATION_ALLOW_FIRE_EXTINGUISH);
         blastProtection = new BlastProtectionUtil(nms, BedWars.getAPI());
+    }
+
+    public static boolean isBuildSession(Player p) {
+        return buildSession.contains(p);
+    }
+
+    public static void addBuildSession(Player p) {
+        buildSession.add(p);
+    }
+
+    public static void removeBuildSession(Player p) {
+        buildSession.remove(p);
     }
 
     @EventHandler
@@ -99,7 +113,6 @@ public class BreakPlace implements Listener {
         }
     }
 
-
     @EventHandler(ignoreCancelled = true)
     public void onBurn(@NotNull BlockBurnEvent event) {
         IArena arena = Arena.getArenaByIdentifier(event.getBlock().getWorld().getName());
@@ -108,7 +121,7 @@ public class BreakPlace implements Listener {
             event.setCancelled(true);
             return;
         }
-        if (arena.isTeamBed(event.getBlock().getLocation())){
+        if (arena.isTeamBed(event.getBlock().getLocation())) {
             event.setCancelled(true);
         }
     }
@@ -602,17 +615,5 @@ public class BreakPlace implements Listener {
                     e.setCancelled(true);
             }
         }
-    }
-
-    public static boolean isBuildSession(Player p) {
-        return buildSession.contains(p);
-    }
-
-    public static void addBuildSession(Player p) {
-        buildSession.add(p);
-    }
-
-    public static void removeBuildSession(Player p) {
-        buildSession.remove(p);
     }
 }

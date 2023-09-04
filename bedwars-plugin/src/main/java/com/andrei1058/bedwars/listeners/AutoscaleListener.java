@@ -31,7 +31,7 @@ public class AutoscaleListener implements Listener {
     @EventHandler
     public void onPlaying(GameStateChangeEvent e) {
         if (e.getNewState() == GameState.playing && Arena.canAutoScale(e.getArena().getArenaName())) {
-            if (Arena.getGamesBeforeRestart() > 1){
+            if (Arena.getGamesBeforeRestart() > 1) {
                 new Arena(e.getArena().getArenaName(), null);
             }
         }

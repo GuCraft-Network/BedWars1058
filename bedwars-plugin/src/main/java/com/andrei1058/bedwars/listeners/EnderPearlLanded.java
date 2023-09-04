@@ -12,7 +12,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 public class EnderPearlLanded implements Listener {
 
     @EventHandler
-    public void onPearlHit(ProjectileHitEvent e){
+    public void onPearlHit(ProjectileHitEvent e) {
 
         if (!(e.getEntity() instanceof EnderPearl)) return;
         if (!(e.getEntity().getShooter() instanceof Player)) return;
