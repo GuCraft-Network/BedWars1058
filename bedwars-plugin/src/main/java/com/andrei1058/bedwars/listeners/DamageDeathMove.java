@@ -554,7 +554,7 @@ public class DamageDeathMove implements Listener {
                     for (Player p : a.getWorld().getPlayers()) {
                         p.sendMessage(getMsg(p, Messages.TEAM_ELIMINATED_CHAT).replace("{TeamColor}", t.getColor().chat().toString()).replace("{TeamName}", t.getDisplayName(Language.getPlayerLanguage(p))));
                     }
-                    Bukkit.getScheduler().runTaskLater(plugin, a::checkWinner, 40L);
+                    Bukkit.getScheduler().runTaskLater(plugin, a::checkWinner, 1L);
                 }
             } else {
                 //respawn session
