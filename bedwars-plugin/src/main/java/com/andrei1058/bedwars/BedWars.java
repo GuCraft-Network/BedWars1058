@@ -80,10 +80,7 @@ import com.andrei1058.bedwars.support.vipfeatures.VipFeatures;
 import com.andrei1058.bedwars.support.vipfeatures.VipListeners;
 import com.andrei1058.vipfeatures.api.IVipFeatures;
 import com.andrei1058.vipfeatures.api.MiniGameAlreadyRegistered;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
+import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -105,7 +102,7 @@ import java.util.*;
 @SuppressWarnings("WeakerAccess")
 public class BedWars extends JavaPlugin {
 
-    private static ServerType serverType = ServerType.MULTIARENA;
+    private static final String version = Bukkit.getServer().getClass().getName().split("\\.")[3];
     public static boolean debug = true, autoscale = false;
     public static String mainCmd = "bw", link = "https://www.ac66.net";
     public static ConfigManager signs, generators;
@@ -116,23 +113,141 @@ public class BedWars extends JavaPlugin {
     public static VersionSupport nms;
 
     public static boolean isPaper = false;
-
+    public static ArenaManager arenaManager = new ArenaManager();
+    protected static Level level;
+    private static ServerType serverType = ServerType.MULTIARENA;
     private static Party party = new NoParty();
     private static Chat chat = new NoChat();
-    protected static Level level;
     private static Economy economy;
-    private static final String version = Bukkit.getServer().getClass().getName().split("\\.")[3];
     private static String lobbyWorld = "";
     private static boolean shuttingDown = false;
-
-    public static ArenaManager arenaManager = new ArenaManager();
-
     //remote database
     private static Database remoteDatabase;
-
+    private static com.andrei1058.bedwars.api.BedWars api;
     private boolean serverSoftwareSupport = true;
 
-    private static com.andrei1058.bedwars.api.BedWars api;
+    public static void registerEvents(Listener... listeners) {
+        Arrays.stream(listeners).forEach(l -> plugin.getServer().getPluginManager().registerEvents(l, plugin));
+    }
+
+    public static void setDebug(boolean value) {
+        debug = value;
+    }
+
+    public static void setAutoscale(boolean autoscale) {
+        BedWars.autoscale = autoscale;
+    }
+
+    public static void debug(String message) {
+        if (debug) {
+            plugin.getLogger().info("DEBUG: " + message);
+        }
+    }
+
+    public static String getForCurrentVersion(String v18, String v12, String v13) {
+        switch (getServerVersion()) {
+            case "v1_8_R3":
+                return v18;
+            case "v1_12_R1":
+                return v12;
+        }
+        return v13;
+    }
+
+    public static ServerType getServerType() {
+        return serverType;
+    }
+
+    public static void setServerType(ServerType serverType) {
+        BedWars.serverType = serverType;
+        if (serverType == ServerType.BUNGEE) autoscale = true;
+    }
+
+    public static Party getParty() {
+        return party;
+    }
+
+    public static void setParty(Party party) {
+        BedWars.party = party;
+    }
+
+    public static Chat getChatSupport() {
+        return chat;
+    }
+
+    /**
+     * Get current levels manager.
+     */
+    public static Level getLevelSupport() {
+        return level;
+    }
+
+    /**
+     * Set the levels manager.
+     * You can use this to add your own levels manager just implement
+     * the Level interface so the plugin will be able to display
+     * the level internally.
+     */
+
+    public static void setLevelAdapter(Level levelsManager) {
+        if (levelsManager instanceof InternalLevel) {
+            if (LevelListeners.instance == null) {
+                Bukkit.getPluginManager().registerEvents(new LevelListeners(), BedWars.plugin);
+            }
+        } else {
+            if (LevelListeners.instance != null) {
+                PlayerJoinEvent.getHandlerList().unregister(LevelListeners.instance);
+                PlayerQuitEvent.getHandlerList().unregister(LevelListeners.instance);
+                LevelListeners.instance = null;
+            }
+        }
+        level = levelsManager;
+    }
+
+    public static Economy getEconomy() {
+        return economy;
+    }
+
+    public static ConfigManager getGeneratorsCfg() {
+        return generators;
+    }
+
+    /**
+     * Get the server version
+     * Ex: v1_8_R3
+     *
+     * @since v0.6.5beta
+     */
+    public static String getServerVersion() {
+        return version;
+    }
+
+    public static String getLobbyWorld() {
+        return lobbyWorld;
+    }
+
+    public static void setLobbyWorld(String lobbyWorld) {
+        BedWars.lobbyWorld = lobbyWorld;
+    }
+
+    /**
+     * Get remote database.
+     */
+    public static Database getRemoteDatabase() {
+        return remoteDatabase;
+    }
+
+    public static StatsManager getStatsManager() {
+        return statsManager;
+    }
+
+    public static com.andrei1058.bedwars.api.BedWars getAPI() {
+        return api;
+    }
+
+    public static boolean isShuttingDown() {
+        return shuttingDown;
+    }
 
     @Override
     public void onLoad() {
@@ -257,7 +372,8 @@ public class BedWars extends JavaPlugin {
 
         // Register events
         registerEvents(new EnderPearlLanded(), new QuitAndTeleportListener(), new BreakPlace(), new DamageDeathMove(), new Inventory(), new Interact(), new HungerWeatherSpawn(),
-                new FireballListener(), new EggBridge(), new SpectatorListeners(), new BaseListener(), new TargetListener(), new LangListener(), new Warnings(), new ChatAFK(), new GameEndListener());
+                new FireballListener(), new EggBridge(), new SpectatorListeners(), new BaseListener(), new TargetListener(), new LangListener(), new ChatAFK(), new GameEndListener());
+        warnings();
 
         if (config.getBoolean(ConfigPath.GENERAL_CONFIGURATION_HEAL_POOL_ENABLE)) {
             registerEvents(new HealPoolListener());
@@ -522,12 +638,13 @@ public class BedWars extends JavaPlugin {
 
     /**
      * Try loading custom adapter support.
+     *
      * @return true when custom adapter was registered.
      */
     private boolean handleWorldAdapter() {
         Plugin swmPlugin = Bukkit.getPluginManager().getPlugin("SlimeWorldManager");
 
-        if (null == swmPlugin){
+        if (null == swmPlugin) {
             return false;
         }
         PluginDescriptionFile pluginDescription = swmPlugin.getDescription();
@@ -555,11 +672,11 @@ public class BedWars extends JavaPlugin {
             }
 
             Constructor<?> constructor = Class.forName(adapterPath).getConstructor(Plugin.class);
-            getLogger().info("Loading restore adapter: "+adapterPath+" ...");
+            getLogger().info("Loading restore adapter: " + adapterPath + " ...");
 
             RestoreAdapter candidate = (RestoreAdapter) constructor.newInstance(this);
             api.setRestoreAdapter(candidate);
-            getLogger().info("Hook into "+candidate.getDisplayName()+" as restore adapter.");
+            getLogger().info("Hook into " + candidate.getDisplayName() + " as restore adapter.");
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -631,127 +748,15 @@ public class BedWars extends JavaPlugin {
         }
     }
 
-    public static void registerEvents(Listener... listeners) {
-        Arrays.stream(listeners).forEach(l -> plugin.getServer().getPluginManager().registerEvents(l, plugin));
-    }
-
-    public static void setDebug(boolean value) {
-        debug = value;
-    }
-
-    public static void setServerType(ServerType serverType) {
-        BedWars.serverType = serverType;
-        if (serverType == ServerType.BUNGEE) autoscale = true;
-    }
-
-    public static void setAutoscale(boolean autoscale) {
-        BedWars.autoscale = autoscale;
-    }
-
-    public static void debug(String message) {
-        if (debug) {
-            plugin.getLogger().info("DEBUG: " + message);
-        }
-    }
-
-    public static String getForCurrentVersion(String v18, String v12, String v13) {
-        switch (getServerVersion()) {
-            case "v1_8_R3":
-                return v18;
-            case "v1_12_R1":
-                return v12;
-        }
-        return v13;
-    }
-
-    public static ServerType getServerType() {
-        return serverType;
-    }
-
-    public static Party getParty() {
-        return party;
-    }
-
-    public static Chat getChatSupport() {
-        return chat;
-    }
-
-    /**
-     * Get current levels manager.
-     */
-    public static Level getLevelSupport() {
-        return level;
-    }
-
-    /**
-     * Set the levels manager.
-     * You can use this to add your own levels manager just implement
-     * the Level interface so the plugin will be able to display
-     * the level internally.
-     */
-
-    public static void setLevelAdapter(Level levelsManager) {
-        if (levelsManager instanceof InternalLevel) {
-            if (LevelListeners.instance == null) {
-                Bukkit.getPluginManager().registerEvents(new LevelListeners(), BedWars.plugin);
+    private void warnings() {
+        Bukkit.getScheduler().runTaskLaterAsynchronously(BedWars.plugin, () -> {
+            if (Bukkit.getPluginManager().isPluginEnabled("Multiverse-Core")) {
+                this.getLogger().severe(ChatColor.RED + "[BedWars1058] Multiverse-Core detected! Please remove it or make sure it won't touch BedWars maps!"); // run after 5 ticks to make sure its after any update spam on join
             }
-        } else {
-            if (LevelListeners.instance != null) {
-                PlayerJoinEvent.getHandlerList().unregister(LevelListeners.instance);
-                PlayerQuitEvent.getHandlerList().unregister(LevelListeners.instance);
-                LevelListeners.instance = null;
+            if (Bukkit.getServer().getSpawnRadius() > 0) {
+                Bukkit.getScheduler().runTaskLaterAsynchronously(BedWars.plugin, () -> this.getLogger().severe(ChatColor.RED + "[BedWars1058] Your spawn-protection in server.properties is enabled. " + ChatColor.YELLOW + "This might mess with BedWars arenas!" + ChatColor.GRAY + " It is highly reccomend setting it to 0."), 5);
             }
-        }
-        level = levelsManager;
-    }
-
-    public static Economy getEconomy() {
-        return economy;
-    }
-
-    public static ConfigManager getGeneratorsCfg() {
-        return generators;
-    }
-
-    public static void setLobbyWorld(String lobbyWorld) {
-        BedWars.lobbyWorld = lobbyWorld;
-    }
-
-    /**
-     * Get the server version
-     * Ex: v1_8_R3
-     *
-     * @since v0.6.5beta
-     */
-    public static String getServerVersion() {
-        return version;
-    }
-
-    public static String getLobbyWorld() {
-        return lobbyWorld;
-    }
-
-    /**
-     * Get remote database.
-     */
-    public static Database getRemoteDatabase() {
-        return remoteDatabase;
-    }
-
-    public static StatsManager getStatsManager() {
-        return statsManager;
-    }
-
-    public static com.andrei1058.bedwars.api.BedWars getAPI() {
-        return api;
-    }
-
-    public static boolean isShuttingDown() {
-        return shuttingDown;
-    }
-
-    public static void setParty(Party party) {
-        BedWars.party = party;
+        }, 105L);
     }
 
     @Override
