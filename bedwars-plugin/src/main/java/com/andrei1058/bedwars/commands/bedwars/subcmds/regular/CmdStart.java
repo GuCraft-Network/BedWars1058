@@ -68,7 +68,7 @@ public class CmdStart extends SubCommand {
         if (a.getStatus() == GameState.playing) return true;
         if (a.getStatus() == GameState.restarting) return true;
         if (a.getStartingTask() == null){
-            if (args.length == 1 && args[0].equalsIgnoreCase("debug") && s.isOp()){
+            if (args.length == 1 && args[0].equalsIgnoreCase("debug") && s.hasPermission("bw.debug")){
                 a.changeStatus(GameState.starting);
                 BedWars.debug = true;
             } else {
