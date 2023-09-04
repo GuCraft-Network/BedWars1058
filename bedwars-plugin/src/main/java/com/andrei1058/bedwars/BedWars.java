@@ -47,7 +47,6 @@ import com.andrei1058.bedwars.commands.shout.ShoutCommand;
 import com.andrei1058.bedwars.configuration.*;
 import com.andrei1058.bedwars.database.Database;
 import com.andrei1058.bedwars.database.SQLite;
-import com.andrei1058.bedwars.halloween.HalloweenSpecial;
 import com.andrei1058.bedwars.language.*;
 import com.andrei1058.bedwars.levels.internal.InternalLevel;
 import com.andrei1058.bedwars.levels.internal.LevelListeners;
@@ -69,15 +68,12 @@ import com.andrei1058.bedwars.sidebar.thread.RefreshPlaceholdersTask;
 import com.andrei1058.bedwars.sidebar.thread.RefreshLifeTask;
 import com.andrei1058.bedwars.sidebar.thread.RefreshTabListTask;
 import com.andrei1058.bedwars.stats.StatsManager;
-import com.andrei1058.bedwars.support.citizens.CitizensListener;
-import com.andrei1058.bedwars.support.citizens.JoinNPC;
 import com.andrei1058.bedwars.support.papi.PAPISupport;
 import com.andrei1058.bedwars.support.papi.SupportPAPI;
 import com.andrei1058.bedwars.support.party.NoParty;
 import com.andrei1058.bedwars.support.party.PAF;
 import com.andrei1058.bedwars.support.party.PAFBungeecordRedisApi;
 import com.andrei1058.bedwars.support.party.PartiesAdapter;
-import com.andrei1058.bedwars.support.preloadedparty.PrePartyListener;
 import com.andrei1058.bedwars.support.vault.*;
 import com.andrei1058.bedwars.support.vipfeatures.VipFeatures;
 import com.andrei1058.bedwars.support.vipfeatures.VipListeners;
@@ -189,18 +185,6 @@ public class BedWars extends JavaPlugin {
 
         // Setup languages
         new English();
-        new Romanian();
-        new Italian();
-        new Polish();
-        new Spanish();
-        new Russian();
-        new Bangla();
-        new Persian();
-        new Hindi();
-        new Indonesia();
-        new Portuguese();
-        new SimplifiedChinese();
-        new Turkish();
 
         config = new MainConfig(this, "config");
 
@@ -271,8 +255,8 @@ public class BedWars extends JavaPlugin {
             }, 1L);
 
         // Register events
-        registerEvents(new EnderPearlLanded(), new QuitAndTeleportListener(), new BreakPlace(), new DamageDeathMove(), new Inventory(), new Interact(), new RefreshGUI(), new HungerWeatherSpawn(), new CmdProcess(),
-                new FireballListener(), new EggBridge(), new SpectatorListeners(), new BaseListener(), new TargetListener(), new LangListener(), new Warnings(this), new ChatAFK(), new GameEndListener());
+        registerEvents(new EnderPearlLanded(), new QuitAndTeleportListener(), new BreakPlace(), new DamageDeathMove(), new Inventory(), new Interact(), new HungerWeatherSpawn(),
+                new FireballListener(), new EggBridge(), new SpectatorListeners(), new BaseListener(), new TargetListener(), new LangListener(), new Warnings(), new ChatAFK(), new GameEndListener());
 
         if (config.getBoolean(ConfigPath.GENERAL_CONFIGURATION_HEAL_POOL_ENABLE)) {
             registerEvents(new HealPoolListner());
@@ -283,13 +267,13 @@ public class BedWars extends JavaPlugin {
                 //registerEvents(new ArenaListeners());
                 ArenaSocket.lobbies.addAll(config.getList(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_LOBBY_SERVERS));
                 new SendTask();
-                registerEvents(new AutoscaleListener(), new PrePartyListener(), new JoinListenerBungee());
+                registerEvents(new AutoscaleListener(), new JoinListenerBungee());
                 Bukkit.getScheduler().runTaskTimerAsynchronously(this, new LoadedUsersCleaner(), 60L, 60L);
             } else {
                 registerEvents(new ServerPingListener(), new JoinListenerBungeeLegacy());
             }
         } else if (getServerType() == ServerType.MULTIARENA || getServerType() == ServerType.SHARED) {
-            registerEvents(new ArenaSelectorListener(), new BlockStatusListener());
+            registerEvents(new ArenaSelectorListener(), new BlockStatusListener(), new RefreshGUI());
             if (getServerType() == ServerType.MULTIARENA) {
                 registerEvents(new JoinListenerMultiArena());
             } else {
@@ -371,28 +355,6 @@ public class BedWars extends JavaPlugin {
             remoteDatabase = new SQLite();
             remoteDatabase.init();
         }
-
-        /* Citizens support */
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            if (this.getServer().getPluginManager().getPlugin("Citizens") != null) {
-                JoinNPC.setCitizensSupport(true);
-                getLogger().info("Hook into Citizens support. /bw npc");
-                registerEvents(new CitizensListener());
-            }
-
-            //spawn NPCs
-            try {
-                JoinNPC.spawnNPCs();
-            } catch (Exception e) {
-                this.getLogger().severe("Could not spawn CmdJoin NPCs. Make sure you have right version of Citizens for your server!");
-                JoinNPC.setCitizensSupport(false);
-            }
-            /*if (getServerType() == ServerType.BUNGEE) {
-                if (Arena.getArenas().size() > 0) {
-                    ArenaSocket.sendMessage(Arena.getArenas().get(0));
-                }
-            }*/
-        }, 40L);
 
         /* Save messages for stats gui items if custom items added, for each language */
         Language.setupCustomStatsMessages();
@@ -554,11 +516,6 @@ public class BedWars extends JavaPlugin {
 
         registerEvents(new ScoreboardListener());
 
-        if (config.getBoolean(ConfigPath.GENERAL_CONFIGURATION_ENABLE_HALLOWEEN)) {
-            // Halloween Special
-            HalloweenSpecial.init();
-        }
-
         SpoilPlayerTNTFeature.init();
     }
 
@@ -614,9 +571,9 @@ public class BedWars extends JavaPlugin {
         if (!nms.isBukkitCommandRegistered("shout")) {
             nms.registerCommand("shout", new ShoutCommand("shout"));
         }
-        nms.registerCommand("rejoin", new RejoinCommand("rejoin"));
         if (!(nms.isBukkitCommandRegistered("leave") && getServerType() == ServerType.BUNGEE)) {
             nms.registerCommand("leave", new LeaveCommand("leave"));
+            nms.registerCommand("rejoin", new RejoinCommand("rejoin"));
         }
         if (getServerType() != ServerType.BUNGEE && config.getBoolean(ConfigPath.GENERAL_ENABLE_PARTY_CMD)) {
             Bukkit.getLogger().info("Registering /party command..");

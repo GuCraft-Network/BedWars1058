@@ -119,9 +119,6 @@ If you get disconnected, or if you leave a game (configurable) you can re-join i
 - players are able to do tnt jump with configurable values.
 - players with tnt in their inventory have a red particle on their head (configurable).
 
-###### Season events:
-- Halloween special. It is enabled automatically based on your machine timezone and will provide cool effects.
-
 # Contributing
 Any help is appreciated, just give a quick look at [CONTRIBUTING.md](https://github.com/andrei1058/BedWars1058/blob/master/CONTRIBUTING.md) first!
 
