@@ -38,7 +38,7 @@ import com.andrei1058.bedwars.arena.spectator.SpectatorListeners;
 import com.andrei1058.bedwars.arena.tasks.OneTick;
 import com.andrei1058.bedwars.arena.tasks.Refresh;
 import com.andrei1058.bedwars.arena.upgrades.BaseListener;
-import com.andrei1058.bedwars.arena.upgrades.HealPoolListner;
+import com.andrei1058.bedwars.arena.upgrades.HealPoolListener;
 import com.andrei1058.bedwars.commands.bedwars.MainCommand;
 import com.andrei1058.bedwars.commands.leave.LeaveCommand;
 import com.andrei1058.bedwars.commands.party.PartyCommand;
@@ -258,7 +258,7 @@ public class BedWars extends JavaPlugin {
                 new FireballListener(), new EggBridge(), new SpectatorListeners(), new BaseListener(), new TargetListener(), new LangListener(), new Warnings(), new ChatAFK(), new GameEndListener());
 
         if (config.getBoolean(ConfigPath.GENERAL_CONFIGURATION_HEAL_POOL_ENABLE)) {
-            registerEvents(new HealPoolListner());
+            registerEvents(new HealPoolListener());
         }
 
         if (getServerType() == ServerType.BUNGEE) {
