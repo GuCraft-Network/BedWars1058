@@ -45,7 +45,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
@@ -157,7 +156,13 @@ public class BreakPlace implements Listener {
                 return;
             }
             if (e.getBlockPlaced().getLocation().getBlockY() >= a.getConfig().getInt(ConfigPath.ARENA_CONFIGURATION_MAX_BUILD_Y)) {
+                e.getPlayer().sendMessage(getMsg(e.getPlayer(), Messages.ARENA_MAX_BUILD_LIMIT_REACHED));
                 e.setCancelled(true);
+                return;
+            }
+            if (e.getBlockPlaced().getLocation().getBlockY() <= a.getConfig().getInt(ConfigPath.ARENA_CONFIGURATION_MIN_BUILD_Y)) {
+                e.setCancelled(true);
+                e.getPlayer().sendMessage(getMsg(e.getPlayer(), Messages.ARENA_MIN_BUILD_LIMIT_REACHED));
                 return;
             }
 
@@ -415,20 +420,6 @@ public class BreakPlace implements Listener {
                 if (exists) {
                     s.add(e.getLine(1) + "," + signs.stringLocationConfigFormat(e.getBlock().getLocation()));
                     signs.set("locations", s);
-                }
-                IArena a = Arena.getArenaByName(e.getLine(1));
-                if (a != null) {
-                    p.sendMessage("§a▪ §7Sign saved for arena: " + e.getLine(1));
-                    a.addSign(e.getBlock().getLocation());
-                    Sign b = (Sign) e.getBlock().getState();
-                    int line = 0;
-                    for (String string : BedWars.signs.getList("format")) {
-                        e.setLine(line, string.replace("[on]", String.valueOf(a.getPlayers().size())).replace("[max]",
-                                        String.valueOf(a.getMaxPlayers())).replace("[arena]", a.getDisplayName()).replace("[status]", a.getDisplayStatus(Language.getDefaultLanguage()))
-                                .replace("[type]", String.valueOf(a.getMaxInTeam())));
-                        line++;
-                    }
-                    b.update(true);
                 }
             } else {
                 p.sendMessage("§c▪ §7You didn't set any arena yet!");
