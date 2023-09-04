@@ -272,7 +272,7 @@ public class BedWars extends JavaPlugin {
                 registerEvents(new ServerPingListener(), new JoinListenerBungeeLegacy());
             }
         } else if (getServerType() == ServerType.MULTIARENA || getServerType() == ServerType.SHARED) {
-            registerEvents(new ArenaSelectorListener(), new BlockStatusListener(), new RefreshGUI());
+            registerEvents(new ArenaSelectorListener(), new RefreshGUI());
             if (getServerType() == ServerType.MULTIARENA) {
                 registerEvents(new JoinListenerMultiArena());
             } else {
