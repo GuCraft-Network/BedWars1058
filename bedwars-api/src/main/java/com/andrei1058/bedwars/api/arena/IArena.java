@@ -307,16 +307,6 @@ public interface IArena {
     }
 
     /**
-     * Add a join sign for the arena.
-     */
-    void addSign(Location loc);
-
-    /**
-     * Refresh signs.
-     */
-    void refreshSigns();
-
-    /**
      * Add a kill point to the game stats.
      */
     void addPlayerKill(Player p, boolean finalKill, Player victim);

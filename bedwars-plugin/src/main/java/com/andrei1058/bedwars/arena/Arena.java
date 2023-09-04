@@ -63,7 +63,6 @@ import com.andrei1058.bedwars.listeners.dropshandler.PlayerDrops;
 import com.andrei1058.bedwars.money.internal.MoneyPerMinuteTask;
 import com.andrei1058.bedwars.shop.ShopCache;
 import com.andrei1058.bedwars.sidebar.SidebarService;
-import com.andrei1058.bedwars.support.citizens.JoinNPC;
 import com.andrei1058.bedwars.support.paper.PaperSupport;
 import com.andrei1058.bedwars.support.papi.SupportPAPI;
 import com.andrei1058.bedwars.support.vault.WithEconomy;
@@ -609,8 +608,6 @@ public class Arena implements IArena {
             }
         }
 
-        refreshSigns();
-        JoinNPC.updateNPCs(getGroup());
         return true;
     }
 
@@ -739,8 +736,6 @@ public class Arena implements IArena {
         }
 
         showTime.remove(p);
-        refreshSigns();
-        JoinNPC.updateNPCs(getGroup());
         return true;
     }
 
@@ -987,8 +982,6 @@ public class Arena implements IArena {
 
         showTime.remove(p);
 
-        refreshSigns();
-        JoinNPC.updateNPCs(getGroup());
 
         // fix #340
         // remove player from party if leaves and the owner is still in the arena while waiting or starting
@@ -1111,8 +1104,6 @@ public class Arena implements IArena {
             }
         }
 
-        refreshSigns();
-        JoinNPC.updateNPCs(getGroup());
     }
 
     /**
@@ -1422,8 +1413,6 @@ public class Arena implements IArena {
 
     public static void setArenaByPlayer(Player p, IArena arena) {
         arenaByPlayer.put(p, arena);
-        arena.refreshSigns();
-        JoinNPC.updateNPCs(arena.getGroup());
     }
 
     public static void setArenaByName(IArena arena) {
@@ -1436,8 +1425,6 @@ public class Arena implements IArena {
 
     public static void removeArenaByPlayer(Player p, @NotNull IArena arena) {
         arenaByPlayer.remove(p);
-        arena.refreshSigns();
-        JoinNPC.updateNPCs(arena.getGroup());
     }
 
     /**
@@ -1466,7 +1453,6 @@ public class Arena implements IArena {
         }
         this.status = status;
         Bukkit.getPluginManager().callEvent(new GameStateChangeEvent(this, status, status));
-        refreshSigns();
         if (status == GameState.playing) {
             for (Player p : players) {
                 Arena.afkCheck.remove(p.getUniqueId());
@@ -1572,8 +1558,6 @@ public class Arena implements IArena {
         if (loc == null) return;
         if (loc.getBlock().getType().toString().endsWith("_SIGN") || loc.getBlock().getType().toString().endsWith("_WALL_SIGN")) {
             signs.add(loc.getBlock());
-            refreshSigns();
-            BlockStatusListener.updateBlock(this);
         }
     }
 
@@ -1584,35 +1568,7 @@ public class Arena implements IArena {
     public GameState getStatus() {
         return status;
     }
-
-
-    /**
-     * Refresh signs.
-     */
-    public synchronized void refreshSigns() {
-        for (Block b : getSigns()) {
-            if (b == null) continue;
-            if (!(b.getType().toString().endsWith("_SIGN") || b.getType().toString().endsWith("_WALL_SIGN"))) continue;
-            if (!(b.getState() instanceof Sign)) continue;
-            Sign s = (Sign) b.getState();
-            if (s == null) return;
-            int line = 0;
-            for (String string : BedWars.signs.getList("format")) {
-                if (string == null) continue;
-                if (getPlayers() == null) continue;
-                s.setLine(line, string.replace("[on]", String.valueOf(getPlayers().size()))
-                        .replace("[max]", String.valueOf(getMaxPlayers())).replace("[arena]", getDisplayName())
-                        .replace("[status]", getDisplayStatus(Language.getDefaultLanguage()))
-                        .replace("[type]", String.valueOf(getMaxInTeam())));
-                line++;
-            }
-            try {
-                s.update(true);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
+    
 
     /**
      * Get a list of spectators for this arena.
