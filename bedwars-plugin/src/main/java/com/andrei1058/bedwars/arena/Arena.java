@@ -79,6 +79,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -2433,21 +2434,55 @@ public class Arena implements IArena {
                 PaperSupport.teleportC(player, getReSpawnLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
                 player.setAllowFlight(true);
                 player.setFlying(true);
+                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 2)); //隐身效果
 
                 respawnSessions.put(player, seconds);
+
+                //开始重生倒计时
+                new BukkitRunnable() {
+                    /* RESPAWN SESSION */
+                    @Override
+                    public void run() {
+                        if (!respawnSessions.isEmpty()) {
+                            for (Map.Entry<Player, Integer> e : respawnSessions.entrySet()) {
+                                if (e.getValue() <= 0) {
+                                    IArena a = Arena.getArenaByPlayer(e.getKey());
+                                    if (a == null) {
+                                        respawnSessions.remove(e.getKey());
+                                        cancel();
+                                    }
+                                    ITeam t = a.getTeam(e.getKey());
+                                    if (t == null) {
+                                        a.addSpectator(e.getKey(), true, null);
+                                        cancel();
+                                    } else {
+                                        t.respawnMember(e.getKey());
+                                        e.getKey().setAllowFlight(false);
+                                        e.getKey().setFlying(false);
+                                        cancel();
+                                    }
+                                } else {
+                                    BedWars.nms.sendTitle(e.getKey(), getMsg(e.getKey(), Messages.PLAYER_DIE_RESPAWN_TITLE).replace("%bw_time%",
+                                            String.valueOf(e.getValue())), getMsg(e.getKey(), Messages.PLAYER_DIE_RESPAWN_SUBTITLE).replace("%bw_time%",
+                                            String.valueOf(e.getValue())), 0, 30, 10);
+                                    e.getKey().sendMessage(getMsg(e.getKey(), Messages.PLAYER_DIE_RESPAWN_CHAT).replace("%bw_time%", String.valueOf(e.getValue())));
+                                    respawnSessions.replace(e.getKey(), e.getValue() - 1);
+                                }
+                            }
+                        }
+                    }
+                }.runTaskTimer(plugin, 0L, 20L);
+
                 Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> {
                     player.setAllowFlight(true);
                     player.setFlying(true);
+                    player.setFireTicks(0);
 
                     nms.setCollide(player, this, false);
-                    // #274
                     for (Player invisible : getShowTime().keySet()) {
                         BedWars.nms.hideArmor(invisible, player);
                     }
-
-                    updateSpectatorCollideRule(player, false);
-                    PaperSupport.teleportC(player, getReSpawnLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
-                }, 10L);
+                }, 5L);
             } else {
                 ITeam team = getTeam(player);
                 team.respawnMember(player);

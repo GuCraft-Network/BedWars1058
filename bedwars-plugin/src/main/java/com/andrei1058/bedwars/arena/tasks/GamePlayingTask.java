@@ -22,7 +22,6 @@ package com.andrei1058.bedwars.arena.tasks;
 
 import com.andrei1058.bedwars.BedWars;
 import com.andrei1058.bedwars.api.arena.GameState;
-import com.andrei1058.bedwars.api.arena.IArena;
 import com.andrei1058.bedwars.api.arena.generator.IGenerator;
 import com.andrei1058.bedwars.api.arena.team.ITeam;
 import com.andrei1058.bedwars.api.configuration.ConfigPath;
@@ -200,33 +199,6 @@ public class GamePlayingTask implements Runnable, PlayingTask {
                 Arena.afkCheck.replace(p.getUniqueId(), current);
                 if (current == 45) {
                     BedWars.getAPI().getAFKUtil().setPlayerAFK(p, true);
-                }
-            }
-        }
-
-        /* RESPAWN SESSION */
-        if (!getArena().getRespawnSessions().isEmpty()) {
-            for (Map.Entry<Player, Integer> e : getArena().getRespawnSessions().entrySet()) {
-                if (e.getValue() <= 0) {
-                    IArena a = Arena.getArenaByPlayer(e.getKey());
-                    if (a == null) {
-                        getArena().getRespawnSessions().remove(e.getKey());
-                        continue;
-                    }
-                    ITeam t = a.getTeam(e.getKey());
-                    if (t == null){
-                        a.addSpectator(e.getKey(), true, null);
-                    } else {
-                        t.respawnMember(e.getKey());
-                        e.getKey().setAllowFlight(false);
-                        e.getKey().setFlying(false);
-                    }
-                } else {
-                    nms.sendTitle(e.getKey(), getMsg(e.getKey(), Messages.PLAYER_DIE_RESPAWN_TITLE).replace("{time}",
-                            String.valueOf(e.getValue())), getMsg(e.getKey(), Messages.PLAYER_DIE_RESPAWN_SUBTITLE).replace("{time}",
-                            String.valueOf(e.getValue())), 0, 30, 10);
-                    e.getKey().sendMessage(getMsg(e.getKey(), Messages.PLAYER_DIE_RESPAWN_CHAT).replace("{time}", String.valueOf(e.getValue())));
-                    getArena().getRespawnSessions().replace(e.getKey(), e.getValue() - 1);
                 }
             }
         }

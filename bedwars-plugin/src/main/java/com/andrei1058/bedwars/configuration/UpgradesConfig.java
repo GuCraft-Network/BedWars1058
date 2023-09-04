@@ -20,7 +20,6 @@
 
 package com.andrei1058.bedwars.configuration;
 
-import com.andrei1058.bedwars.BedWars;
 import com.andrei1058.bedwars.api.configuration.ConfigManager;
 import org.bukkit.configuration.file.YamlConfiguration;
 
