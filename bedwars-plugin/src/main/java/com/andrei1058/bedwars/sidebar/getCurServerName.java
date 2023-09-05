@@ -20,8 +20,6 @@ public class GetCurServerName implements Listener, PluginMessageListener {
 
     public static String getGameName() {
         if (gamename.equals("Null")) {
-            return gamename;
-        } else {
             Bukkit.getScheduler().runTaskLaterAsynchronously(BedWars.plugin, () -> {
                 SidebarService.getInstance().refreshPlaceholders();
             }, 20L);
