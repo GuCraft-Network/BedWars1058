@@ -70,6 +70,7 @@ public class ConfigPath {
     public static final String GENERAL_CONFIGURATION_BUNGEE_OPTION_BWP_TIME_OUT = "bungee-settings.bwp-time-out";
 
     public static final String GENERAL_CONFIGURATION_ALLOW_FIRE_EXTINGUISH = "allow-fire-extinguish";
+    public static final String GENERAL_CONFIGURATION_ENABLE_ANTI_DROP = "enable-anti-drop-feature";
 
     public static final String GENERAL_CONFIGURATION_LOBBY_ITEMS_PATH = "lobby-items";
     public static final String GENERAL_CONFIGURATION_EXPERIMENTAL_TEAM_ASSIGNER = "use-experimental-team-assigner";
@@ -167,6 +168,7 @@ public class ConfigPath {
     public static final String ARENA_SHOP_PROTECTION = "shop-protection";
     public static final String ARENA_UPGRADES_PROTECTION = "upgrades-protection";
     public static final String ARENA_GENERATOR_PROTECTION = "generator-protection";
+    public static final String ARENA_GENERATOR_SPLIT_RANGE = "generator-split-range";
     public static final String ARENA_DISABLE_GENERATOR_FOR_EMPTY_TEAMS = "disable-generator-for-empty-teams";
     public static final String ARENA_DISABLE_NPCS_FOR_EMPTY_TEAMS = "disable-npcs-for-empty-teams";
     public static final String ARENA_ISLAND_RADIUS = "island-radius";
@@ -189,14 +191,6 @@ public class ConfigPath {
     public static final String SOUNDS_BOUGHT = "shop-bought";
     public static final String SOUNDS_KILL = "kill";
 
-    public static final String SIGNS_STATUS_BLOCK_WAITING_MATERIAL = "status-block.waiting.material";
-    public static final String SIGNS_STATUS_BLOCK_WAITING_DATA = "status-block.waiting.data";
-    public static final String SIGNS_STATUS_BLOCK_STARTING_MATERIAL = "status-block.starting.material";
-    public static final String SIGNS_STATUS_BLOCK_STARTING_DATA = "status-block.starting.data";
-    public static final String SIGNS_STATUS_BLOCK_PLAYING_MATERIAL = "status-block.playing.material";
-    public static final String SIGNS_STATUS_BLOCK_PLAYING_DATA = "status-block.playing.data";
-    public static final String SIGNS_STATUS_BLOCK_RESTARTING_MATERIAL = "status-block.restarting.material";
-    public static final String SIGNS_STATUS_BLOCK_RESTARTING_DATA = "status-block.restarting.data";
 
     private static final String GENERAL_PARTY_SETTINGS_PATH = "party-settings";
     public static final String GENERAL_ENABLE_PARTY_CMD = GENERAL_PARTY_SETTINGS_PATH + ".enable-party-cmd";
@@ -237,6 +231,7 @@ public class ConfigPath {
     public static final String GENERAL_CONFIGURATION_PERFORMANCE_PATH = "performance-settings";
     public static final String GENERAL_CONFIGURATION_PERFORMANCE_ROTATE_GEN = GENERAL_CONFIGURATION_PERFORMANCE_PATH + ".rotate-generators";
     public static final String GENERAL_CONFIGURATION_PERFORMANCE_SPOIL_TNT_PLAYERS = GENERAL_CONFIGURATION_PERFORMANCE_PATH + ".spoil-tnt-players";
+    public static final String GENERAL_CONFIGURATION_PERFORMANCE_GENERATOR_SPLIT = GENERAL_CONFIGURATION_PERFORMANCE_PATH + ".split-island-generator";
 
     public static final String GENERAL_CONFIGURATION_PERFORMANCE_PAPER_FEATURES = GENERAL_CONFIGURATION_PERFORMANCE_PATH + ".paper-features";
 
