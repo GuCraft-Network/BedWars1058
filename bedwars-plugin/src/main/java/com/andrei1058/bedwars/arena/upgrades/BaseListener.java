@@ -45,35 +45,6 @@ public class BaseListener implements Listener {
 
     public static Map<Player, ITeam> isOnABase = new WeakHashMap<>();
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onPlayerMove(PlayerMoveEvent e) {
-        IArena a = Arena.getArenaByIdentifier(e.getPlayer().getWorld().getName());
-        if (a == null) return;
-        if (a.getStatus() != GameState.playing) return;
-        Player p = e.getPlayer();
-        checkEvents(p, a);
-    }
-
-    @EventHandler
-    public void onTeleport(PlayerTeleportEvent e) {
-        Player p = e.getPlayer();
-        if (isOnABase.containsKey(p)) {
-            IArena a = Arena.getArenaByPlayer(p);
-            if (a == null) {
-                isOnABase.remove(p);
-                return;
-            }
-            checkEvents(p, a);
-        }
-    }
-
-    @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent e) {
-        IArena a = Arena.getArenaByPlayer(e.getEntity());
-        if (a == null) return;
-        checkEvents(e.getEntity(), a);
-    }
-
     /**
      * Check the Enter/ Leave events and call them
      */
@@ -109,6 +80,35 @@ public class BaseListener implements Listener {
                 isOnABase.remove(p);
             }
         }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerMove(PlayerMoveEvent e) {
+        IArena a = Arena.getArenaByIdentifier(e.getPlayer().getWorld().getName());
+        if (a == null) return;
+        if (a.getStatus() != GameState.playing) return;
+        Player p = e.getPlayer();
+        checkEvents(p, a);
+    }
+
+    @EventHandler
+    public void onTeleport(PlayerTeleportEvent e) {
+        Player p = e.getPlayer();
+        if (isOnABase.containsKey(p)) {
+            IArena a = Arena.getArenaByPlayer(p);
+            if (a == null) {
+                isOnABase.remove(p);
+                return;
+            }
+            checkEvents(p, a);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent e) {
+        IArena a = Arena.getArenaByPlayer(e.getEntity());
+        if (a == null) return;
+        checkEvents(e.getEntity(), a);
     }
 
     @EventHandler
@@ -176,7 +176,7 @@ public class BaseListener implements Listener {
     }
 
     @EventHandler
-    public void onArenaLeave(PlayerLeaveArenaEvent event){
+    public void onArenaLeave(PlayerLeaveArenaEvent event) {
         isOnABase.remove(event.getPlayer());
     }
 }
