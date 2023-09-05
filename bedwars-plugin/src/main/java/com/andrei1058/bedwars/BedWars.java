@@ -60,7 +60,6 @@ import com.andrei1058.bedwars.listeners.joinhandler.*;
 import com.andrei1058.bedwars.lobbysocket.ArenaSocket;
 import com.andrei1058.bedwars.lobbysocket.LoadedUsersCleaner;
 import com.andrei1058.bedwars.lobbysocket.SendTask;
-import com.andrei1058.bedwars.maprestore.internal.InternalAdapter;
 import com.andrei1058.bedwars.money.internal.MoneyListeners;
 import com.andrei1058.bedwars.shop.ShopManager;
 import com.andrei1058.bedwars.sidebar.ScoreboardListener;
@@ -90,7 +89,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -106,7 +104,7 @@ public class BedWars extends JavaPlugin {
     private static final String version = Bukkit.getServer().getClass().getName().split("\\.")[3];
     public static boolean debug = true, autoscale = false;
     public static String mainCmd = "bw", link = "https://www.ac66.net";
-    public static ConfigManager generators;
+    public static ConfigManager signs, generators;
     public static MainConfig config;
     public static ShopManager shop;
     public static StatsManager statsManager;
@@ -318,10 +316,11 @@ public class BedWars extends JavaPlugin {
 
         nms.registerVersionListeners();
 
-        if (!this.handleWorldAdapter()) {
+        handleWorldAdapter();
+        /*if (!this.handleWorldAdapter()) {
             api.setRestoreAdapter(new InternalAdapter(this));
             getLogger().info("Using internal world restore system.");
-        }
+        }*/
 
         /* Register commands */
         nms.registerCommand(mainCmd, new MainCommand(mainCmd));
@@ -642,8 +641,21 @@ public class BedWars extends JavaPlugin {
      * @return true when custom adapter was registered.
      */
     private boolean handleWorldAdapter() {
-        Plugin swmPlugin = Bukkit.getPluginManager().getPlugin("SlimeWorldManager");
+        String adapterPath;
+        try {
+            adapterPath = "com.andrei1058.bedwars.arena.mapreset.slime.SlimeAdapter";
+            Constructor<?> constructor = Class.forName(adapterPath).getConstructor(Plugin.class);
+            getLogger().info("Loading restore adapter: " + adapterPath + " ...");
 
+            RestoreAdapter candidate = (RestoreAdapter) constructor.newInstance(this);
+            api.setRestoreAdapter(candidate);
+            getLogger().info("Hook into " + candidate.getDisplayName() + " as restore adapter.");
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.getLogger().info("Something went wrong! Using internal reset adapter...");
+        }
+/*
         if (null == swmPlugin) {
             return false;
         }
@@ -651,27 +663,11 @@ public class BedWars extends JavaPlugin {
         if (null == pluginDescription) {
             return false;
         }
+
         String[] versionString = pluginDescription.getVersion().split("\\.");
-        if (version.equals("2.3.0-SNAPSHOT")) {
-            String adapterPath;
-            try {
-                adapterPath = "com.andrei1058.bedwars.arena.mapreset.slime.SlimeAdapter";
-                Constructor<?> constructor = Class.forName(adapterPath).getConstructor(Plugin.class);
-                getLogger().info("Loading restore adapter: " + adapterPath + " ...");
-
-                RestoreAdapter candidate = (RestoreAdapter) constructor.newInstance(this);
-                api.setRestoreAdapter(candidate);
-                getLogger().info("Hook into " + candidate.getDisplayName() + " as restore adapter.");
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                this.getLogger().info("Something went wrong! Using internal reset adapter...");
-            }
-        }
-        return false;
 
 
-        /*try {
+        try {
             int major = Integer.parseInt(versionString[0]);
             int minor = Integer.parseInt(versionString[1]);
             int release = versionString.length > 3 ? Integer.parseInt(versionString[3]) : 0;
@@ -697,8 +693,8 @@ public class BedWars extends JavaPlugin {
         } catch (Exception e) {
             e.printStackTrace();
             this.getLogger().info("Something went wrong! Using internal reset adapter...");
-        }
-        return false;*/
+        }*/
+        return false;
     }
 
     private void registerDelayedCommands() {

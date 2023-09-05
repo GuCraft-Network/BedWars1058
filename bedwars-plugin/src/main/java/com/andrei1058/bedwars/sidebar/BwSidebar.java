@@ -390,7 +390,7 @@ public class BwSidebar implements ISidebar {
         }
 
         // unique tab list name
-        String tabListName = player.getName();
+        String tabListName = player.getDisplayName();
 
         if (tabList.containsKey(tabListName)) {
             handle.removeTab(tabListName);
@@ -601,7 +601,7 @@ public class BwSidebar implements ISidebar {
         strings = new ArrayList<>();
         for (String string : Language.getList(getPlayer(), path)) {
             String parsed = string.replace("{vPrefix}", BedWars.getChatSupport().getPrefix(targetPlayer))
-                    .replace("{vSuffix}", BedWars.getChatSupport().getSuffix(targetPlayer));
+                    .replace("{vSuffix}", BedWars.getChatSupport().getSuffix(targetPlayer)).replace("{vPrefixColor}",BedWars.getChatSupport().getPrefixColor(targetPlayer));
 
             if (null != replacements) {
                 for (Map.Entry<String, String> entry : replacements.entrySet()) {
