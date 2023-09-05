@@ -275,7 +275,6 @@ public class DamageDeathMove implements Listener {
                             a.getShowTime().remove(p);
                             p.removePotionEffect(PotionEffectType.INVISIBILITY);
                             ITeam team = a.getTeam(p);
-                            p.sendMessage(getMsg(p, Messages.INTERACT_INVISIBILITY_REMOVED_DAMGE_TAKEN));
                             Bukkit.getPluginManager().callEvent(new PlayerInvisibilityPotionEvent(PlayerInvisibilityPotionEvent.Type.REMOVED, team, p, a));
                         });
                     }
@@ -605,6 +604,7 @@ public class DamageDeathMove implements Listener {
                     // if the moving player has invisible armor
                     if (a.getShowTime().containsKey(e.getPlayer())) {
                         for (Player p : a.getPlayers()) {
+                            if (a.getTeam(e.getPlayer()).equals(a.getTeam(p))) return;
                             nms.hideArmor(e.getPlayer(), p);
                         }
                     }
