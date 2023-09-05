@@ -308,6 +308,7 @@ public class Messages {
     public static String INTERACT_ENDERCHEST_ITEM_DROP = "interact-enderchest-item-drop";
     public static String INTERACT_INVISIBILITY_REMOVED_DAMGE_TAKEN = "interact-invisibility-removed-damaged";
     public static String INTERACT_INVISIBILITY_REMOVED_TRAP = "interact-invisibility-removed-trap";
+    public static String INTERACT_MAGIC_MILK_REMOVED = "interact-magic-milk-removed";
     /**
      * PvP related
      */
