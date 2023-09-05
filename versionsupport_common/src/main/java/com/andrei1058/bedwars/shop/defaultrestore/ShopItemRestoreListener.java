@@ -23,6 +23,7 @@ package com.andrei1058.bedwars.shop.defaultrestore;
 import com.andrei1058.bedwars.api.arena.GameState;
 import com.andrei1058.bedwars.api.arena.IArena;
 import com.andrei1058.bedwars.api.arena.team.ITeam;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -95,6 +96,9 @@ public class ShopItemRestoreListener {
                 if (api.getVersionSupport().getCustomData(is).equalsIgnoreCase("DEFAULT_ITEM")) {
                     ((Player) player).getInventory().remove(is);
                     ((Player) player).updateInventory();
+                    Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("BedWars1058"), () -> {
+                        ((Player) player).updateInventory();
+                    }, 1L);
                     return false; // function will only return false. default item should only be checked. access tools should be put in chests
                 }
             }

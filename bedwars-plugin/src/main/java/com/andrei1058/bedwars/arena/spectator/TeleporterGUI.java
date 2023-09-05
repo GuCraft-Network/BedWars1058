@@ -116,7 +116,7 @@ public class TeleporterGUI {
         IArena currentArena = Arena.getArenaByPlayer(targetPlayer);
         ITeam targetPlayerTeam = currentArena.getTeam(targetPlayer);
 
-        im.setDisplayName(getMsg(GUIholder, Messages.ARENA_SPECTATOR_TELEPORTER_GUI_HEAD_NAME)
+        im.setDisplayName(getMsg(targetPlayer, Messages.ARENA_SPECTATOR_TELEPORTER_GUI_HEAD_NAME)
                 .replace("{vPrefix}", BedWars.getChatSupport().getPrefix(targetPlayer))
                 .replace("{vSuffix}", BedWars.getChatSupport().getSuffix(targetPlayer))
                 .replace("{team}", targetPlayerTeam.getDisplayName(Language.getPlayerLanguage(GUIholder)))

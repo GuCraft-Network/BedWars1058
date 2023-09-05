@@ -43,6 +43,7 @@ import com.andrei1058.bedwars.listeners.dropshandler.PlayerDrops;
 import com.andrei1058.bedwars.support.paper.PaperSupport;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -181,16 +182,19 @@ public class DamageDeathMove implements Listener {
                 p.removePotionEffect(pf.getType());
             }
 
-            //在死亡时关闭背包
+            //在死亡时清空关闭背包
             p.closeInventory();
-            //在死亡时清空背包
             p.getInventory().clear();
+            p.getInventory().setArmorContents(null);
             //死亡后经验为0
-            p.setLevel(0);
             p.setExp(0);
+            p.setLevel(0);
             //死亡后血量饱食度回满
+            p.setHealthScale(20);
             p.setHealth(20);
             p.setFoodLevel(20);
+            //设置生存模式
+            p.setGameMode(GameMode.SURVIVAL);
 
             //callevent
             PlayerDeathEvent deathEvent = new PlayerDeathEvent(p, items, 0, null);

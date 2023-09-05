@@ -38,7 +38,7 @@ public class WithChat implements Chat {
 
     @Override
     public String getPrefixColor(Player p) {
-        return ChatColor.translateAlternateColorCodes('&', chat.getPlayerPrefix(p).substring(0,2));
+        return ChatColor.translateAlternateColorCodes('&', chat.getPlayerPrefix(p).substring(0, 2));
     }
 
     @Override
