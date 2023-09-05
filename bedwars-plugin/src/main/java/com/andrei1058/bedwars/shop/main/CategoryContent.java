@@ -135,186 +135,6 @@ public class CategoryContent implements ICategoryContent {
 
     }
 
-    public void execute(Player player, ShopCache shopCache, int slot) {
-
-        IContentTier ct;
-
-        //check weight
-        if (shopCache.getCategoryWeight(father) > weight) return;
-
-        if (shopCache.getContentTier(getIdentifier()) > contentTiers.size()) {
-            Bukkit.getLogger().severe("Wrong tier order at: " + getIdentifier());
-            return;
-        }
-
-        //check if can re-buy
-        if (shopCache.getContentTier(getIdentifier()) == contentTiers.size()) {
-            if (isPermanent() && shopCache.hasCachedItem(this)) {
-                player.sendMessage(getMsg(player, Messages.SHOP_ALREADY_BOUGHT));
-                Sounds.playSound(ConfigPath.SOUNDS_INSUFF_MONEY, player);
-                return;
-            }
-            //current tier
-            ct = contentTiers.get(shopCache.getContentTier(getIdentifier()) - 1);
-        } else {
-            if (!shopCache.hasCachedItem(this)) {
-                ct = contentTiers.get(0);
-            } else {
-                ct = contentTiers.get(shopCache.getContentTier(getIdentifier()));
-            }
-        }
-
-        //check money
-        int money = calculateMoney(player, ct.getCurrency());
-        if (money < ct.getPrice()) {
-            player.sendMessage(getMsg(player, Messages.SHOP_INSUFFICIENT_MONEY).replace("{currency}", getMsg(player, getCurrencyMsgPath(ct))).
-                    replace("{amount}", String.valueOf(ct.getPrice() - money)));
-            Sounds.playSound(ConfigPath.SOUNDS_INSUFF_MONEY, player);
-            return;
-        }
-
-        ShopBuyEvent event;
-        //call shop buy event
-        Bukkit.getPluginManager().callEvent(event = new ShopBuyEvent(player, Arena.getArenaByPlayer(player), this));
-
-        if (event.isCancelled()){
-            return;
-        }
-
-        if (player.getInventory().firstEmpty() == -1) {
-            player.sendMessage(getMsg(player, Messages.SHOP_INSUFFICIENT_SPACE));
-            Sounds.playSound(ConfigPath.SOUNDS_INSUFF_MONEY, player);
-            return;
-        }
-
-        //take money
-        takeMoney(player, ct.getCurrency(), ct.getPrice());
-
-        //upgrade if possible
-        shopCache.upgradeCachedItem(this, slot);
-
-
-        //give items
-        giveItems(player, shopCache, Arena.getArenaByPlayer(player));
-
-        //play sound
-        Sounds.playSound(ConfigPath.SOUNDS_BOUGHT, player);
-
-        //send purchase msg
-        if (itemNamePath == null || Language.getPlayerLanguage(player).getYml().get(itemNamePath) == null) {
-            ItemStack displayItem = ct.getItemStack();
-            if (displayItem.getItemMeta() != null && displayItem.getItemMeta().hasDisplayName()) {
-                player.sendMessage(getMsg(player, Messages.SHOP_NEW_PURCHASE).replace("{item}", displayItem.getItemMeta().getDisplayName()));
-            }
-        } else {
-            player.sendMessage(getMsg(player, Messages.SHOP_NEW_PURCHASE).replace("{item}", ChatColor.stripColor(getMsg(player, itemNamePath))).replace("{color}", "").replace("{tier}", ""));
-        }
-
-
-        shopCache.setCategoryWeight(father, weight);
-    }
-
-    /**
-     * Add tier items to player inventory
-     */
-    public void giveItems(Player player, ShopCache shopCache, IArena arena) {
-        for (IBuyItem bi : contentTiers.get(shopCache.getContentTier(getIdentifier()) - 1).getBuyItemsList()) {
-            bi.give(player, arena);
-        }
-    }
-
-    @Override
-    public int getSlot() {
-        return slot;
-    }
-
-    @Override
-    public ItemStack getItemStack(Player player) {
-        ShopCache sc = ShopCache.getShopCache(player.getUniqueId());
-        return sc == null ? null : getItemStack(player, sc);
-    }
-
-    @Override
-    public boolean hasQuick(Player player) {
-        PlayerQuickBuyCache pqbc = PlayerQuickBuyCache.getQuickBuyCache(player.getUniqueId());
-        return pqbc != null && hasQuick(pqbc);
-    }
-
-    public ItemStack getItemStack(Player player, ShopCache shopCache) {
-        IContentTier ct;
-        if (shopCache.getContentTier(identifier) == contentTiers.size()) {
-            ct = contentTiers.get(contentTiers.size() - 1);
-        } else {
-            if (shopCache.hasCachedItem(this)) {
-                ct = contentTiers.get(shopCache.getContentTier(identifier));
-            } else {
-                ct = contentTiers.get(shopCache.getContentTier(identifier) - 1);
-            }
-        }
-
-        ItemStack i = ct.getItemStack();
-        ItemMeta im = i.getItemMeta();
-
-        if (im != null) {
-            im = i.getItemMeta().clone();
-            boolean canAfford = calculateMoney(player, ct.getCurrency()) >= ct.getPrice();
-            PlayerQuickBuyCache qbc = PlayerQuickBuyCache.getQuickBuyCache(player.getUniqueId());
-            boolean hasQuick = qbc != null && hasQuick(qbc);
-
-            String color = getMsg(player, canAfford ? Messages.SHOP_CAN_BUY_COLOR : Messages.SHOP_CANT_BUY_COLOR);
-            String translatedCurrency = getMsg(player, getCurrencyMsgPath(ct));
-            ChatColor cColor = getCurrencyColor(ct.getCurrency());
-
-            int tierI = ct.getValue();
-            String tier = getRomanNumber(tierI);
-            String buyStatus;
-
-            if (isPermanent() && shopCache.hasCachedItem(this) && shopCache.getCachedItem(this).getTier() == getContentTiers().size()) {
-                if (!(nms.isArmor(i))){
-                    buyStatus = getMsg(player, Messages.SHOP_LORE_STATUS_MAXED);  //ARMOR
-                }else {
-                    buyStatus = getMsg(player, Messages.SHOP_LORE_STATUS_ARMOR);
-                }
-            } else if (!canAfford) {
-                buyStatus = getMsg(player, Messages.SHOP_LORE_STATUS_CANT_AFFORD).replace("{currency}", translatedCurrency);
-            } else {
-                buyStatus = getMsg(player, Messages.SHOP_LORE_STATUS_CAN_BUY);
-            }
-
-
-            im.setDisplayName(getMsg(player, itemNamePath).replace("{color}", color).replace("{tier}", tier));
-
-            List<String> lore = new ArrayList<>();
-            for (String s : Language.getList(player, itemLorePath)) {
-                if (s.contains("{quick_buy}")) {
-                    if (hasQuick) {
-                        if (ShopIndex.getIndexViewers().contains(player.getUniqueId())) {
-                            s = getMsg(player, Messages.SHOP_LORE_QUICK_REMOVE);
-                        } else {
-                            continue;
-                        }
-                    } else {
-                        s = getMsg(player, Messages.SHOP_LORE_QUICK_ADD);
-                    }
-                }
-                s = s.replace("{tier}", tier).replace("{color}", color).replace("{cost}", cColor + String.valueOf(ct.getPrice()))
-                        .replace("{currency}", cColor + translatedCurrency).replace("{buy_status}", buyStatus);
-                lore.add(s);
-            }
-
-            im.setLore(lore);
-            i.setItemMeta(im);
-        }
-        return i;
-    }
-
-    public boolean hasQuick(PlayerQuickBuyCache c) {
-        for (QuickBuyElement q : c.getElements()) {
-            if (q.getCategoryContent() == this) return true;
-        }
-        return false;
-    }
-
     /**
      * Get player's money amount
      */
@@ -431,7 +251,6 @@ public class CategoryContent implements ICategoryContent {
         return s;
     }
 
-
     /**
      * Take money from player on buy
      */
@@ -463,8 +282,184 @@ public class CategoryContent implements ICategoryContent {
 
     }
 
-    public void setLoaded(boolean loaded) {
-        this.loaded = loaded;
+    public void execute(Player player, ShopCache shopCache, int slot) {
+
+        IContentTier ct;
+
+        //check weight
+        if (shopCache.getCategoryWeight(father) > weight) return;
+
+        if (shopCache.getContentTier(getIdentifier()) > contentTiers.size()) {
+            Bukkit.getLogger().severe("Wrong tier order at: " + getIdentifier());
+            return;
+        }
+
+        //check if can re-buy
+        if (shopCache.getContentTier(getIdentifier()) == contentTiers.size()) {
+            if (isPermanent() && shopCache.hasCachedItem(this)) {
+                player.sendMessage(getMsg(player, Messages.SHOP_ALREADY_BOUGHT));
+                Sounds.playSound(ConfigPath.SOUNDS_INSUFF_MONEY, player);
+                return;
+            }
+            //current tier
+            ct = contentTiers.get(shopCache.getContentTier(getIdentifier()) - 1);
+        } else {
+            if (!shopCache.hasCachedItem(this)) {
+                ct = contentTiers.get(0);
+            } else {
+                ct = contentTiers.get(shopCache.getContentTier(getIdentifier()));
+            }
+        }
+
+        //check money
+        int money = calculateMoney(player, ct.getCurrency());
+        if (money < ct.getPrice()) {
+            player.sendMessage(getMsg(player, Messages.SHOP_INSUFFICIENT_MONEY).replace("{currency}", getMsg(player, getCurrencyMsgPath(ct))).
+                    replace("{amount}", String.valueOf(ct.getPrice() - money)));
+            Sounds.playSound(ConfigPath.SOUNDS_INSUFF_MONEY, player);
+            return;
+        }
+
+        ShopBuyEvent event;
+        //call shop buy event
+        Bukkit.getPluginManager().callEvent(event = new ShopBuyEvent(player, Arena.getArenaByPlayer(player), this));
+
+        if (event.isCancelled()) {
+            return;
+        }
+
+        if (player.getInventory().firstEmpty() == -1) {
+            player.sendMessage(getMsg(player, Messages.SHOP_INSUFFICIENT_SPACE));
+            Sounds.playSound(ConfigPath.SOUNDS_INSUFF_MONEY, player);
+            return;
+        }
+
+        //take money
+        takeMoney(player, ct.getCurrency(), ct.getPrice());
+
+        //upgrade if possible
+        shopCache.upgradeCachedItem(this, slot);
+
+
+        //give items
+        giveItems(player, shopCache, Arena.getArenaByPlayer(player));
+
+        //play sound
+        Sounds.playSound(ConfigPath.SOUNDS_BOUGHT, player);
+
+        //send purchase msg
+        if (itemNamePath == null || Language.getPlayerLanguage(player).getYml().get(itemNamePath) == null) {
+            ItemStack displayItem = ct.getItemStack();
+            if (displayItem.getItemMeta() != null && displayItem.getItemMeta().hasDisplayName()) {
+                player.sendMessage(getMsg(player, Messages.SHOP_NEW_PURCHASE).replace("{item}", displayItem.getItemMeta().getDisplayName()));
+            }
+        } else {
+            player.sendMessage(getMsg(player, Messages.SHOP_NEW_PURCHASE).replace("{item}", ChatColor.stripColor(getMsg(player, itemNamePath))).replace("{color}", "").replace("{tier}", ""));
+        }
+
+
+        shopCache.setCategoryWeight(father, weight);
+    }
+
+    /**
+     * Add tier items to player inventory
+     */
+    public void giveItems(Player player, ShopCache shopCache, IArena arena) {
+        for (IBuyItem bi : contentTiers.get(shopCache.getContentTier(getIdentifier()) - 1).getBuyItemsList()) {
+            bi.give(player, arena);
+        }
+    }
+
+    @Override
+    public int getSlot() {
+        return slot;
+    }
+
+    @Override
+    public ItemStack getItemStack(Player player) {
+        ShopCache sc = ShopCache.getShopCache(player.getUniqueId());
+        return sc == null ? null : getItemStack(player, sc);
+    }
+
+    @Override
+    public boolean hasQuick(Player player) {
+        PlayerQuickBuyCache pqbc = PlayerQuickBuyCache.getQuickBuyCache(player.getUniqueId());
+        return pqbc != null && hasQuick(pqbc);
+    }
+
+    public ItemStack getItemStack(Player player, ShopCache shopCache) {
+        IContentTier ct;
+        if (shopCache.getContentTier(identifier) == contentTiers.size()) {
+            ct = contentTiers.get(contentTiers.size() - 1);
+        } else {
+            if (shopCache.hasCachedItem(this)) {
+                ct = contentTiers.get(shopCache.getContentTier(identifier));
+            } else {
+                ct = contentTiers.get(shopCache.getContentTier(identifier) - 1);
+            }
+        }
+
+        ItemStack i = ct.getItemStack();
+        ItemMeta im = i.getItemMeta();
+
+        if (im != null) {
+            im = i.getItemMeta().clone();
+            boolean canAfford = calculateMoney(player, ct.getCurrency()) >= ct.getPrice();
+            PlayerQuickBuyCache qbc = PlayerQuickBuyCache.getQuickBuyCache(player.getUniqueId());
+            boolean hasQuick = qbc != null && hasQuick(qbc);
+
+            String color = getMsg(player, canAfford ? Messages.SHOP_CAN_BUY_COLOR : Messages.SHOP_CANT_BUY_COLOR);
+            String translatedCurrency = getMsg(player, getCurrencyMsgPath(ct));
+            ChatColor cColor = getCurrencyColor(ct.getCurrency());
+
+            int tierI = ct.getValue();
+            String tier = getRomanNumber(tierI);
+            String buyStatus;
+
+            if (isPermanent() && shopCache.hasCachedItem(this) && shopCache.getCachedItem(this).getTier() == getContentTiers().size()) {
+                if (!(nms.isArmor(i))) {
+                    buyStatus = getMsg(player, Messages.SHOP_LORE_STATUS_MAXED);  //ARMOR
+                } else {
+                    buyStatus = getMsg(player, Messages.SHOP_LORE_STATUS_ARMOR);
+                }
+            } else if (!canAfford) {
+                buyStatus = getMsg(player, Messages.SHOP_LORE_STATUS_CANT_AFFORD).replace("{currency}", translatedCurrency);
+            } else {
+                buyStatus = getMsg(player, Messages.SHOP_LORE_STATUS_CAN_BUY);
+            }
+
+
+            im.setDisplayName(getMsg(player, itemNamePath).replace("{color}", color).replace("{tier}", tier));
+
+            List<String> lore = new ArrayList<>();
+            for (String s : Language.getList(player, itemLorePath)) {
+                if (s.contains("{quick_buy}")) {
+                    if (hasQuick) {
+                        if (ShopIndex.getIndexViewers().contains(player.getUniqueId())) {
+                            s = getMsg(player, Messages.SHOP_LORE_QUICK_REMOVE);
+                        } else {
+                            continue;
+                        }
+                    } else {
+                        s = getMsg(player, Messages.SHOP_LORE_QUICK_ADD);
+                    }
+                }
+                s = s.replace("{tier}", tier).replace("{color}", color).replace("{cost}", cColor + String.valueOf(ct.getPrice()))
+                        .replace("{currency}", cColor + translatedCurrency).replace("{buy_status}", buyStatus);
+                lore.add(s);
+            }
+
+            im.setLore(lore);
+            i.setItemMeta(im);
+        }
+        return i;
+    }
+
+    public boolean hasQuick(PlayerQuickBuyCache c) {
+        for (QuickBuyElement q : c.getElements()) {
+            if (q.getCategoryContent() == this) return true;
+        }
+        return false;
     }
 
     /**
@@ -472,6 +467,10 @@ public class CategoryContent implements ICategoryContent {
      */
     public boolean isLoaded() {
         return loaded;
+    }
+
+    public void setLoaded(boolean loaded) {
+        this.loaded = loaded;
     }
 
     public boolean isPermanent() {

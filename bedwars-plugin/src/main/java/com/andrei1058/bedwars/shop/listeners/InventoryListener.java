@@ -43,6 +43,29 @@ import static org.bukkit.event.inventory.InventoryAction.MOVE_TO_OTHER_INVENTORY
 
 public class InventoryListener implements Listener {
 
+    /**
+     * Check can move item outside inventory.
+     * Block despawnable, permanent and start items dropping and inventory change.
+     */
+    public static boolean shouldCancelMovement(ItemStack i, ShopCache sc) {
+        if (i == null) return false;
+        if (sc == null) return false;
+
+        if (nms.isCustomBedWarsItem(i)) {
+            if (nms.getCustomData(i).equalsIgnoreCase("DEFAULT_ITEM")) {
+                return true;
+            }
+        }
+
+        String identifier = nms.getShopUpgradeIdentifier(i);
+        if (identifier == null) return false;
+        if (identifier.equals("null")) return false;
+        ShopCache.CachedItem cachedItem = sc.getCachedItem(identifier);
+        return cachedItem != null;
+        // the commented line bellow was blocking movement only if tiers amount > 1
+        // return sc.getCachedItem(identifier).getCc().getContentTiers().size() > 1;
+    }
+
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
         if (e.isCancelled()) return;
@@ -60,7 +83,7 @@ public class InventoryListener implements Listener {
         if (cache == null) return;
         if (shopCache == null) return;
 
-        if(ShopIndex.getIndexViewers().contains(p.getUniqueId()) || ShopCategory.getCategoryViewers().contains(p.getUniqueId())) {
+        if (ShopIndex.getIndexViewers().contains(p.getUniqueId()) || ShopCategory.getCategoryViewers().contains(p.getUniqueId())) {
             if (e.getClickedInventory() != null && e.getClickedInventory().getType().equals(InventoryType.PLAYER)) {
                 e.setCancelled(true);
                 return;
@@ -198,28 +221,5 @@ public class InventoryListener implements Listener {
         ShopIndex.indexViewers.remove(e.getPlayer().getUniqueId());
         ShopCategory.categoryViewers.remove(e.getPlayer().getUniqueId());
         QuickBuyAdd.quickBuyAdds.remove(e.getPlayer().getUniqueId());
-    }
-
-    /**
-     * Check can move item outside inventory.
-     * Block despawnable, permanent and start items dropping and inventory change.
-     */
-    public static boolean shouldCancelMovement(ItemStack i, ShopCache sc) {
-        if (i == null) return false;
-        if (sc == null) return false;
-
-        if (nms.isCustomBedWarsItem(i)){
-            if (nms.getCustomData(i).equalsIgnoreCase("DEFAULT_ITEM")){
-                return true;
-            }
-        }
-
-        String identifier = nms.getShopUpgradeIdentifier(i);
-        if (identifier == null) return false;
-        if (identifier.equals("null")) return false;
-        ShopCache.CachedItem cachedItem = sc.getCachedItem(identifier);
-        return cachedItem != null;
-        // the commented line bellow was blocking movement only if tiers amount > 1
-        // return sc.getCachedItem(identifier).getCc().getContentTiers().size() > 1;
     }
 }

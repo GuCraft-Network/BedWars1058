@@ -23,7 +23,7 @@ public class MoneyPerMinuteTask {
             return;
         }
         task = Bukkit.getScheduler().runTaskTimer(BedWars.plugin, () -> {
-            if (null == arena){
+            if (null == arena) {
                 this.cancel();
                 return;
             }

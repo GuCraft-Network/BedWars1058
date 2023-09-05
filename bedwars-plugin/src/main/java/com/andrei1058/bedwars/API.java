@@ -53,6 +53,18 @@ import java.util.logging.Level;
 
 public class API implements com.andrei1058.bedwars.api.BedWars {
 
+    private static final ScoreboardUtil scoreboardUtil = new ScoreboardUtil() {
+
+        @Override
+        public void removePlayerScoreboard(Player player) {
+            SidebarService.getInstance().remove(player);
+        }
+
+        @Override
+        public void givePlayerScoreboard(@NotNull Player player, boolean delay) {
+            SidebarService.getInstance().giveSidebar(player, Arena.getArenaByPlayer(player), delay);
+        }
+    };
     private static RestoreAdapter restoreAdapter;
     private final AFKUtil afkSystem = new AFKUtil() {
         private final HashMap<UUID, Integer> afkPlayers = new HashMap<>();
@@ -83,7 +95,6 @@ public class API implements com.andrei1058.bedwars.api.BedWars {
             return afkPlayers.getOrDefault(player.getUniqueId(), 0);
         }
     };
-
     private final ArenaUtil arenaUtil = new ArenaUtil() {
         @Override
         public boolean canAutoScale(String arenaName) {
@@ -116,13 +127,13 @@ public class API implements com.andrei1058.bedwars.api.BedWars {
         }
 
         @Override
-        public void setGamesBeforeRestart(int games) {
-            Arena.setGamesBeforeRestart(games);
+        public int getGamesBeforeRestart() {
+            return Arena.getGamesBeforeRestart();
         }
 
         @Override
-        public int getGamesBeforeRestart() {
-            return Arena.getGamesBeforeRestart();
+        public void setGamesBeforeRestart(int games) {
+            Arena.setGamesBeforeRestart(games);
         }
 
         @Override
@@ -195,7 +206,6 @@ public class API implements com.andrei1058.bedwars.api.BedWars {
             Arena.sendLobbyCommandItems(p);
         }
     };
-
     private final Configs configs = new Configs() {
         @Override
         public ConfigManager getMainConfig() {
@@ -222,7 +232,6 @@ public class API implements com.andrei1058.bedwars.api.BedWars {
             return UpgradesManager.getConfiguration();
         }
     };
-
     private final ShopUtil shopUtil = new ShopUtil() {
         @Override
         public int calculateMoney(Player player, Material currency) {
@@ -254,6 +263,27 @@ public class API implements com.andrei1058.bedwars.api.BedWars {
             CategoryContent.takeMoney(player, currency, amount);
         }
     };
+    private final TeamUpgradesUtil teamUpgradesUtil = new TeamUpgradesUtil() {
+        @Override
+        public boolean isWatchingGUI(Player player) {
+            return UpgradesManager.isWatchingUpgrades(player.getUniqueId());
+        }
+
+        @Override
+        public void setWatchingGUI(Player player) {
+            UpgradesManager.setWatchingUpgrades(player.getUniqueId());
+        }
+
+        @Override
+        public void removeWatchingUpgrades(UUID uuid) {
+            UpgradesManager.removeWatchingUpgrades(uuid);
+        }
+
+        @Override
+        public int getTotalUpgradeTiers(IArena arena) {
+            return UpgradesManager.getMenuForArena(arena).countTiers();
+        }
+    };
 
     @Override
     public IStats getStatsUtil() {
@@ -279,28 +309,6 @@ public class API implements com.andrei1058.bedwars.api.BedWars {
     public ShopUtil getShopUtil() {
         return shopUtil;
     }
-
-    private final TeamUpgradesUtil teamUpgradesUtil = new TeamUpgradesUtil() {
-        @Override
-        public boolean isWatchingGUI(Player player) {
-            return UpgradesManager.isWatchingUpgrades(player.getUniqueId());
-        }
-
-        @Override
-        public void setWatchingGUI(Player player) {
-            UpgradesManager.setWatchingUpgrades(player.getUniqueId());
-        }
-
-        @Override
-        public void removeWatchingUpgrades(UUID uuid) {
-            UpgradesManager.removeWatchingUpgrades(uuid);
-        }
-
-        @Override
-        public int getTotalUpgradeTiers(IArena arena) {
-            return UpgradesManager.getMenuForArena(arena).countTiers();
-        }
-    };
 
     @Override
     public TeamUpgradesUtil getTeamUpgradesUtil() {
@@ -360,7 +368,7 @@ public class API implements com.andrei1058.bedwars.api.BedWars {
         if (partyAdapter == null) return;
         if (partyAdapter.equals(BedWars.getParty())) return;
         BedWars.setParty(partyAdapter);
-        BedWars.plugin.getLogger().log(Level.WARNING,  "One of your plugins changed the Party adapter to: " + partyAdapter.getClass().getName());
+        BedWars.plugin.getLogger().log(Level.WARNING, "One of your plugins changed the Party adapter to: " + partyAdapter.getClass().getName());
     }
 
     @Override
@@ -412,20 +420,6 @@ public class API implements com.andrei1058.bedwars.api.BedWars {
     public File getAddonsPath() {
         return new File(BedWars.plugin.getDataFolder(), "Addons");
     }
-
-
-    private static final ScoreboardUtil scoreboardUtil = new ScoreboardUtil() {
-
-        @Override
-        public void removePlayerScoreboard(Player player) {
-            SidebarService.getInstance().remove(player);
-        }
-
-        @Override
-        public void givePlayerScoreboard(@NotNull Player player, boolean delay) {
-            SidebarService.getInstance().giveSidebar(player, Arena.getArenaByPlayer(player), delay);
-        }
-    };
 
     @Override
     public ScoreboardUtil getScoreboardUtil() {

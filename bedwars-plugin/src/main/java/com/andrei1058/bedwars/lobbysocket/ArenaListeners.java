@@ -36,27 +36,27 @@ public class ArenaListeners implements Listener {
     public void onPlayerJoinArena(PlayerJoinArenaEvent e) {
         if (e == null) return;
         final IArena a = e.getArena();
-        Bukkit.getScheduler().runTaskAsynchronously(BedWars.plugin, ()-> ArenaSocket.sendMessage(ArenaSocket.formatUpdateMessage(a)));
+        Bukkit.getScheduler().runTaskAsynchronously(BedWars.plugin, () -> ArenaSocket.sendMessage(ArenaSocket.formatUpdateMessage(a)));
     }
 
     @EventHandler
-    public void onPlayerLeaveArena(PlayerLeaveArenaEvent e){
+    public void onPlayerLeaveArena(PlayerLeaveArenaEvent e) {
         if (e == null) return;
         final IArena a = e.getArena();
-        Bukkit.getScheduler().runTaskAsynchronously(BedWars.plugin, ()-> ArenaSocket.sendMessage(ArenaSocket.formatUpdateMessage(a)));
+        Bukkit.getScheduler().runTaskAsynchronously(BedWars.plugin, () -> ArenaSocket.sendMessage(ArenaSocket.formatUpdateMessage(a)));
     }
 
     @EventHandler
-    public void onArenaStatusChange(GameStateChangeEvent e){
+    public void onArenaStatusChange(GameStateChangeEvent e) {
         if (e == null) return;
         final IArena a = e.getArena();
-        Bukkit.getScheduler().runTaskAsynchronously(BedWars.plugin, ()-> ArenaSocket.sendMessage(ArenaSocket.formatUpdateMessage(a)));
+        Bukkit.getScheduler().runTaskAsynchronously(BedWars.plugin, () -> ArenaSocket.sendMessage(ArenaSocket.formatUpdateMessage(a)));
     }
 
     @EventHandler
-    public void onArenaLoad(ArenaEnableEvent e){
+    public void onArenaLoad(ArenaEnableEvent e) {
         if (e == null) return;
         final IArena a = e.getArena();
-        Bukkit.getScheduler().runTaskAsynchronously(BedWars.plugin, ()-> ArenaSocket.sendMessage(ArenaSocket.formatUpdateMessage(a)));
+        Bukkit.getScheduler().runTaskAsynchronously(BedWars.plugin, () -> ArenaSocket.sendMessage(ArenaSocket.formatUpdateMessage(a)));
     }
 }

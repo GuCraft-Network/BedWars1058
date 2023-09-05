@@ -143,6 +143,13 @@ public class ContentTier implements IContentTier {
     }
 
     /**
+     * Set tier price.
+     */
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    /**
      * Get tier currency
      */
     public Material getCurrency() {
@@ -157,10 +164,10 @@ public class ContentTier implements IContentTier {
     }
 
     /**
-     * Set tier price.
+     * Get item stack with name and lore in player's language
      */
-    public void setPrice(int price) {
-        this.price = price;
+    public ItemStack getItemStack() {
+        return itemStack;
     }
 
     /**
@@ -168,20 +175,6 @@ public class ContentTier implements IContentTier {
      */
     public void setItemStack(ItemStack itemStack) {
         this.itemStack = itemStack;
-    }
-
-    /**
-     * Set list of items that you receive on buy.
-     */
-    public void setBuyItemsList(List<IBuyItem> buyItemsList) {
-        this.buyItemsList = buyItemsList;
-    }
-
-    /**
-     * Get item stack with name and lore in player's language
-     */
-    public ItemStack getItemStack() {
-        return itemStack;
     }
 
     /**
@@ -203,5 +196,12 @@ public class ContentTier implements IContentTier {
      */
     public List<IBuyItem> getBuyItemsList() {
         return buyItemsList;
+    }
+
+    /**
+     * Set list of items that you receive on buy.
+     */
+    public void setBuyItemsList(List<IBuyItem> buyItemsList) {
+        this.buyItemsList = buyItemsList;
     }
 }

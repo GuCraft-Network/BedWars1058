@@ -28,7 +28,7 @@ public class Refresh implements Runnable {
 
     @Override
     public void run() {
-        for (Despawnable d : nms.getDespawnablesList().values()){
+        for (Despawnable d : nms.getDespawnablesList().values()) {
             d.refresh();
         }
     }

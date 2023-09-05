@@ -31,6 +31,10 @@ public class WithEconomy implements Economy {
         return true;
     }
 
+    public static void setEconomy(net.milkbowl.vault.economy.Economy economy) {
+        WithEconomy.economy = economy;
+    }
+
     @Override
     public double getMoney(Player p) {
         return economy.getBalance(p);
@@ -38,15 +42,11 @@ public class WithEconomy implements Economy {
 
     @Override
     public void giveMoney(Player p, double money) {
-        economy.depositPlayer (p, money);
+        economy.depositPlayer(p, money);
     }
 
     @Override
     public void buyAction(Player p, double cost) {
         economy.bankWithdraw(p.getName(), cost);
-    }
-
-    public static void setEconomy(net.milkbowl.vault.economy.Economy economy) {
-        WithEconomy.economy = economy;
     }
 }

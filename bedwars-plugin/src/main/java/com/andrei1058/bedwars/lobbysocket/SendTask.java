@@ -40,7 +40,7 @@ public class SendTask {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    for (IArena a : arenas){
+                    for (IArena a : arenas) {
                         ArenaSocket.sendMessage(ArenaSocket.formatUpdateMessage(a));
                     }
                 }

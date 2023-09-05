@@ -34,6 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings("WeakerAccess")
 public class PlayerLevel {
 
+    private static ConcurrentHashMap<UUID, PlayerLevel> levelByPlayer = new ConcurrentHashMap<>();
     private UUID uuid;
     private int level;
     private int nextLevelCost;
@@ -42,11 +43,8 @@ public class PlayerLevel {
     private String progressBar;
     private String requiredXp;
     private String formattedCurrentXp;
-
     // keep trace if current level is different than the one in database
     private boolean modified = false;
-
-    private static ConcurrentHashMap<UUID, PlayerLevel> levelByPlayer = new ConcurrentHashMap<>();
 
 
     /**
@@ -69,9 +67,11 @@ public class PlayerLevel {
         if (!levelByPlayer.containsKey(player)) levelByPlayer.put(player, this);
     }
 
-    public void setLevelName(int level) {
-        this.levelName = ChatColor.translateAlternateColorCodes('&', LevelsConfig.getLevelName(level)).replace("{number}", String.valueOf(level));
-
+    /**
+     * Get PlayerLevel by player.
+     */
+    public static PlayerLevel getLevelByPlayer(UUID player) {
+        return levelByPlayer.getOrDefault(player, new PlayerLevel(player, 1, 0));
     }
 
     public void setNextLevelCost(int level, boolean initialize) {
@@ -118,17 +118,22 @@ public class PlayerLevel {
     }
 
     /**
+     * Set player level.
+     */
+    public void setLevel(int level) {
+        this.level = level;
+        nextLevelCost = LevelsConfig.getNextCost(level);
+        this.levelName = ChatColor.translateAlternateColorCodes('&', LevelsConfig.getLevelName(level)).replace("{number}", String.valueOf(level));
+        requiredXp = nextLevelCost >= 1000 ? nextLevelCost % 1000 == 0 ? nextLevelCost / 1000 + "k" : (double) nextLevelCost / 1000 + "k" : String.valueOf(nextLevelCost);
+        updateProgressBar();
+        modified = true;
+    }
+
+    /**
      * Get the amount of xp required to level up.
      */
     public int getNextLevelCost() {
         return nextLevelCost;
-    }
-
-    /**
-     * Get PlayerLevel by player.
-     */
-    public static PlayerLevel getLevelByPlayer(UUID player) {
-        return levelByPlayer.getOrDefault(player, new PlayerLevel(player, 1, 0));
     }
 
     /**
@@ -143,6 +148,11 @@ public class PlayerLevel {
      */
     public String getLevelName() {
         return levelName;
+    }
+
+    public void setLevelName(int level) {
+        this.levelName = ChatColor.translateAlternateColorCodes('&', LevelsConfig.getLevelName(level)).replace("{number}", String.valueOf(level));
+
     }
 
     /**
@@ -191,18 +201,6 @@ public class PlayerLevel {
     }
 
     /**
-     * Set player level.
-     */
-    public void setLevel(int level) {
-        this.level = level;
-        nextLevelCost = LevelsConfig.getNextCost(level);
-        this.levelName = ChatColor.translateAlternateColorCodes('&', LevelsConfig.getLevelName(level)).replace("{number}", String.valueOf(level));
-        requiredXp = nextLevelCost >= 1000 ? nextLevelCost % 1000 == 0 ? nextLevelCost / 1000 + "k" : (double) nextLevelCost / 1000 + "k" : String.valueOf(nextLevelCost);
-        updateProgressBar();
-        modified = true;
-    }
-
-    /**
      * Get player xp already formatted.
      * Like: 1000 is 1k
      */
@@ -232,7 +230,7 @@ public class PlayerLevel {
         format.setMinimumFractionDigits(0);
 
         if (score >= 1000) {
-            return format.format(score/1000.0)+"k";
+            return format.format(score / 1000.0) + "k";
         }
         return format.format(score);
     }

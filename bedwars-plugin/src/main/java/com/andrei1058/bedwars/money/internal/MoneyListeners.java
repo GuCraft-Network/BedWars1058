@@ -65,7 +65,7 @@ public class MoneyListeners implements Listener {
      */
     @EventHandler
     public void onBreakBed(PlayerBedBreakEvent e) {
-        Player player = e.getPlayer ();
+        Player player = e.getPlayer();
         if (player == null) return;
         int bedDestroy = MoneyConfig.money.getInt("money-rewards.bed-destroyed");
         if (bedDestroy > 0) {

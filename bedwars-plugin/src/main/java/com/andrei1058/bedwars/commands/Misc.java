@@ -66,9 +66,9 @@ public class Misc {
             if (e.hasMetadata("bw1058-setup")) {
                 if (e.hasMetadata("bw1058-loc")) {
                     if (e.getMetadata("bw1058-loc").get(0).asString().equalsIgnoreCase(configLoc)) {
-                        if (contains != null){
-                            if (!contains.isEmpty()){
-                                if (ChatColor.stripColor(e.getCustomName()).contains(contains)){
+                        if (contains != null) {
+                            if (!contains.isEmpty()) {
+                                if (ChatColor.stripColor(e.getCustomName()).contains(contains)) {
                                     e.remove();
                                     return;
                                 }

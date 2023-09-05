@@ -76,7 +76,7 @@ public class SpectatorListeners implements Listener {
         if (e.getClickedBlock() == null) return;
         if (!BedWars.getAPI().getArenaUtil().isSpectating(e.getPlayer())) return;
         if (e.getClickedBlock().getType().toString().contains("DOOR"))
-        // Disable spectator interact
+            // Disable spectator interact
             e.setCancelled(true);
     }
 
@@ -202,7 +202,7 @@ public class SpectatorListeners implements Listener {
     public void onTeleport(PlayerTeleportEvent e) {
         IArena a = Arena.getArenaByPlayer(e.getPlayer());
         if (a == null) return;
-        if (a.isSpectator(e.getPlayer())){
+        if (a.isSpectator(e.getPlayer())) {
             if (!(e.getTo().getWorld().equals(e.getPlayer().getWorld())) && e.getCause() == PlayerTeleportEvent.TeleportCause.SPECTATE) {
                 Player p = e.getPlayer();
                 e.setCancelled(true);

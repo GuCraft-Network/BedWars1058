@@ -77,8 +77,8 @@ public class MenuUpgrade implements MenuContent, TeamUpgrade {
         ItemMeta im = i.getItemMeta();
         if (im == null) return i;
         String color;
-        if (!highest){
-            if (afford){
+        if (!highest) {
+            if (afford) {
                 color = Language.getMsg(player, Messages.FORMAT_UPGRADE_COLOR_CAN_AFFORD);
             } else {
                 color = Language.getMsg(player, Messages.FORMAT_UPGRADE_COLOR_CANT_AFFORD);
@@ -91,18 +91,18 @@ public class MenuUpgrade implements MenuContent, TeamUpgrade {
 
         List<String> lore = new ArrayList<>();
         String currencyMsg = UpgradesManager.getCurrencyMsg(player, ut);
-        for (String s : Language.getList(player, Messages.UPGRADES_UPGRADE_TIER_ITEM_LORE.replace("{name}", this.getName().replace("upgrade-", "")))){
-            if (s.contains("{tier_")){
+        for (String s : Language.getList(player, Messages.UPGRADES_UPGRADE_TIER_ITEM_LORE.replace("{name}", this.getName().replace("upgrade-", "")))) {
+            if (s.contains("{tier_")) {
                 // Get tier number from placeholder
                 String result = s.replaceAll(".*_([0-9]+)_.*", "$1");
 
                 String tierColor = Messages.FORMAT_UPGRADE_TIER_LOCKED;
-                if (Integer.valueOf(result)-1 <= team.getTeamUpgradeTiers().getOrDefault(getName(), -1)) {
+                if (Integer.valueOf(result) - 1 <= team.getTeamUpgradeTiers().getOrDefault(getName(), -1)) {
                     tierColor = Messages.FORMAT_UPGRADE_TIER_UNLOCKED;
                 }
 
                 //get current tier. Note: placeholder number doesnt match array index.
-                UpgradeTier upgradeTier = tiers.get(Integer.valueOf(result)-1);
+                UpgradeTier upgradeTier = tiers.get(Integer.valueOf(result) - 1);
 
                 lore.add(s.replace("{tier_" + result + "_cost}", String.valueOf(upgradeTier.getCost()))
                         .replace("{tier_" + result + "_currency}", currencyMsg)
@@ -112,9 +112,9 @@ public class MenuUpgrade implements MenuContent, TeamUpgrade {
                 lore.add(s.replace("{color}", color));
             }
         }
-        if (highest){
+        if (highest) {
             lore.add(Language.getMsg(player, Messages.UPGRADES_LORE_REPLACEMENT_UNLOCKED).replace("{color}", color));
-        } else if (afford){
+        } else if (afford) {
             lore.add(Language.getMsg(player, Messages.UPGRADES_LORE_REPLACEMENT_CLICK_TO_BUY).replace("{color}", color));
         } else {
             lore.add(Language.getMsg(player, Messages.UPGRADES_LORE_REPLACEMENT_INSUFFICIENT_MONEY).replace("{currency}", currencyMsg).replace("{color}", color));
@@ -148,8 +148,8 @@ public class MenuUpgrade implements MenuContent, TeamUpgrade {
 
             final UpgradeBuyEvent event;
             Bukkit.getPluginManager().callEvent(event = new UpgradeBuyEvent(this, player, team));
-            if(event.isCancelled()) return;
-            
+            if (event.isCancelled()) return;
+
             if (ut.getCurrency() == Material.AIR) {
                 BedWars.getEconomy().buyAction(player, ut.getCost());
             } else {

@@ -55,6 +55,10 @@ public class ArenaList extends SubCommand {
                 "§fShow available arenas", "/" + MainCommand.getInstance().getName() + " " + getSubCommandName(), ClickEvent.Action.RUN_COMMAND));
     }
 
+    private static String color(String msg) {
+        return ChatColor.translateAlternateColorCodes('&', msg);
+    }
+
     @Override
     public boolean execute(String[] args, CommandSender s) {
         if (s instanceof ConsoleCommandSender) return false;
@@ -73,7 +77,7 @@ public class ArenaList extends SubCommand {
         }
         int start = (page - 1) * ARENAS_PER_PAGE;
         List<IArena> arenas = new ArrayList<>(Arena.getArenas());
-        if (arenas.size() <= start){
+        if (arenas.size() <= start) {
             page = 1;
             start = 0;
         }
@@ -141,9 +145,5 @@ public class ArenaList extends SubCommand {
         }
 
         return hasPermission(s);
-    }
-
-    private static String color(String msg) {
-        return ChatColor.translateAlternateColorCodes('&', msg);
     }
 }

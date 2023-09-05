@@ -48,6 +48,33 @@ public class ShopManager extends ConfigManager {
         registerListeners();
     }
 
+    /**
+     * Hide an item details
+     */
+    public static ItemMeta hideItemStuff(ItemMeta im) {
+        if (im != null) {
+            im.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_PLACED_ON);
+        }
+        return im;
+    }
+
+    /**
+     * Enchant item stack and hide details
+     */
+    public static ItemStack enchantItem(ItemStack itemStack) {
+        ItemStack i = new ItemStack(itemStack);
+        ItemMeta im = i.getItemMeta();
+        if (im != null) {
+            im.addEnchant(Enchantment.ARROW_DAMAGE, 1, true);
+            i.setItemMeta(hideItemStuff(im));
+        }
+        return i;
+    }
+
+    public static ShopIndex getShop() {
+        return shop;
+    }
+
     private void saveDefaults() {
         getYml().options().header("Shop with quick buy and tiers");
 
@@ -413,29 +440,6 @@ public class ShopManager extends ConfigManager {
     }
 
     /**
-     * Hide an item details
-     */
-    public static ItemMeta hideItemStuff(ItemMeta im) {
-        if (im != null) {
-            im.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_PLACED_ON);
-        }
-        return im;
-    }
-
-    /**
-     * Enchant item stack and hide details
-     */
-    public static ItemStack enchantItem(ItemStack itemStack) {
-        ItemStack i = new ItemStack(itemStack);
-        ItemMeta im = i.getItemMeta();
-        if (im != null) {
-            im.addEnchant(Enchantment.ARROW_DAMAGE, 1, true);
-            i.setItemMeta(hideItemStuff(im));
-        }
-        return i;
-    }
-
-    /**
      * Initialize a shop category to config
      */
     @SuppressWarnings("SameParameterValue")
@@ -522,10 +526,6 @@ public class ShopManager extends ConfigManager {
         if (!itemName.isEmpty()) {
             getYml().addDefault(path + "name", itemName);
         }
-    }
-
-    public static ShopIndex getShop() {
-        return shop;
     }
 
     /**

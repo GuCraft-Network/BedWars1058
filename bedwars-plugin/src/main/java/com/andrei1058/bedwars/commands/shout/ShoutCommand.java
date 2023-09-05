@@ -42,24 +42,6 @@ public class ShoutCommand extends BukkitCommand {
         super(name);
     }
 
-    @Override
-    public boolean execute(CommandSender s, String st, String[] args) {
-        if (s instanceof ConsoleCommandSender) return true;
-        Player p = (Player) s;
-        IArena a = Arena.getArenaByPlayer(p);
-        if (a == null || a.isSpectator(p)) {
-            p.sendMessage(Language.getMsg(p, Messages.COMMAND_NOT_FOUND_OR_INSUFF_PERMS));
-            return true;
-        }
-        StringBuilder sb = new StringBuilder();
-        for (String ar : args) {
-            sb.append(ar).append(" ");
-        }
-
-        p.chat("!" + sb);
-        return false;
-    }
-
     public static void updateShout(Player player) {
         if (player.hasPermission("bw.shout.bypass")) return;
         if (shoutCooldown.containsKey(player.getUniqueId()))
@@ -81,5 +63,23 @@ public class ShoutCommand extends BukkitCommand {
     public static boolean isShout(Player p) {
         if (!shoutCooldown.containsKey(p.getUniqueId())) return false;
         return shoutCooldown.get(p.getUniqueId()) + 1000 > System.currentTimeMillis();
+    }
+
+    @Override
+    public boolean execute(CommandSender s, String st, String[] args) {
+        if (s instanceof ConsoleCommandSender) return true;
+        Player p = (Player) s;
+        IArena a = Arena.getArenaByPlayer(p);
+        if (a == null || a.isSpectator(p)) {
+            p.sendMessage(Language.getMsg(p, Messages.COMMAND_NOT_FOUND_OR_INSUFF_PERMS));
+            return true;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (String ar : args) {
+            sb.append(ar).append(" ");
+        }
+
+        p.chat("!" + sb);
+        return false;
     }
 }

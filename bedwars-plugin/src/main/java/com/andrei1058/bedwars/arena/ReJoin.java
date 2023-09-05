@@ -47,13 +47,12 @@ import static com.andrei1058.bedwars.api.language.Language.getMsg;
 
 public class ReJoin {
 
+    private static final List<ReJoin> reJoinList = new ArrayList<>();
+    private final ArrayList<ShopCache.CachedItem> permanentsAndNonDowngradables = new ArrayList<>();
     private UUID player;
     private IArena arena;
     private ITeam bwt;
     private ReJoinTask task = null;
-    private final ArrayList<ShopCache.CachedItem> permanentsAndNonDowngradables = new ArrayList<>();
-
-    private static final List<ReJoin> reJoinList = new ArrayList<>();
 
     /**
      * Make rejoin possible for a player
@@ -109,6 +108,10 @@ public class ReJoin {
             }
         }
         return null;
+    }
+
+    public static List<ReJoin> getReJoinList() {
+        return Collections.unmodifiableList(reJoinList);
     }
 
     /**
@@ -216,10 +219,6 @@ public class ReJoin {
     @SuppressWarnings("WeakerAccess")
     public List<ShopCache.CachedItem> getPermanentsAndNonDowngradables() {
         return permanentsAndNonDowngradables;
-    }
-
-    public static List<ReJoin> getReJoinList() {
-        return Collections.unmodifiableList(reJoinList);
     }
 
     @Override

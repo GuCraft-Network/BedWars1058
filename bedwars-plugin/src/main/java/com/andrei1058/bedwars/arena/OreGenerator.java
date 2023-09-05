@@ -51,6 +51,9 @@ import static com.andrei1058.bedwars.BedWars.*;
 @SuppressWarnings("WeakerAccess")
 public class OreGenerator implements IGenerator {
 
+    private static final ConcurrentLinkedDeque<OreGenerator> rotation = new ConcurrentLinkedDeque<>();
+    public boolean stack = getGeneratorsCfg().getBoolean(ConfigPath.GENERATOR_STACK_ITEMS);
+    boolean up = true;
     private Location location;
     private int delay = 1, upgradeStage = 1, lastSpawn, spawnLimit = 0, amount = 1;
     private IArena arena;
@@ -58,17 +61,11 @@ public class OreGenerator implements IGenerator {
     private GeneratorType type;
     private int rotate = 0, dropID = 0;
     private ITeam bwt;
-    boolean up = true;
-
     /**
      * Generator holograms per language <iso, holo></iso,>
      */
     private HashMap<String, IGenHolo> armorStands = new HashMap<>();
-
     private ArmorStand item;
-    public boolean stack = getGeneratorsCfg().getBoolean(ConfigPath.GENERATOR_STACK_ITEMS);
-
-    private static final ConcurrentLinkedDeque<OreGenerator> rotation = new ConcurrentLinkedDeque<>();
 
     public OreGenerator(Location location, IArena arena, GeneratorType type, ITeam bwt) {
         if (type == GeneratorType.EMERALD || type == GeneratorType.DIAMOND) {
@@ -86,6 +83,26 @@ public class OreGenerator implements IGenerator {
         c.setMaxY(c.getMaxY() + 5);
         c.setMinY(c.getMinY() - 2);
         arena.getRegionsList().add(c);
+    }
+
+    public static ConcurrentLinkedDeque<OreGenerator> getRotation() {
+        return rotation;
+    }
+
+    private static ArmorStand createArmorStand(String name, Location l) {
+        ArmorStand a = (ArmorStand) l.getWorld().spawnEntity(l, EntityType.ARMOR_STAND);
+        a.setGravity(false);
+        if (name != null) {
+            a.setCustomName(name);
+            a.setCustomNameVisible(true);
+        }
+        a.setRemoveWhenFarAway(false);
+        a.setVisible(false);
+        a.setCanPickupItems(false);
+        a.setArms(false);
+        a.setBasePlate(false);
+        a.setMarker(true);
+        return a;
     }
 
     @Override
@@ -143,7 +160,7 @@ public class OreGenerator implements IGenerator {
 
     @Override
     public void spawn() {
-        if (arena.getStatus() != GameState.playing){
+        if (arena.getStatus() != GameState.playing) {
             return;
         }
 
@@ -222,12 +239,6 @@ public class OreGenerator implements IGenerator {
         dropItem(location, amount);
     }
 
-    @Override
-    public void setOre(ItemStack ore) {
-        BedWars.debug("Changing ore for generator at " + location.toString() + " from " + this.ore + " to " + ore);
-        this.ore = ore;
-    }
-
     /**
      * Get the arena assigned to this generator.
      */
@@ -235,88 +246,9 @@ public class OreGenerator implements IGenerator {
         return arena;
     }
 
-    public static ConcurrentLinkedDeque<OreGenerator> getRotation() {
-        return rotation;
-    }
-
     @Override
     public HashMap<String, IGenHolo> getLanguageHolograms() {
         return armorStands;
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    public class HoloGram implements IGenHolo {
-        String iso;
-        ArmorStand tier, timer, name;
-
-        public HoloGram(String iso) {
-            this.iso = iso;
-            this.tier = createArmorStand(Language.getLang(iso).m(Messages.GENERATOR_HOLOGRAM_TIER)
-                    .replace("{tier}", Language.getLang(iso).m(Messages.FORMATTING_GENERATOR_TIER1)), location.clone().add(0, 3, 0));
-            this.timer = createArmorStand(Language.getLang(iso).m(Messages.GENERATOR_HOLOGRAM_TIMER)
-                    .replace("{seconds}", String.valueOf(lastSpawn)), location.clone().add(0, 2.4, 0));
-            this.name = createArmorStand(Language.getLang(iso).m(getOre().getType() == Material.DIAMOND ? Messages.GENERATOR_HOLOGRAM_TYPE_DIAMOND
-                    : Messages.GENERATOR_HOLOGRAM_TYPE_EMERALD), location.clone().add(0, 2.7, 0));
-
-        }
-
-        @Override
-        public void updateForAll() {
-            for (Player p2 : timer.getWorld().getPlayers()) {
-                if (Language.getPlayerLanguage(p2).getIso().equalsIgnoreCase(iso)) continue;
-                nms.hideEntity(tier, p2);
-                nms.hideEntity(timer, p2);
-                nms.hideEntity(name, p2);
-            }
-        }
-
-        @Override
-        public void updateForPlayer(Player p, String lang) {
-            if (lang.equalsIgnoreCase(iso)) return;
-            nms.hideEntity(tier, p);
-            nms.hideEntity(timer, p);
-            nms.hideEntity(name, p);
-        }
-
-        @Override
-        public void setTierName(String name) {
-            if (tier.isDead()) return;
-            tier.setCustomName(name);
-        }
-
-        @Override
-        public String getIso() {
-            return iso;
-        }
-
-        @Override
-        public void setTimerName(String name) {
-            if (timer.isDead()) return;
-            timer.setCustomName(name);
-        }
-
-        @Override
-        public void destroy() {
-            tier.remove();
-            timer.remove();
-            name.remove();
-        }
-    }
-
-    private static ArmorStand createArmorStand(String name, Location l) {
-        ArmorStand a = (ArmorStand) l.getWorld().spawnEntity(l, EntityType.ARMOR_STAND);
-        a.setGravity(false);
-        if (name != null) {
-            a.setCustomName(name);
-            a.setCustomNameVisible(true);
-        }
-        a.setRemoveWhenFarAway(false);
-        a.setVisible(false);
-        a.setCanPickupItems(false);
-        a.setArms(false);
-        a.setBasePlate(false);
-        a.setMarker(true);
-        return a;
     }
 
     @Override
@@ -357,16 +289,6 @@ public class OreGenerator implements IGenerator {
     }
 
     @Override
-    public void setDelay(int delay) {
-        this.delay = delay;
-    }
-
-    @Override
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
-
-    @Override
     public Location getLocation() {
         return location;
     }
@@ -374,6 +296,12 @@ public class OreGenerator implements IGenerator {
     @Override
     public ItemStack getOre() {
         return ore;
+    }
+
+    @Override
+    public void setOre(ItemStack ore) {
+        BedWars.debug("Changing ore for generator at " + location.toString() + " from " + this.ore + " to " + ore);
+        this.ore = ore;
     }
 
     @Override
@@ -412,11 +340,6 @@ public class OreGenerator implements IGenerator {
         item = createArmorStand(null, location.clone().add(0, 0.5, 0));
         item.setHelmet(new ItemStack(type == GeneratorType.DIAMOND ? Material.DIAMOND_BLOCK : Material.EMERALD_BLOCK));
         //}
-    }
-
-    @Override
-    public void setSpawnLimit(int value) {
-        this.spawnLimit = value;
     }
 
     private void loadDefaults() {
@@ -477,8 +400,18 @@ public class OreGenerator implements IGenerator {
     }
 
     @Override
+    public void setType(GeneratorType type) {
+        this.type = type;
+    }
+
+    @Override
     public int getAmount() {
         return amount;
+    }
+
+    @Override
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
     @Override
@@ -487,13 +420,13 @@ public class OreGenerator implements IGenerator {
     }
 
     @Override
-    public int getNextSpawn() {
-        return lastSpawn;
+    public void setDelay(int delay) {
+        this.delay = delay;
     }
 
     @Override
-    public int getSpawnLimit() {
-        return spawnLimit;
+    public int getNextSpawn() {
+        return lastSpawn;
     }
 
     @Override
@@ -502,8 +435,13 @@ public class OreGenerator implements IGenerator {
     }
 
     @Override
-    public void setStack(boolean stack) {
-        this.stack = stack;
+    public int getSpawnLimit() {
+        return spawnLimit;
+    }
+
+    @Override
+    public void setSpawnLimit(int value) {
+        this.spawnLimit = value;
     }
 
     @Override
@@ -512,8 +450,8 @@ public class OreGenerator implements IGenerator {
     }
 
     @Override
-    public void setType(GeneratorType type) {
-        this.type = type;
+    public void setStack(boolean stack) {
+        this.stack = stack;
     }
 
     public void destroyData() {
@@ -524,5 +462,64 @@ public class OreGenerator implements IGenerator {
         bwt = null;
         armorStands = null;
         item = null;
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public class HoloGram implements IGenHolo {
+        String iso;
+        ArmorStand tier, timer, name;
+
+        public HoloGram(String iso) {
+            this.iso = iso;
+            this.tier = createArmorStand(Language.getLang(iso).m(Messages.GENERATOR_HOLOGRAM_TIER)
+                    .replace("{tier}", Language.getLang(iso).m(Messages.FORMATTING_GENERATOR_TIER1)), location.clone().add(0, 3, 0));
+            this.timer = createArmorStand(Language.getLang(iso).m(Messages.GENERATOR_HOLOGRAM_TIMER)
+                    .replace("{seconds}", String.valueOf(lastSpawn)), location.clone().add(0, 2.4, 0));
+            this.name = createArmorStand(Language.getLang(iso).m(getOre().getType() == Material.DIAMOND ? Messages.GENERATOR_HOLOGRAM_TYPE_DIAMOND
+                    : Messages.GENERATOR_HOLOGRAM_TYPE_EMERALD), location.clone().add(0, 2.7, 0));
+
+        }
+
+        @Override
+        public void updateForAll() {
+            for (Player p2 : timer.getWorld().getPlayers()) {
+                if (Language.getPlayerLanguage(p2).getIso().equalsIgnoreCase(iso)) continue;
+                nms.hideEntity(tier, p2);
+                nms.hideEntity(timer, p2);
+                nms.hideEntity(name, p2);
+            }
+        }
+
+        @Override
+        public void updateForPlayer(Player p, String lang) {
+            if (lang.equalsIgnoreCase(iso)) return;
+            nms.hideEntity(tier, p);
+            nms.hideEntity(timer, p);
+            nms.hideEntity(name, p);
+        }
+
+        @Override
+        public void setTierName(String name) {
+            if (tier.isDead()) return;
+            tier.setCustomName(name);
+        }
+
+        @Override
+        public String getIso() {
+            return iso;
+        }
+
+        @Override
+        public void setTimerName(String name) {
+            if (timer.isDead()) return;
+            timer.setCustomName(name);
+        }
+
+        @Override
+        public void destroy() {
+            tier.remove();
+            timer.remove();
+            name.remove();
+        }
     }
 }

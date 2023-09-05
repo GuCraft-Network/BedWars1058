@@ -111,13 +111,13 @@ public class PAPISupport extends PlaceholderExpansion {
         if (player == null) return null;
 
         // stats placeholders
-        if(s.startsWith("stats_")) {
+        if (s.startsWith("stats_")) {
             String targetedStat = s.replaceFirst("stats_", "");
-            if(targetedStat.isEmpty() || targetedStat.isBlank()) {
+            if (targetedStat.isEmpty() || targetedStat.isBlank()) {
                 return null;
             }
             PlayerStats stats = BedWars.getStatsManager().getUnsafe(player.getUniqueId());
-            if(stats == null) {
+            if (stats == null) {
                 return null;
             }
             switch (targetedStat) {
@@ -211,16 +211,16 @@ public class PAPISupport extends PlaceholderExpansion {
                 response = String.valueOf(BedWars.getLevelSupport().getRequiredXp(player));
                 break;
             case "player_status":
-                if(a != null) {
+                if (a != null) {
                     switch (a.getStatus()) {
                         case waiting:
                         case starting:
                             response = "WAITING";
                             break;
                         case playing:
-                            if(a.isPlayer(player)) {
+                            if (a.isPlayer(player)) {
                                 response = "PLAYING";
-                            } else if(a.isSpectator(player)) {
+                            } else if (a.isSpectator(player)) {
                                 response = "SPECTATING";
                             } else {
                                 response = "IN_GAME_BUT_NOT"; // this shouldnt happen
@@ -242,9 +242,9 @@ public class PAPISupport extends PlaceholderExpansion {
             case "elapsed_time":
                 if (a != null) {
                     Instant startTime = a.getStartTime();
-                    if (null != startTime){
+                    if (null != startTime) {
                         Duration time = Duration.ofMillis(Instant.now().minusMillis(startTime.toEpochMilli()).toEpochMilli());
-                        if (time.toHours() == 0){
+                        if (time.toHours() == 0) {
                             response = String.format("%02d:%02d", time.toMinutes(), time.toSeconds());
                         } else {
                             response = String.format("%02d:%02d:%02d", time.toHours(), time.toMinutes(), time.toSeconds());

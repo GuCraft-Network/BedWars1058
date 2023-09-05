@@ -41,13 +41,13 @@ import static com.andrei1058.bedwars.BedWars.nms;
 
 public class ShopCategory {
 
+    public static List<UUID> categoryViewers = new ArrayList<>();
+    private final List<CategoryContent> categoryContentList = new ArrayList<>();
+    private final String name;
     private int slot;
     private ItemStack itemStack;
     private String itemNamePath, itemLorePath, invNamePath;
     private boolean loaded = false;
-    private final List<CategoryContent> categoryContentList = new ArrayList<>();
-    public static List<UUID> categoryViewers = new ArrayList<>();
-    private final String name;
 
     /**
      * Load a shop category from the given path
@@ -72,8 +72,8 @@ public class ShopCategory {
             return;
         }
 
-        for (ShopCategory sc : ShopManager.shop.getCategoryList()){
-            if (sc.getSlot() == slot){
+        for (ShopCategory sc : ShopManager.shop.getCategoryList()) {
+            if (sc.getSlot() == slot) {
                 BedWars.plugin.getLogger().severe("Slot is already in use at: " + path);
                 return;
             }
@@ -118,7 +118,23 @@ public class ShopCategory {
         }
     }
 
-    public void open(Player player, ShopIndex index, ShopCache shopCache){
+    /**
+     * Get a category content by identifier
+     */
+    public static CategoryContent getCategoryContent(String identifier, ShopIndex shopIndex) {
+        for (ShopCategory sc : shopIndex.getCategoryList()) {
+            for (CategoryContent cc : sc.getCategoryContentList()) {
+                if (cc.getIdentifier().equals(identifier)) return cc;
+            }
+        }
+        return null;
+    }
+
+    public static List<UUID> getCategoryViewers() {
+        return new ArrayList<>(categoryViewers);
+    }
+
+    public void open(Player player, ShopIndex index, ShopCache shopCache) {
         if (player.getOpenInventory().getTopInventory() == null) return;
         ShopIndex.indexViewers.remove(player.getUniqueId());
 
@@ -141,7 +157,7 @@ public class ShopCategory {
         }
 
         player.openInventory(inv);
-        if (!categoryViewers.contains(player.getUniqueId())){
+        if (!categoryViewers.contains(player.getUniqueId())) {
             categoryViewers.add(player.getUniqueId());
         }
     }
@@ -178,21 +194,7 @@ public class ShopCategory {
         return categoryContentList;
     }
 
-    /**Get a category content by identifier*/
-    public static CategoryContent getCategoryContent(String identifier, ShopIndex shopIndex){
-        for (ShopCategory sc : shopIndex.getCategoryList()){
-            for (CategoryContent cc : sc.getCategoryContentList()){
-                if (cc.getIdentifier().equals(identifier)) return cc;
-            }
-        }
-        return null;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public static List<UUID> getCategoryViewers() {
-        return new ArrayList<>(categoryViewers);
     }
 }

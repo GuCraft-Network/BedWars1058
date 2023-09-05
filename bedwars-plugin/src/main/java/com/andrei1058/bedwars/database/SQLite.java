@@ -99,7 +99,7 @@ public class SQLite implements Database {
                         "iso VARCHAR(200));";
                 st.executeUpdate(sql);
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -278,8 +278,7 @@ public class SQLite implements Database {
                     }
                 }
             }
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
             return 0;
         }
@@ -434,7 +433,7 @@ public class SQLite implements Database {
                     String identifier = updateSlots.get(key);
                     ps.setString(index, identifier.trim().isEmpty() ? null : identifier);
                 }
-                ps.setString(hasQuick ? updateSlots.size()+1 : 1, uuid.toString());
+                ps.setString(hasQuick ? updateSlots.size() + 1 : 1, uuid.toString());
                 ps.execute();
             }
         } catch (SQLException e) {
@@ -475,9 +474,8 @@ public class SQLite implements Database {
 
         if (this.connection == null)
             renew = true;
-        else
-            if (this.connection.isClosed())
-                renew = true;
+        else if (this.connection.isClosed())
+            renew = true;
 
         if (renew)
             this.connection = DriverManager.getConnection(url);

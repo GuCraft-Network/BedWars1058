@@ -272,7 +272,7 @@ public class MenuBaseTrap implements MenuContent, EnemyBaseEnterTrap, TeamUpgrad
 
         final UpgradeBuyEvent event;
         Bukkit.getPluginManager().callEvent(event = new UpgradeBuyEvent(this, player, team));
-        if(event.isCancelled()) return;
+        if (event.isCancelled()) return;
 
         if (currency == Material.AIR) {
             BedWars.getEconomy().buyAction(player, money);

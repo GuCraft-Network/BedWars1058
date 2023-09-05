@@ -46,7 +46,7 @@ public class CmdUpgrades extends SubCommand {
         if (a == null) return false;
         if (!a.isPlayer((Player) s)) return false;
         ITeam t = a.getTeam((Player) s);
-        if (t.getTeamUpgrades().distance(((Player)s).getLocation()) < 4){
+        if (t.getTeamUpgrades().distance(((Player) s).getLocation()) < 4) {
             UpgradesManager.getMenuForArena(a).open((Player) s);
             return true;
         }

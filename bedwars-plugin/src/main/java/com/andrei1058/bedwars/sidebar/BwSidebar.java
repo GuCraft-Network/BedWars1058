@@ -42,13 +42,12 @@ public class BwSidebar implements ISidebar {
     private static final String TEAM_PREFIX = "?_";
 
     private final Player player;
-    private IArena arena;
-    private Sidebar handle;
     private final SimpleDateFormat dateFormat;
     private final SimpleDateFormat nextEventDateFormat;
     private final HashMap<String, PlayerTab> tabList = new HashMap<>();
-
     private final List<PlaceholderProvider> persistentProviders = new ArrayList<>();
+    private IArena arena;
+    private Sidebar handle;
 
 
     protected BwSidebar(Player player) {

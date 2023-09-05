@@ -25,5 +25,6 @@ import org.bukkit.entity.Player;
 public interface Chat {
 
     String getPrefix(Player p);
+
     String getSuffix(Player p);
 }

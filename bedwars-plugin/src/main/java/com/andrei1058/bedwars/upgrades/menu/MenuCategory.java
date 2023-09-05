@@ -97,12 +97,12 @@ public class MenuCategory implements MenuContent {
 
     @Override
     public void onClick(Player player, ClickType clickType, ITeam team) {
-        if (name.equalsIgnoreCase("category-traps")){
-            int queueLimit = UpgradesManager.getConfiguration().getInt(team.getArena().getGroup().toLowerCase()+"-upgrades-settings.trap-queue-limit");
-            if (queueLimit == 0){
+        if (name.equalsIgnoreCase("category-traps")) {
+            int queueLimit = UpgradesManager.getConfiguration().getInt(team.getArena().getGroup().toLowerCase() + "-upgrades-settings.trap-queue-limit");
+            if (queueLimit == 0) {
                 queueLimit = UpgradesManager.getConfiguration().getInt("default-upgrades-settings.trap-queue-limit");
             }
-            if (queueLimit <= team.getActiveTraps().size()){
+            if (queueLimit <= team.getActiveTraps().size()) {
                 player.sendMessage(Language.getMsg(player, Messages.UPGRADES_TRAP_QUEUE_LIMIT));
                 return;
             }

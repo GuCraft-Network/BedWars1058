@@ -34,17 +34,17 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 public class ShopOpenListener implements Listener {
 
     @EventHandler
-    public void onShopOpen(PlayerInteractAtEntityEvent e){
+    public void onShopOpen(PlayerInteractAtEntityEvent e) {
         IArena a = Arena.getArenaByPlayer(e.getPlayer());
         if (a == null) return;
-        if(!a.getStatus().equals(GameState.playing)) return;
+        if (!a.getStatus().equals(GameState.playing)) return;
         Location l = e.getRightClicked().getLocation();
         for (ITeam t : a.getTeams()) {
             Location l2 = t.getShop();
             if (l.getBlockX() == l2.getBlockX() && l.getBlockY() == l2.getBlockY() && l.getBlockZ() == l2.getBlockZ()) {
                 e.setCancelled(true);
                 if (a.isPlayer(e.getPlayer())) {
-                    ShopManager.shop.open(e.getPlayer(), PlayerQuickBuyCache.getQuickBuyCache(e.getPlayer().getUniqueId()),true);
+                    ShopManager.shop.open(e.getPlayer(), PlayerQuickBuyCache.getQuickBuyCache(e.getPlayer().getUniqueId()), true);
                 }
             }
         }

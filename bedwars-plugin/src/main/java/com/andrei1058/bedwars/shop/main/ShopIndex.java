@@ -39,13 +39,12 @@ import java.util.UUID;
 @SuppressWarnings("WeakerAccess")
 public class ShopIndex {
 
+    public static List<UUID> indexViewers = new ArrayList<>();
+    public ItemStack separatorSelected, separatorStandard;
     private int invSize = 54;
     private String namePath, separatorNamePath, separatorLorePath;
     private List<ShopCategory> categoryList = new ArrayList<>();
     private QuickBuyButton quickBuyButton;
-    public ItemStack separatorSelected, separatorStandard;
-
-    public static List<UUID> indexViewers = new ArrayList<>();
 
 
     /**
@@ -65,6 +64,10 @@ public class ShopIndex {
         this.quickBuyButton = quickBuyButton;
         this.separatorStandard = separatorStandard;
         this.separatorSelected = separatorSelected;
+    }
+
+    public static List<UUID> getIndexViewers() {
+        return new ArrayList<>(indexViewers);
     }
 
     /**
@@ -105,7 +108,6 @@ public class ShopIndex {
             indexViewers.add(player.getUniqueId());
         }
     }
-
 
     /**
      * Add shop separator between categories and items
@@ -172,9 +174,5 @@ public class ShopIndex {
      */
     public QuickBuyButton getQuickBuyButton() {
         return quickBuyButton;
-    }
-
-    public static List<UUID> getIndexViewers() {
-        return new ArrayList<>(indexViewers);
     }
 }

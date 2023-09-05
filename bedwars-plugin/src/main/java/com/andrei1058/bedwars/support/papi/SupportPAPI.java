@@ -29,6 +29,14 @@ public class SupportPAPI {
 
     private static supp supportPAPI = new noPAPI();
 
+    public static supp getSupportPAPI() {
+        return supportPAPI;
+    }
+
+    public static void setSupportPAPI(supp s) {
+        supportPAPI = s;
+    }
+
     public interface supp {
         String replace(Player p, String s);
 
@@ -59,13 +67,5 @@ public class SupportPAPI {
         public List<String> replace(Player p, List<String> strings) {
             return PlaceholderAPI.setPlaceholders(p, strings);
         }
-    }
-
-    public static supp getSupportPAPI() {
-        return supportPAPI;
-    }
-
-    public static void setSupportPAPI(supp s) {
-        supportPAPI = s;
     }
 }

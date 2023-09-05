@@ -62,6 +62,17 @@ import static com.andrei1058.bedwars.api.language.Language.getMsg;
 @SuppressWarnings("WeakerAccess")
 public class BedWarsTeam implements ITeam {
 
+    // Invulnerability at re-spawn
+    // Fall invulnerability when teammates respawn
+    public static HashMap<UUID, Long> reSpawnInvulnerability = new HashMap<>();
+    // team generators
+    private final List<IGenerator> generators = new ArrayList<>();
+    // team upgrade name, tier
+    private final ConcurrentHashMap<String, Integer> teamUpgradeList = new ConcurrentHashMap<>();
+    // Used for show/ hide bed hologram
+    private final HashMap<UUID, BedHolo> beds = new HashMap<>();
+    // Queued traps
+    private final LinkedList<EnemyBaseEnterTrap> enemyBaseEnterTraps = new LinkedList<>();
     private List<Player> members = new ArrayList<>();
     private TeamColor color;
     private Location spawn, bed, shop, teamUpgrades;
@@ -70,12 +81,6 @@ public class BedWarsTeam implements ITeam {
     private Arena arena;
     private boolean bedDestroyed = false;
     private Vector killDropsLoc = null;
-
-    // team generators
-    private List<IGenerator> generators = new ArrayList<>();
-
-    // team upgrade name, tier
-    private ConcurrentHashMap<String, Integer> teamUpgradeList = new ConcurrentHashMap<>();
     // Potion effects for teammates from the upgrades
     private List<PotionEffect> teamEffects = new ArrayList<>();
     // Potion effects for teammates on base only
@@ -86,17 +91,10 @@ public class BedWarsTeam implements ITeam {
     private List<TeamEnchant> swordsEnchantemnts = new ArrayList<>();
     // Enchantments for armors
     private List<TeamEnchant> armorsEnchantemnts = new ArrayList<>();
-    // Used for show/ hide bed hologram
-    private HashMap<UUID, BedHolo> beds = new HashMap<>();
-    // Queued traps
-    private LinkedList<EnemyBaseEnterTrap> enemyBaseEnterTraps = new LinkedList<>();
     // Amount of dragons for Sudden Death phase
     private int dragons = 1;
     // Player cache, used for losers stats and rejoin
     private List<Player> membersCache = new ArrayList<>();
-    // Invulnerability at re-spawn
-    // Fall invulnerability when teammates respawn
-    public static HashMap<UUID, Long> reSpawnInvulnerability = new HashMap<>();
 
     public BedWarsTeam(String name, TeamColor color, Location spawn, Location bed, Location shop, Location teamUpgrades, Arena arena) {
         if (arena == null) return;
@@ -481,77 +479,6 @@ public class BedWarsTeam implements ITeam {
     }
 
     /**
-     * Creates a hologram on the team bed's per player
-     */
-    @SuppressWarnings("WeakerAccess")
-    public class BedHolo {
-        private ArmorStand a;
-        private UUID p;
-        private Arena arena;
-        private boolean hidden = false, bedDestroyed = false;
-
-        public BedHolo(@NotNull Player p, Arena arena) {
-            this.p = p.getUniqueId();
-            this.arena = arena;
-            spawn();
-            beds.put(p.getUniqueId(), this);
-        }
-
-        public void spawn() {
-            if (!arena.getConfig().getBoolean(ConfigPath.ARENA_USE_BED_HOLO)) return;
-            a = (ArmorStand) bed.getWorld().spawnEntity(bed.getBlock().getLocation().add(+0.5, 1, +0.5), EntityType.ARMOR_STAND);
-            a.setGravity(false);
-            if (name != null) {
-                if (isBedDestroyed()) {
-                    a.setCustomName(getMsg(Bukkit.getPlayer(p), Messages.BED_HOLOGRAM_DESTROYED));
-                    bedDestroyed = true;
-                } else {
-                    a.setCustomName(getMsg(Bukkit.getPlayer(p), Messages.BED_HOLOGRAM_DEFEND));
-                }
-                a.setCustomNameVisible(true);
-            }
-            a.setRemoveWhenFarAway(false);
-            a.setCanPickupItems(false);
-            a.setArms(false);
-            a.setBasePlate(false);
-            a.setMarker(true);
-            a.setVisible(false);
-            for (Player p2 : arena.getWorld().getPlayers()) {
-                if (p != p2.getUniqueId()) {
-                    nms.hideEntity(a, p2);
-                }
-            }
-        }
-
-        public void hide() {
-            if (!arena.getConfig().getBoolean(ConfigPath.ARENA_USE_BED_HOLO)) return;
-            if (bedDestroyed) return;
-            hidden = true;
-            a.remove();
-        }
-
-        public void destroy() {
-            if (!arena.getConfig().getBoolean(ConfigPath.ARENA_USE_BED_HOLO)) return;
-            a.remove();
-            beds.remove(p);
-        }
-
-        public void show() {
-            if (!arena.getConfig().getBoolean(ConfigPath.ARENA_USE_BED_HOLO)) return;
-            hidden = false;
-            spawn();
-        }
-
-        public Arena getArena() {
-            return arena;
-        }
-
-        public boolean isHidden() {
-            return hidden;
-        }
-    }
-
-    /**
      * Used when someone buys a new potion effect with apply == members
      */
     public void addTeamEffect(PotionEffectType pef, int amp, int duration) {
@@ -643,27 +570,6 @@ public class BedWarsTeam implements ITeam {
         }, 20L);
     }
 
-    /**
-     * Enchantments for bows, swords and armors from the team upgrades
-     */
-    public static class Enchant implements TeamEnchant {
-        Enchantment enchantment;
-        int amplifier;
-
-        public Enchant(Enchantment enchantment, int amplifier) {
-            this.enchantment = enchantment;
-            this.amplifier = amplifier;
-        }
-
-        public Enchantment getEnchantment() {
-            return enchantment;
-        }
-
-        public int getAmplifier() {
-            return amplifier;
-        }
-    }
-
     public boolean isMember(Player u) {
         if (u == null) return false;
         return members.contains(u);
@@ -682,6 +588,27 @@ public class BedWarsTeam implements ITeam {
 
     public boolean isBedDestroyed() {
         return bedDestroyed;
+    }
+
+    /**
+     * Destroy the bed for a team.
+     */
+    public void setBedDestroyed(boolean bedDestroyed) {
+        this.bedDestroyed = bedDestroyed;
+        if (!bedDestroyed) {
+            if (!getBed().getBlock().getType().toString().contains("BED")) {
+                BedWars.plugin.getLogger().severe("Bed not set for team: " + getName() + " in arena: " + getArena().getArenaName());
+                return;
+            }
+            nms.colorBed(this);
+        } else {
+            bed.getBlock().setType(Material.AIR);
+        }
+        for (BedHolo bh : beds.values()) {
+            bh.hide();
+            bh.show();
+        }
+
     }
 
     public Location getSpawn() {
@@ -727,27 +654,6 @@ public class BedWarsTeam implements ITeam {
         return beds.get(p.getUniqueId());
     }
 
-    /**
-     * Destroy the bed for a team.
-     */
-    public void setBedDestroyed(boolean bedDestroyed) {
-        this.bedDestroyed = bedDestroyed;
-        if (!bedDestroyed) {
-            if (!getBed().getBlock().getType().toString().contains("BED")) {
-                BedWars.plugin.getLogger().severe("Bed not set for team: " + getName() + " in arena: " + getArena().getArenaName());
-                return;
-            }
-            nms.colorBed(this);
-        } else {
-            bed.getBlock().setType(Material.AIR);
-        }
-        for (BedHolo bh : beds.values()) {
-            bh.hide();
-            bh.show();
-        }
-
-    }
-
     @Deprecated
     public IGenerator getIronGenerator() {
         IGenerator[] gens = (IGenerator[]) generators.stream().filter(f -> f.getType() == GeneratorType.IRON).toArray();
@@ -778,7 +684,6 @@ public class BedWarsTeam implements ITeam {
     public List<IGenerator> getGenerators() {
         return generators;
     }
-
 
     public List<PotionEffect> getBaseEffects() {
         return base;
@@ -869,6 +774,14 @@ public class BedWarsTeam implements ITeam {
         this.killDropsLoc = new Vector(loc.getBlockX() + 0.5, loc.getBlockY(), loc.getBlockZ() + 0.5);
     }
 
+    public void setKillDropsLocation(Location loc) {
+        if (loc == null) {
+            this.killDropsLoc = null;
+            return;
+        }
+        this.killDropsLoc = new Vector(loc.getBlockX() + 0.5, loc.getBlockY(), loc.getBlockZ() + 0.5);
+    }
+
     @Override
     public boolean isBed(@NotNull Location location) {
         for (int x = location.getBlockX() - 1; x < location.getBlockX() + 1; x++) {
@@ -881,11 +794,95 @@ public class BedWarsTeam implements ITeam {
         return false;
     }
 
-    public void setKillDropsLocation(Location loc) {
-        if (loc == null) {
-            this.killDropsLoc = null;
-            return;
+    /**
+     * Enchantments for bows, swords and armors from the team upgrades
+     */
+    public static class Enchant implements TeamEnchant {
+        Enchantment enchantment;
+        int amplifier;
+
+        public Enchant(Enchantment enchantment, int amplifier) {
+            this.enchantment = enchantment;
+            this.amplifier = amplifier;
         }
-        this.killDropsLoc = new Vector(loc.getBlockX() + 0.5, loc.getBlockY(), loc.getBlockZ() + 0.5);
+
+        public Enchantment getEnchantment() {
+            return enchantment;
+        }
+
+        public int getAmplifier() {
+            return amplifier;
+        }
+    }
+
+    /**
+     * Creates a hologram on the team bed's per player
+     */
+    @SuppressWarnings("WeakerAccess")
+    public class BedHolo {
+        private final UUID p;
+        private final Arena arena;
+        private ArmorStand a;
+        private boolean hidden = false, bedDestroyed = false;
+
+        public BedHolo(@NotNull Player p, Arena arena) {
+            this.p = p.getUniqueId();
+            this.arena = arena;
+            spawn();
+            beds.put(p.getUniqueId(), this);
+        }
+
+        public void spawn() {
+            if (!arena.getConfig().getBoolean(ConfigPath.ARENA_USE_BED_HOLO)) return;
+            a = (ArmorStand) bed.getWorld().spawnEntity(bed.getBlock().getLocation().add(+0.5, 1, +0.5), EntityType.ARMOR_STAND);
+            a.setGravity(false);
+            if (name != null) {
+                if (isBedDestroyed()) {
+                    a.setCustomName(getMsg(Bukkit.getPlayer(p), Messages.BED_HOLOGRAM_DESTROYED));
+                    bedDestroyed = true;
+                } else {
+                    a.setCustomName(getMsg(Bukkit.getPlayer(p), Messages.BED_HOLOGRAM_DEFEND));
+                }
+                a.setCustomNameVisible(true);
+            }
+            a.setRemoveWhenFarAway(false);
+            a.setCanPickupItems(false);
+            a.setArms(false);
+            a.setBasePlate(false);
+            a.setMarker(true);
+            a.setVisible(false);
+            for (Player p2 : arena.getWorld().getPlayers()) {
+                if (p != p2.getUniqueId()) {
+                    nms.hideEntity(a, p2);
+                }
+            }
+        }
+
+        public void hide() {
+            if (!arena.getConfig().getBoolean(ConfigPath.ARENA_USE_BED_HOLO)) return;
+            if (bedDestroyed) return;
+            hidden = true;
+            a.remove();
+        }
+
+        public void destroy() {
+            if (!arena.getConfig().getBoolean(ConfigPath.ARENA_USE_BED_HOLO)) return;
+            a.remove();
+            beds.remove(p);
+        }
+
+        public void show() {
+            if (!arena.getConfig().getBoolean(ConfigPath.ARENA_USE_BED_HOLO)) return;
+            hidden = false;
+            spawn();
+        }
+
+        public Arena getArena() {
+            return arena;
+        }
+
+        public boolean isHidden() {
+            return hidden;
+        }
     }
 }

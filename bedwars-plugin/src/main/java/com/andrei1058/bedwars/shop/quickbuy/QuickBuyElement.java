@@ -31,7 +31,7 @@ public class QuickBuyElement {
     private boolean loaded = false;
 
 
-    public QuickBuyElement(String path, int slot){
+    public QuickBuyElement(String path, int slot) {
         this.categoryContent = ShopCategory.getCategoryContent(path, ShopManager.getShop());
         if (this.categoryContent != null) this.loaded = true;
         this.slot = slot;

@@ -52,8 +52,8 @@ public class DelArena extends SubCommand {
         setPriority(4);
         showInList(true);
         setPermission(Permissions.PERMISSION_DEL_ARENA);
-        setDisplayInfo(Misc.msgHoverClick("§6 ▪ §7/" + MainCommand.getInstance().getName() + " "+getSubCommandName()+" §6<worldName>", "§fDelete a map and its configuration.",
-                "/" + MainCommand.getInstance().getName() + " "+getSubCommandName(), ClickEvent.Action.SUGGEST_COMMAND));
+        setDisplayInfo(Misc.msgHoverClick("§6 ▪ §7/" + MainCommand.getInstance().getName() + " " + getSubCommandName() + " §6<worldName>", "§fDelete a map and its configuration.",
+                "/" + MainCommand.getInstance().getName() + " " + getSubCommandName(), ClickEvent.Action.SUGGEST_COMMAND));
     }
 
     @Override
@@ -73,7 +73,7 @@ public class DelArena extends SubCommand {
             p.sendMessage("§c▪ §7Please disable it first!");
             return true;
         }
-        File ac = new File(plugin.getDataFolder(), "/Arenas/" + args[0]+ ".yml");
+        File ac = new File(plugin.getDataFolder(), "/Arenas/" + args[0] + ".yml");
         if (!ac.exists()) {
             p.sendMessage("§c▪ §7This arena doesn't exist!");
             return true;

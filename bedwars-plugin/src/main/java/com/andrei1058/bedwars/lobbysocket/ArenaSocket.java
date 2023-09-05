@@ -42,8 +42,8 @@ import java.util.logging.Level;
 
 public class ArenaSocket {
 
-    public static List<String> lobbies = new ArrayList<>();
     private static final ConcurrentHashMap<String, RemoteLobby> sockets = new ConcurrentHashMap<>();
+    public static List<String> lobbies = new ArrayList<>();
 
     /**
      * Send arena data to the lobbies.
@@ -94,6 +94,15 @@ public class ArenaSocket {
         return js.toString();
     }
 
+    /**
+     * Close active sockets.
+     */
+    public static void disable() {
+        for (RemoteLobby rl : new ArrayList<>(sockets.values())) {
+            rl.disable();
+        }
+    }
+
     private static class RemoteLobby {
         private Socket socket;
         private PrintWriter out;
@@ -141,7 +150,7 @@ public class ArenaSocket {
                                 break;
                             case "Q":
                                 Player p = Bukkit.getPlayer(json.get("name").getAsString());
-                                if (p != null && p.isOnline()){
+                                if (p != null && p.isOnline()) {
                                     IArena a = Arena.getArenaByPlayer(p);
                                     if (a != null) {
                                         JsonObject jo = new JsonObject();
@@ -204,15 +213,6 @@ public class ArenaSocket {
             }
             in = null;
             out = null;
-        }
-    }
-
-    /**
-     * Close active sockets.
-     */
-    public static void disable() {
-        for (RemoteLobby rl : new ArrayList<>(sockets.values())) {
-            rl.disable();
         }
     }
 }

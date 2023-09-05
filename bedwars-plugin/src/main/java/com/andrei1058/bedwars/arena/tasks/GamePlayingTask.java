@@ -44,8 +44,8 @@ import static com.andrei1058.bedwars.api.language.Language.getMsg;
 
 public class GamePlayingTask implements Runnable, PlayingTask {
 
-    private Arena arena;
-    private BukkitTask task;
+    private final Arena arena;
+    private final BukkitTask task;
     private int beds_destroy_countdown, dragon_spawn_countdown, game_end_countdown;
 
     public GamePlayingTask(Arena arena) {
@@ -141,7 +141,7 @@ public class GamePlayingTask implements Runnable, PlayingTask {
                         }
                     }
                     getArena().updateNextEvent();
-                    for (ITeam team : arena.getTeams()){
+                    for (ITeam team : arena.getTeams()) {
                         for (IGenerator o : team.getGenerators()) {
                             Location l = o.getLocation();
                             for (int y = 0; y < 20; y++) {

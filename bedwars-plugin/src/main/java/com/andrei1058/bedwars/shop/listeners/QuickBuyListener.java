@@ -31,7 +31,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class QuickBuyListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onArenaJoin(PlayerJoinArenaEvent e){
+    public void onArenaJoin(PlayerJoinArenaEvent e) {
         if (e == null) return;
         if (e.isSpectator()) return;
         PlayerQuickBuyCache cache = PlayerQuickBuyCache.getQuickBuyCache(e.getPlayer().getUniqueId());
@@ -42,7 +42,7 @@ public class QuickBuyListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onArenaJoin(PlayerReJoinEvent e){
+    public void onArenaJoin(PlayerReJoinEvent e) {
         if (e == null) return;
         PlayerQuickBuyCache cache = PlayerQuickBuyCache.getQuickBuyCache(e.getPlayer().getUniqueId());
         if (cache != null) {
@@ -52,7 +52,7 @@ public class QuickBuyListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onQuit(PlayerQuitEvent e){
+    public void onQuit(PlayerQuitEvent e) {
         if (e == null) return;
         PlayerQuickBuyCache cache = PlayerQuickBuyCache.getQuickBuyCache(e.getPlayer().getUniqueId());
         if (cache == null) return;

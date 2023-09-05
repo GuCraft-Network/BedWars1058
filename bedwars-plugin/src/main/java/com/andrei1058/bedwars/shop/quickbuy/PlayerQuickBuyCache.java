@@ -43,15 +43,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerQuickBuyCache {
 
+    private static final ConcurrentHashMap<UUID, PlayerQuickBuyCache> quickBuyCaches = new ConcurrentHashMap<>();
+    public static int[] quickSlots = new int[]{19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43};
     private final List<QuickBuyElement> elements = new ArrayList<>();
+    private final HashMap<Integer, String> updateSlots = new HashMap<>();
     private String emptyItemNamePath, emptyItemLorePath;
     private ItemStack emptyItem;
     private UUID player;
     private QuickBuyTask task;
-
-    public static int[] quickSlots = new int[]{19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43};
-    private static final ConcurrentHashMap<UUID, PlayerQuickBuyCache> quickBuyCaches = new ConcurrentHashMap<>();
-    private final HashMap<Integer, String> updateSlots = new HashMap<>();
 
     public PlayerQuickBuyCache(Player player) {
         if (player == null) return;
@@ -68,6 +67,13 @@ public class PlayerQuickBuyCache {
         quickBuyCaches.put(this.player, this);
     }
 
+    /**
+     * Get a Player Quick buy cache
+     */
+    @Nullable
+    public static PlayerQuickBuyCache getQuickBuyCache(UUID uuid) {
+        return quickBuyCaches.getOrDefault(uuid, null);
+    }
 
     /**
      * Add the player's preferences to the given inventory.
@@ -103,13 +109,13 @@ public class PlayerQuickBuyCache {
     public void setElement(int slot, CategoryContent cc) {
         elements.removeIf(q -> q.getSlot() == slot);
         String element;
-        if (cc == null){
+        if (cc == null) {
             element = " ";
         } else {
             addQuickElement(new QuickBuyElement(cc.getIdentifier(), slot));
             element = cc.getIdentifier();
         }
-        if (updateSlots.containsKey(slot)){
+        if (updateSlots.containsKey(slot)) {
             updateSlots.replace(slot, element);
         } else {
             updateSlots.put(slot, element);
@@ -136,14 +142,6 @@ public class PlayerQuickBuyCache {
             if (q.getCategoryContent() == cc) return true;
         }
         return false;
-    }
-
-    /**
-     * Get a Player Quick buy cache
-     */
-    @Nullable
-    public static PlayerQuickBuyCache getQuickBuyCache(UUID uuid) {
-        return quickBuyCaches.getOrDefault(uuid, null);
     }
 
     public List<QuickBuyElement> getElements() {

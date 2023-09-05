@@ -44,8 +44,8 @@ public class CmdStart extends SubCommand {
         super(parent, name);
         setPriority(15);
         showInList(true);
-        setDisplayInfo(com.andrei1058.bedwars.commands.bedwars.MainCommand.createTC("§6 ▪ §7/"+ MainCommand.getInstance().getName()+" "+getSubCommandName()+" §8 - §eforce start an arena",
-                "/"+getParent().getName()+" "+getSubCommandName(), "§fForcestart an arena.\n§fPermission: §c"+Permissions.PERMISSION_FORCESTART));
+        setDisplayInfo(com.andrei1058.bedwars.commands.bedwars.MainCommand.createTC("§6 ▪ §7/" + MainCommand.getInstance().getName() + " " + getSubCommandName() + " §8 - §eforce start an arena",
+                "/" + getParent().getName() + " " + getSubCommandName(), "§fForcestart an arena.\n§fPermission: §c" + Permissions.PERMISSION_FORCESTART));
     }
 
     @Override
@@ -53,22 +53,22 @@ public class CmdStart extends SubCommand {
         if (s instanceof ConsoleCommandSender) return false;
         Player p = (Player) s;
         IArena a = Arena.getArenaByPlayer(p);
-        if (a == null){
+        if (a == null) {
             p.sendMessage(getMsg(p, Messages.COMMAND_FORCESTART_NOT_IN_GAME));
             return true;
         }
-        if (!a.isPlayer(p)){
+        if (!a.isPlayer(p)) {
             p.sendMessage(getMsg(p, Messages.COMMAND_FORCESTART_NOT_IN_GAME));
             return true;
         }
-        if (!(p.hasPermission(Permissions.PERMISSION_ALL) || p.hasPermission(Permissions.PERMISSION_FORCESTART))){
+        if (!(p.hasPermission(Permissions.PERMISSION_ALL) || p.hasPermission(Permissions.PERMISSION_FORCESTART))) {
             p.sendMessage(getMsg(p, Messages.COMMAND_FORCESTART_NO_PERM));
             return true;
         }
         if (a.getStatus() == GameState.playing) return true;
         if (a.getStatus() == GameState.restarting) return true;
-        if (a.getStartingTask() == null){
-            if (args.length == 1 && args[0].equalsIgnoreCase("debug") && s.hasPermission("bw.debug")){
+        if (a.getStartingTask() == null) {
+            if (args.length == 1 && args[0].equalsIgnoreCase("debug") && s.hasPermission("bw.debug")) {
                 a.changeStatus(GameState.starting);
                 BedWars.debug = true;
             } else {
@@ -93,9 +93,9 @@ public class CmdStart extends SubCommand {
         Player p = (Player) s;
 
         IArena a = Arena.getArenaByPlayer(p);
-        if (a != null){
+        if (a != null) {
             GameState status = a.getStatus();
-            if (status == GameState.waiting || status == GameState.starting){
+            if (status == GameState.waiting || status == GameState.starting) {
                 if (!a.isPlayer(p)) return false;
             } else {
                 return false;

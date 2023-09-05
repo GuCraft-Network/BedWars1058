@@ -37,6 +37,10 @@ import static com.andrei1058.bedwars.BedWars.plugin;
  */
 class PlayerGoods {
 
+    /**
+     * a list where you can get PlayerGoods by player
+     */
+    private static final HashMap<UUID, PlayerGoods> playerGoods = new HashMap<>();
     private UUID uuid;
     private int level, foodLevel;
     private double health, healthscale;
@@ -49,7 +53,7 @@ class PlayerGoods {
     private boolean allowFlight, flying;
     private String displayName, tabName;
 
-    PlayerGoods(Player p, boolean prepare){
+    PlayerGoods(Player p, boolean prepare) {
         this(p, prepare, false);
     }
 
@@ -117,11 +121,6 @@ class PlayerGoods {
     }
 
     /**
-     * a list where you can get PlayerGoods by player
-     */
-    private static HashMap<UUID, PlayerGoods> playerGoods = new HashMap<>();
-
-    /**
      * check if a player has a vault
      */
     static boolean hasGoods(Player p) {
@@ -154,8 +153,8 @@ class PlayerGoods {
         player.setHealthScale(healthscale);
         try {
             player.setHealth(health);
-        } catch (Exception e){
-            BedWars.plugin.getLogger().severe("Something went wrong when restoring player health: "+health+". Giving default of: 20");
+        } catch (Exception e) {
+            BedWars.plugin.getLogger().severe("Something went wrong when restoring player health: " + health + ". Giving default of: 20");
             player.setHealth(20);
         }
         player.setFoodLevel(foodLevel);

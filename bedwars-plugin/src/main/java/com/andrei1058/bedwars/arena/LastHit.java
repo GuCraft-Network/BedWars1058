@@ -29,10 +29,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class LastHit {
 
-    private UUID victim;
+    private static final ConcurrentHashMap<UUID, LastHit> lastHit = new ConcurrentHashMap<>();
+    private final UUID victim;
     private Entity damager;
     private long time;
-    private static ConcurrentHashMap<UUID, LastHit> lastHit = new ConcurrentHashMap<>();
 
     public LastHit(@NotNull Player victim, Entity damager, long time) {
         this.victim = victim.getUniqueId();
@@ -41,16 +41,16 @@ public class LastHit {
         lastHit.put(victim.getUniqueId(), this);
     }
 
-    public void setTime(long time) {
-        this.time = time;
-    }
-
-    public void setDamager(Entity damager) {
-        this.damager = damager;
+    public static LastHit getLastHit(@NotNull Player player) {
+        return lastHit.getOrDefault(player.getUniqueId(), null);
     }
 
     public Entity getDamager() {
         return damager;
+    }
+
+    public void setDamager(Entity damager) {
+        this.damager = damager;
     }
 
     public UUID getVictim() {
@@ -65,7 +65,7 @@ public class LastHit {
         return time;
     }
 
-    public static LastHit getLastHit(@NotNull Player player) {
-        return lastHit.getOrDefault(player.getUniqueId(), null);
+    public void setTime(long time) {
+        this.time = time;
     }
 }

@@ -84,10 +84,10 @@ public class InternalMenu implements UpgradesIndex {
 
     public int countTiers() {
         int count = 0;
-        for (MenuContent content : menuContentBySlot.values()){
-            if (content instanceof TeamUpgrade && !(content instanceof EnemyBaseEnterTrap)){
+        for (MenuContent content : menuContentBySlot.values()) {
+            if (content instanceof TeamUpgrade && !(content instanceof EnemyBaseEnterTrap)) {
                 TeamUpgrade tu = (TeamUpgrade) content;
-                count+=tu.getTierCount();
+                count += tu.getTierCount();
             }
         }
         return count;

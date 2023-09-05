@@ -78,7 +78,8 @@ public class UpgradesConfig extends ConfigManager {
 
             yml.addDefault("upgrade-miner.tier-2.currency", "diamond");
             yml.addDefault("upgrade-miner.tier-2.cost", 4);
-            addDefaultDisplayItem("upgrade-miner.tier-2", getForCurrentVersion("GOLD_PICKAXE", "GOLD_PICKAXE", "GOLDEN_PICKAXE"), 0, 2, false);            yml.addDefault("upgrade-miner.tier-2.receive", Collections.singletonList("player-effect: FAST_DIGGING,1,0,team"));
+            addDefaultDisplayItem("upgrade-miner.tier-2", getForCurrentVersion("GOLD_PICKAXE", "GOLD_PICKAXE", "GOLDEN_PICKAXE"), 0, 2, false);
+            yml.addDefault("upgrade-miner.tier-2.receive", Collections.singletonList("player-effect: FAST_DIGGING,1,0,team"));
 
             yml.addDefault("upgrade-forge.tier-1.currency", "diamond");
             yml.addDefault("upgrade-forge.tier-1.cost", 2);

@@ -33,10 +33,10 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 public class UpgradeOpenListener implements Listener {
 
     @EventHandler
-    public void onUpgradesOpen(PlayerInteractAtEntityEvent e){
+    public void onUpgradesOpen(PlayerInteractAtEntityEvent e) {
         IArena a = Arena.getArenaByPlayer(e.getPlayer());
         if (a == null) return;
-        if(!a.getStatus().equals(GameState.playing)) return;
+        if (!a.getStatus().equals(GameState.playing)) return;
         Location l = e.getRightClicked().getLocation();
         for (ITeam t : a.getTeams()) {
             Location l2 = t.getTeamUpgrades();

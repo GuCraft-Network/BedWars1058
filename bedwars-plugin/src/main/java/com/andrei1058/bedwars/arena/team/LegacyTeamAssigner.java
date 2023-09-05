@@ -35,9 +35,10 @@ import static com.andrei1058.bedwars.BedWars.getParty;
 
 public class LegacyTeamAssigner {
 
-    private LegacyTeamAssigner(){}
+    private LegacyTeamAssigner() {
+    }
 
-    public static void assignTeams(IArena arena){
+    public static void assignTeams(IArena arena) {
         //Check who is having parties
         List<Player> skip = new ArrayList<>(), owners = new ArrayList<>();
         for (Player p : arena.getPlayers()) {

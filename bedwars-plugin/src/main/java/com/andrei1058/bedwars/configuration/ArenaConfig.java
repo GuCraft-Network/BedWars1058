@@ -83,7 +83,7 @@ public class ArenaConfig extends ConfigManager {
         if (yml.get("islandRadius") != null) {
             set(ConfigPath.ARENA_ISLAND_RADIUS, yml.getInt("islandRadius"));
         }
-        if (yml.get("voidKill") != null){
+        if (yml.get("voidKill") != null) {
             set("voidKill", null);
         }
         set(ConfigPath.GENERAL_CONFIGURATION_ENABLE_GEN_SPLIT, null);

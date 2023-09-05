@@ -32,7 +32,7 @@ import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 public class TargetListener implements Listener {
 
     @EventHandler
-    public void onTarget(EntityTargetLivingEntityEvent e){
+    public void onTarget(EntityTargetLivingEntityEvent e) {
         if (!(e.getTarget() instanceof Player)) return;
         IArena arena = Arena.getArenaByIdentifier(e.getEntity().getWorld().getName());
         Player p = (Player) e.getTarget();
@@ -41,12 +41,12 @@ public class TargetListener implements Listener {
             e.setCancelled(true);
             return;
         }
-        if (arena.getStatus() != GameState.playing){
+        if (arena.getStatus() != GameState.playing) {
             e.setCancelled(true);
             return;
         }
-        if (BedWars.nms.isDespawnable(e.getEntity())){
-            if (arena.getTeam(p) == BedWars.nms.getDespawnablesList().get(e.getEntity().getUniqueId()).getTeam()){
+        if (BedWars.nms.isDespawnable(e.getEntity())) {
+            if (arena.getTeam(p) == BedWars.nms.getDespawnablesList().get(e.getEntity().getUniqueId()).getTeam()) {
                 e.setCancelled(true);
             }
         }

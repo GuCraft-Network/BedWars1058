@@ -70,10 +70,10 @@ public class Misc {
         if (getServerType() != ServerType.BUNGEE) {
             if (!p.getWorld().getName().equalsIgnoreCase(config.getLobbyWorldName())) {
                 Location loc = config.getConfigLoc("lobbyLoc");
-                if (loc != null){ // Can happen when location is not set in config
-                    try{
+                if (loc != null) { // Can happen when location is not set in config
+                    try {
                         p.teleport(loc);
-                    } catch (Exception ignored){
+                    } catch (Exception ignored) {
                         Bukkit.getLogger().severe("Could not teleport player to lobby! Try setting the lobby again with /bw setLobby");
                     }
                 } else {
@@ -384,8 +384,8 @@ public class Misc {
      * Check if location is on a protected region
      */
     public static boolean isBuildProtected(Location l, IArena a) {
-        for (Region region : a.getRegionsList()){
-            if (region.isInRegion(l)){
+        for (Region region : a.getRegionsList()) {
+            if (region.isInRegion(l)) {
                 return true;
             }
         }

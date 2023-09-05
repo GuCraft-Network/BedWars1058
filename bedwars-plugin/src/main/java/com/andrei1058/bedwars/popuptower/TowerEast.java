@@ -15,6 +15,7 @@ import java.util.List;
 
 public class TowerEast {
     private BukkitTask task;
+
     public TowerEast(Location loc, Block chest, TeamColor color, Player p) {
         ItemStack itemInHand = p.getInventory().getItemInHand();
         if (itemInHand.getAmount() > 1) {

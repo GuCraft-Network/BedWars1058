@@ -44,8 +44,8 @@ public class CmdJoin extends SubCommand {
         super(parent, name);
         setPriority(19);
         showInList(false);
-        setDisplayInfo(com.andrei1058.bedwars.commands.bedwars.MainCommand.createTC("§6 ▪ §7/"+ com.andrei1058.bedwars.commands.bedwars.MainCommand.getInstance().getName()+" join §e<random/ arena/ groupName>",
-                "/"+getParent().getName()+" "+getSubCommandName(), "§fJoin an arena by name or by group.\n§f/bw join random - join random arena."));
+        setDisplayInfo(com.andrei1058.bedwars.commands.bedwars.MainCommand.createTC("§6 ▪ §7/" + com.andrei1058.bedwars.commands.bedwars.MainCommand.getInstance().getName() + " join §e<random/ arena/ groupName>",
+                "/" + getParent().getName() + " " + getSubCommandName(), "§fJoin an arena by name or by group.\n§f/bw join random - join random arena."));
     }
 
     @Override
@@ -56,8 +56,8 @@ public class CmdJoin extends SubCommand {
             s.sendMessage(getMsg(p, Messages.COMMAND_JOIN_USAGE));
             return true;
         }
-        if (args[0].equalsIgnoreCase("random")){
-            if (!Arena.joinRandomArena(p)){
+        if (args[0].equalsIgnoreCase("random")) {
+            if (!Arena.joinRandomArena(p)) {
                 s.sendMessage(getMsg(p, Messages.COMMAND_JOIN_NO_EMPTY_FOUND));
                 Sounds.playSound("join-denied", p);
             } else {
@@ -74,14 +74,14 @@ public class CmdJoin extends SubCommand {
             }
             return true;
         } else if (Arena.getArenaByName(args[0]) != null) {
-            if (Arena.getArenaByName(args[0]).addPlayer(p, false)){
+            if (Arena.getArenaByName(args[0]).addPlayer(p, false)) {
                 Sounds.playSound("join-allowed", p);
             } else {
                 Sounds.playSound("join-denied", p);
             }
             return true;
         } else if (Arena.getArenaByIdentifier(args[0]) != null) {
-            if (Arena.getArenaByIdentifier(args[0]).addPlayer(p, false)){
+            if (Arena.getArenaByIdentifier(args[0]).addPlayer(p, false)) {
                 Sounds.playSound("join-allowed", p);
             } else {
                 Sounds.playSound("join-denied", p);
@@ -95,7 +95,7 @@ public class CmdJoin extends SubCommand {
     @Override
     public List<String> getTabComplete() {
         List<String> tab = new ArrayList<>(BedWars.config.getYml().getStringList(ConfigPath.GENERAL_CONFIGURATION_ARENA_GROUPS));
-        for (IArena arena : Arena.getArenas()){
+        for (IArena arena : Arena.getArenas()) {
             tab.add(arena.getArenaName());
         }
         return tab;

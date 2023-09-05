@@ -66,10 +66,10 @@ public class MenuTrapSlot implements MenuContent {
                 ebe = team.getActiveTraps().get(trap);
             }
         }
-        if (ebe != null){
+        if (ebe != null) {
             i = ebe.getItemStack().clone();
         }
-        i.setAmount(trap+1);
+        i.setAmount(trap + 1);
         ItemMeta im = i.getItemMeta();
         if (im == null) return i;
         im.setDisplayName(Language.getMsg(player, Messages.UPGRADES_TRAP_SLOT_ITEM_NAME_PATH + name.replace("trap-slot-", ""))

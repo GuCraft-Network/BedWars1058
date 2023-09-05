@@ -63,13 +63,14 @@ public class VipListeners implements Listener {
                         if (e.getLocation().getBlockX() == t.getBed().getBlockX() &&
                                 e.getLocation().getBlockY() == t.getBed().getBlockY() &&
                                 e.getLocation().getBlockZ() == t.getBed().getBlockZ()) {
-                            if (BedWars.nms.isBed(t.getBed().clone().add(x, 0, z).getBlock().getType())) e.setCancelled(true);
+                            if (BedWars.nms.isBed(t.getBed().clone().add(x, 0, z).getBlock().getType()))
+                                e.setCancelled(true);
                             return;
                         }
                     }
                 }
             }
-            a.getPlaced().add(new Vector(e.getLocation().getBlockX(), e.getLocation().getBlockY(),e.getLocation().getBlockZ()));
+            a.getPlaced().add(new Vector(e.getLocation().getBlockX(), e.getLocation().getBlockY(), e.getLocation().getBlockZ()));
         }
     }
 }

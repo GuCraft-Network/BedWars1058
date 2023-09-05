@@ -40,28 +40,32 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class CmdStats extends SubCommand {
 
+    private static ConcurrentHashMap<UUID, Long> statsCoolDown = new ConcurrentHashMap<>();
+
     public CmdStats(ParentCommand parent, String name) {
         super(parent, name);
         setPriority(16);
         showInList(false);
-        setDisplayInfo(com.andrei1058.bedwars.commands.bedwars.MainCommand.createTC("§6 ▪ §7/"+ MainCommand.getInstance().getName()+" "+getSubCommandName(), "/"+getParent().getName()+" "+getSubCommandName(), "§fOpens the stats GUI."));
+        setDisplayInfo(com.andrei1058.bedwars.commands.bedwars.MainCommand.createTC("§6 ▪ §7/" + MainCommand.getInstance().getName() + " " + getSubCommandName(), "/" + getParent().getName() + " " + getSubCommandName(), "§fOpens the stats GUI."));
     }
 
-    private static ConcurrentHashMap<UUID, Long> statsCoolDown = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<UUID, Long> getStatsCoolDown() {
+        return statsCoolDown;
+    }
 
     @Override
     public boolean execute(String[] args, CommandSender s) {
         if (s instanceof ConsoleCommandSender) return false;
         Player p = (Player) s;
         IArena a = Arena.getArenaByPlayer(p);
-        if (a != null){
-            if (!(a.getStatus() == GameState.starting || a.getStatus() == GameState.waiting)){
-                if (!a.isSpectator(p)){
+        if (a != null) {
+            if (!(a.getStatus() == GameState.starting || a.getStatus() == GameState.waiting)) {
+                if (!a.isSpectator(p)) {
                     return false;
                 }
             }
         }
-        if (statsCoolDown.containsKey(p.getUniqueId())){
+        if (statsCoolDown.containsKey(p.getUniqueId())) {
             if (System.currentTimeMillis() - 3000 >= statsCoolDown.get(p.getUniqueId())) {
                 statsCoolDown.replace(p.getUniqueId(), System.currentTimeMillis());
             } else {
@@ -80,7 +84,6 @@ public class CmdStats extends SubCommand {
         return new ArrayList<>();
     }
 
-
     @Override
     public boolean canSee(CommandSender s, BedWars api) {
         if (s instanceof ConsoleCommandSender) return false;
@@ -90,9 +93,5 @@ public class CmdStats extends SubCommand {
 
         if (SetupSession.isInSetupSession(p.getUniqueId())) return false;
         return hasPermission(s);
-    }
-
-    public static ConcurrentHashMap<UUID, Long> getStatsCoolDown() {
-        return statsCoolDown;
     }
 }

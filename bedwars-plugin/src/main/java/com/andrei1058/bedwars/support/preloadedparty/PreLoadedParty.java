@@ -30,45 +30,45 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PreLoadedParty {
 
+    private static ConcurrentHashMap<String, PreLoadedParty> preLoadedParties = new ConcurrentHashMap<>();
     private String owner;
     private List<Player> members = new ArrayList<>();
 
-    private static ConcurrentHashMap<String, PreLoadedParty> preLoadedParties = new ConcurrentHashMap<>();
-
-    public PreLoadedParty(String owner){
+    public PreLoadedParty(String owner) {
         PreLoadedParty plp = getPartyByOwner(owner);
-        if (plp != null){
+        if (plp != null) {
             plp.clean();
         }
         this.owner = owner;
         preLoadedParties.put(owner, this);
     }
 
-    public static PreLoadedParty getPartyByOwner(String owner){
+    public static PreLoadedParty getPartyByOwner(String owner) {
         return preLoadedParties.getOrDefault(owner, null);
     }
 
-    public void addMember(Player player){
+    public static ConcurrentHashMap<String, PreLoadedParty> getPreLoadedParties() {
+        return preLoadedParties;
+    }
+
+    public void addMember(Player player) {
         members.add(player);
     }
 
-    public void teamUp(){
+    public void teamUp() {
         if (this.owner == null) return;
         Player owner = Bukkit.getPlayer(this.owner);
         if (owner == null) return;
         if (!owner.isOnline()) return;
-        for (Player player : members){
-            if (!player.getName().equalsIgnoreCase(this.owner)){
+        for (Player player : members) {
+            if (!player.getName().equalsIgnoreCase(this.owner)) {
                 BedWars.getParty().addMember(owner, player);
             }
         }
         preLoadedParties.remove(this.owner);
     }
 
-    public static ConcurrentHashMap<String, PreLoadedParty> getPreLoadedParties() {
-        return preLoadedParties;
-    }
-    public void clean(){
+    public void clean() {
         preLoadedParties.remove(this.owner);
     }
 }

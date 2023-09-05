@@ -39,7 +39,6 @@ import static com.andrei1058.bedwars.BedWars.config;
 @SuppressWarnings("WeakerAccess")
 public class MySQL implements Database {
 
-    private HikariDataSource dataSource;
     private final String host;
     private final String database;
     private final String user;
@@ -49,6 +48,7 @@ public class MySQL implements Database {
     private final boolean certificateVerification;
     private final int poolSize;
     private final int maxLifetime;
+    private HikariDataSource dataSource;
 
     /**
      * Create new MySQL connection.
@@ -356,10 +356,10 @@ public class MySQL implements Database {
                 try (ResultSet result = statement.executeQuery()) {
                     if (result.next()) {
                         return new Object[]{
-                            result.getInt(1),
-                            result.getInt(2),
-                            result.getString(3),
-                            result.getInt(4)
+                                result.getInt(1),
+                                result.getInt(2),
+                                result.getString(3),
+                                result.getInt(4)
                         };
                     }
                 }
@@ -503,7 +503,7 @@ public class MySQL implements Database {
                     String identifier = updateSlots.get(key);
                     ps.setString(index, identifier.trim().isEmpty() ? null : identifier);
                 }
-                ps.setString(hasQuick ? updateSlots.size()+1 : 1, uuid.toString());
+                ps.setString(hasQuick ? updateSlots.size() + 1 : 1, uuid.toString());
                 ps.execute();
             }
         } catch (SQLException e) {

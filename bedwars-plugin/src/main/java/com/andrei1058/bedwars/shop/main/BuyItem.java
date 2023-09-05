@@ -44,12 +44,12 @@ import static com.andrei1058.bedwars.BedWars.plugin;
 @SuppressWarnings("WeakerAccess")
 public class BuyItem implements IBuyItem {
 
+    private final String upgradeIdentifier;
     private ItemStack itemStack;
     private boolean autoEquip = false;
     private boolean permanent = false;
     private boolean unbreakable = false;
     private boolean loaded = false;
-    private final String upgradeIdentifier;
 
     /**
      * Create a shop item
@@ -70,7 +70,7 @@ public class BuyItem implements IBuyItem {
         if (yml.get(path + ".name") != null) {
             ItemMeta im = itemStack.getItemMeta();
             if (im != null) {
-                im.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&r"+yml.getString(path + ".name")));
+                im.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&r" + yml.getString(path + ".name")));
                 itemStack.setItemMeta(im);
             }
         }
@@ -202,7 +202,7 @@ public class BuyItem implements IBuyItem {
             } else if (m == Material.LEATHER_CHESTPLATE || m == Material.CHAINMAIL_CHESTPLATE || m == Material.IRON_CHESTPLATE || m == Material.DIAMOND_CHESTPLATE || m == nms.materialGoldenChestPlate() || m == nms.materialNetheriteChestPlate() || m == nms.materialElytra()) {
                 if (permanent) i = nms.setShopUpgradeIdentifier(i, upgradeIdentifier);
                 player.getInventory().setChestplate(i);
-            } else if (m == Material.LEATHER_LEGGINGS || m == Material.CHAINMAIL_LEGGINGS || m == Material.IRON_LEGGINGS  || m == Material.DIAMOND_LEGGINGS || m == nms.materialGoldenLeggings()|| m == nms.materialNetheriteLeggings()) {
+            } else if (m == Material.LEATHER_LEGGINGS || m == Material.CHAINMAIL_LEGGINGS || m == Material.IRON_LEGGINGS || m == Material.DIAMOND_LEGGINGS || m == nms.materialGoldenLeggings() || m == nms.materialNetheriteLeggings()) {
                 if (permanent) i = nms.setShopUpgradeIdentifier(i, upgradeIdentifier);
                 player.getInventory().setLeggings(i);
             } else {
