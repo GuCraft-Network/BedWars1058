@@ -1,57 +1,77 @@
 package com.andrei1058.bedwars.sidebar;
 
 import com.andrei1058.bedwars.BedWars;
-import com.andrei1058.bedwars.api.events.player.PlayerJoinArenaEvent;
+import com.andrei1058.bedwars.sidebar.thread.RefreshPlaceholdersTask;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 
-public class GetCurServerName implements PluginMessageListener, Listener {
-    private static String serverName = null;
+public class GetCurServerName implements Listener, PluginMessageListener {
 
-    public static String getGameName() {
-        String gameName = null;
-        if (serverName != null) {
-            // 使用正则表达式进行替换操作
-            if (serverName.contains("2v2")) {
-                gameName = serverName.replaceAll("bw([shru])hyp2", "$1".toUpperCase());
-            } else {
-                gameName = serverName.replaceAll("bw([shru])hyp4", "$1".toUpperCase());
-            }
-        }
-        return gameName;
-    }
+    private static String gamename = "Null";
+    private String servername = "Null";
 
     @EventHandler
-    public void onJoin(PlayerJoinArenaEvent e) {
-        if (serverName != null) return;
-        try {
-            ByteArrayDataOutput out = ByteStreams.newDataOutput();
-            out.writeUTF("GetServer");
-            e.getPlayer().sendPluginMessage(BedWars.plugin, "BungeeCord", out.toByteArray());
-        } catch (Exception var3) {
-            var3.printStackTrace();
+    public void onJoin(PlayerJoinEvent e) {
+        if (!("Null".equals(servername) && "Null".equals(gamename))) {
+            return;
+        }
+        Bukkit.getScheduler().runTaskLaterAsynchronously(BedWars.plugin, () -> {
+            try {
+                ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                out.writeUTF("GetServer");
+                e.getPlayer().sendPluginMessage(BedWars.plugin, "BungeeCord", out.toByteArray());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }, 2L);
+    }
+
+    public static String getGameName() {
+        if (gamename.equals("Null")) {
+            return gamename;
+        } else {
+            SidebarService.getInstance().refreshPlaceholders();
+        }
+        return gamename;
+    }
+
+    private void GetGameName() {
+        if (servername.startsWith("bwhyp2")) {
+            gamename = servername.replace("bwhyp2v", "N");
+        } else if (servername.startsWith("bwhyp4")) {
+            gamename = servername.replace("bwhyp4v", "N");
+        } else if (servername.startsWith("bwrhyp4")) {
+            gamename = servername.replace("bwrhyp4v", "R");
+        } else if (servername.startsWith("bwuhyp4")) {
+            gamename = servername.replace("bwuhyp4v", "U");
+        } else if (servername.startsWith("bwshyp4")) {
+            gamename = servername.replace("bwshyp4v", "S");
+        } else {
+            gamename = "Null";
         }
     }
 
     @Override
     public void onPluginMessageReceived(String channel, Player player, byte[] message) {
-        if (!channel.equals("BungeeCord")) {
-            return;
-        }
-        try {
-            DataInputStream input = new DataInputStream(new ByteArrayInputStream(message));
-            if (input.readUTF().equals("GetServer")) {
-                serverName = input.readUTF();
+        if ("BungeeCord".equals(channel)) {
+            try {
+                DataInputStream input = new DataInputStream(new ByteArrayInputStream(message));
+                if ("GetServer".equals(input.readUTF())) {
+                    servername = input.readUTF();
+                    GetGameName();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception var5) {
-            var5.printStackTrace();
         }
     }
 }
