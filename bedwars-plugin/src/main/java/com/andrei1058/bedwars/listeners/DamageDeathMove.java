@@ -168,14 +168,6 @@ public class DamageDeathMove implements Listener {
                 }
             }
 
-            //隐身
-            if (p.hasPotionEffect(PotionEffectType.INVISIBILITY) && a.getShowTime().containsKey(p)) {
-                p.removePotionEffect(PotionEffectType.INVISIBILITY);
-                ITeam team = a.getTeam(p);
-                p.sendMessage(getMsg(p, Messages.INTERACT_INVISIBILITY_REMOVED_DAMGE_TAKEN));
-                Bukkit.getPluginManager().callEvent(new PlayerInvisibilityPotionEvent(PlayerInvisibilityPotionEvent.Type.REMOVED, team, p, a));
-            }
-
             //在死亡时清除所有药水效果
             for (PotionEffect pf : p.getActivePotionEffects()) {
                 //移除所有
@@ -560,9 +552,15 @@ public class DamageDeathMove implements Listener {
                 e.getDrops().clear();
             }
 
-
             // send respawn packet
             //Bukkit.getScheduler().runTaskLater(plugin, () -> victim.spigot().respawn(), 3L);
+
+            //隐身
+            if (a.getShowTime().containsKey(victim)) {
+                ITeam team = a.getTeam(victim);
+                victim.sendMessage(getMsg(victim, Messages.INTERACT_INVISIBILITY_REMOVED_DAMGE_TAKEN));
+                Bukkit.getPluginManager().callEvent(new PlayerInvisibilityPotionEvent(PlayerInvisibilityPotionEvent.Type.REMOVED, team, victim, a));
+            }
 
             a.addPlayerDeath(victim);
 
