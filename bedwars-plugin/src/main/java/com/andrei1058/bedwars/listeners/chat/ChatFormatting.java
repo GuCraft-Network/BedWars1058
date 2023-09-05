@@ -117,6 +117,10 @@ public class ChatFormatting implements Listener {
 
             // spectator chat
             if (a.isSpectator(p)) {
+                if (p.hasPermission(Permissions.PERMISSION_ALL)) {
+                    setRecipients(e, a.getPlayers(), a.getSpectators());
+                    e.setFormat(parsePHolders(language.m(Messages.FORMATTING_CHAT_LOBBY), p, null));
+                }
                 setRecipients(e, a.getSpectators());
                 e.setFormat(parsePHolders(language.m(Messages.FORMATTING_CHAT_SPECTATOR), p, null));
                 return;
@@ -134,11 +138,6 @@ public class ChatFormatting implements Listener {
 
             // shout format
             if (isShouting(msg, language) && a.getMaxInTeam() != 1) {
-                if (!(p.hasPermission(Permissions.PERMISSION_ALL))) {
-                    e.setCancelled(true);
-                    p.sendMessage(Language.getMsg(p, Messages.COMMAND_NOT_FOUND_OR_INSUFF_PERMS));
-                    return;
-                }
                 if (ShoutCommand.isShoutCooldown(p)) {
                     e.setCancelled(true);
                     p.sendMessage(language.m(Messages.COMMAND_COOLDOWN)
