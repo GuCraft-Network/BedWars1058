@@ -127,7 +127,6 @@ public class JoinListenerBungee implements Listener {
         if (proxyUser == null) {
             // If is an admin let him in to do the setup
             if (p.hasPermission("bw.setup")) {
-                JoinHandlerCommon.displayCustomerDetails(p);
                 Bukkit.dispatchCommand(p, "bw");
                 World mainWorld = Bukkit.getWorlds().get(0);
                 if (mainWorld != null) {
@@ -154,7 +153,6 @@ public class JoinListenerBungee implements Listener {
             if (reJoin != null) {
                 // Check if can re-join
                 if (reJoin.canReJoin()) {
-                    JoinHandlerCommon.displayCustomerDetails(p);
                     reJoin.reJoin(p);
                     // Cache player language
                     Language.setPlayerLanguage(p.getUniqueId(), playerLang.getIso());
@@ -179,7 +177,6 @@ public class JoinListenerBungee implements Listener {
 
             // Join allowed, cache player language
             Language.setPlayerLanguage(p.getUniqueId(), playerLang.getIso());
-            JoinHandlerCommon.displayCustomerDetails(p);
 
             // Join as player
             switch (status) {

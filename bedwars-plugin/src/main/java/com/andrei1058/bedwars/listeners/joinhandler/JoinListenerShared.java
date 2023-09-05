@@ -38,8 +38,6 @@ public class JoinListenerShared implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         final Player p = e.getPlayer();
 
-        JoinHandlerCommon.displayCustomerDetails(p);
-
         // Show commands if player is op and there is no set arenas
         if (p.isOp()) {
             if (Arena.getArenas().isEmpty()) {

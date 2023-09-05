@@ -113,7 +113,6 @@ public class JoinListenerBungeeLegacy implements Listener {
             }
         }
 
-        JoinHandlerCommon.displayCustomerDetails(p);
 
         if (Arena.getArenas().isEmpty()) {
             // Show setup commands if there is no arena available

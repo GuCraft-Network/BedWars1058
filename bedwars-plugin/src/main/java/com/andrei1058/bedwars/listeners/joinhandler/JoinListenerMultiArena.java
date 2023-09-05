@@ -43,8 +43,6 @@ public class JoinListenerMultiArena implements Listener {
         final Player p = e.getPlayer();
         p.getInventory().setArmorContents(null);
 
-        JoinHandlerCommon.displayCustomerDetails(p);
-
         // Show commands if player is op and there is no set arenas
         if (p.isOp()) {
             if (Arena.getArenas().isEmpty()) {
