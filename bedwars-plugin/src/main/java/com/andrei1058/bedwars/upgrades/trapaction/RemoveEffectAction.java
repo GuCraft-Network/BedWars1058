@@ -35,9 +35,9 @@ import static com.andrei1058.bedwars.api.language.Language.getMsg;
 
 public class RemoveEffectAction implements TrapAction {
 
-    private PotionEffectType potionEffectType;
+    private final PotionEffectType potionEffectType;
 
-    public RemoveEffectAction(PotionEffectType potionEffectType){
+    public RemoveEffectAction(PotionEffectType potionEffectType) {
         this.potionEffectType = potionEffectType;
     }
 
@@ -50,15 +50,12 @@ public class RemoveEffectAction implements TrapAction {
     public void onTrigger(@NotNull Player player, ITeam playerTeam, ITeam targetTeam) {
         player.removePotionEffect(potionEffectType);
         //如果有隐身效果，在触发报警陷阱时移除隐身效果以及脚印
-        if (potionEffectType.equals(PotionEffectType.INVISIBILITY)) {
-            IArena a = Arena.getArenaByPlayer(player);
-            if (a.getShowTime().containsKey(player)) {
-                player.removePotionEffect(PotionEffectType.INVISIBILITY);
-                a.getShowTime().remove(player);
-                player.sendMessage(getMsg(player, Messages.INTERACT_INVISIBILITY_REMOVED_TRAP));
-                ITeam team = a.getTeam(player);
-                Bukkit.getPluginManager().callEvent(new PlayerInvisibilityPotionEvent(PlayerInvisibilityPotionEvent.Type.REMOVED, team, player, a));
-            }
+        IArena a = Arena.getArenaByPlayer(player);
+        if (potionEffectType.toString().contains("PotionEffectType.INVISIBILITY") && a.getShowTime().containsKey(player)) {
+            player.removePotionEffect(PotionEffectType.INVISIBILITY);
+            player.sendMessage(getMsg(player, Messages.INTERACT_INVISIBILITY_REMOVED_TRAP));
+            ITeam team = a.getTeam(player);
+            Bukkit.getPluginManager().callEvent(new PlayerInvisibilityPotionEvent(PlayerInvisibilityPotionEvent.Type.REMOVED, team, player, a));
         }
     }
 }
