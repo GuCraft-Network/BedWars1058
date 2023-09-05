@@ -51,7 +51,7 @@ public class RemoveEffectAction implements TrapAction {
         player.removePotionEffect(potionEffectType);
         //如果有隐身效果，在触发报警陷阱时移除隐身效果以及脚印
         IArena a = Arena.getArenaByPlayer(player);
-        if (potionEffectType.toString().contains("PotionEffectType.INVISIBILITY") && a.getShowTime().containsKey(player)) {
+        if (potionEffectType.toString().contains("INVISIBILITY") && a.getShowTime().containsKey(player)) {
             player.removePotionEffect(PotionEffectType.INVISIBILITY);
             player.sendMessage(getMsg(player, Messages.INTERACT_INVISIBILITY_REMOVED_TRAP));
             ITeam team = a.getTeam(player);
