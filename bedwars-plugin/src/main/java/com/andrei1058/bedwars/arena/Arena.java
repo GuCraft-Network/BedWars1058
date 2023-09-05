@@ -831,8 +831,9 @@ public class Arena implements IArena {
             for (PotionEffect pf : p.getActivePotionEffects()) {
                 p.removePotionEffect(pf.getType());
             }
-        } else if (status == GameState.playing) {
+        } else if (status == GameState.playing || status == GameState.starting && (startingTask != null && startingTask.getCountdown() <= 1)) {
             addSpectator(p, false, null);
+            p.sendMessage(getMsg(p,Messages.ARENA_JOIN_DENIED_NO_TIME));
             /* stop code if status playing*/
             return false;
         }
