@@ -141,20 +141,6 @@ public class GamePlayingTask implements Runnable, PlayingTask {
                         }
                     }
                     getArena().updateNextEvent();
-                    for (ITeam team : arena.getTeams()) {
-                        for (IGenerator o : team.getGenerators()) {
-                            Location l = o.getLocation();
-                            for (int y = 0; y < 20; y++) {
-                                l.clone().subtract(0, y, 0).getBlock().setType(Material.AIR);
-                            }
-                        }
-                    }
-                    for (ITeam t : getArena().getTeams()) {
-                        if (t.getMembers().isEmpty()) continue;
-                        for (int x = 0; x < t.getDragons(); x++) {
-                            nms.spawnDragon(getArena().getConfig().getArenaLoc("waiting.Loc").add(0, 10, 0), t);
-                        }
-                    }
                 }
                 break;
             case GAME_END:
