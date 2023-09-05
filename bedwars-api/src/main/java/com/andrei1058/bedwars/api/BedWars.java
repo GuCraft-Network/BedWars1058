@@ -399,12 +399,6 @@ public interface BedWars {
         ConfigManager getMainConfig();
 
         /**
-         * Get signs configuration.
-         */
-        @SuppressWarnings("unused")
-        ConfigManager getSignsConfig();
-
-        /**
          * Get generators configuration.
          */
         @SuppressWarnings("unused")

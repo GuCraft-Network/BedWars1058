@@ -117,7 +117,7 @@ public class Arena implements IArena {
     public boolean allowSpectate = true;
     private List<Player> players = new ArrayList<>();
     private List<Player> spectators = new ArrayList<>();
-    private List<Player> respawners = new ArrayList<>();
+    public List<Player> respawns = new ArrayList<>();
     private GameState status = GameState.restarting;
     private YamlConfiguration yml;
     private ArenaConfig cm;
