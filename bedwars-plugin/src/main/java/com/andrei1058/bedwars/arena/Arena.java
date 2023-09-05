@@ -117,7 +117,7 @@ public class Arena implements IArena {
     public boolean allowSpectate = true;
     private List<Player> players = new ArrayList<>();
     private List<Player> spectators = new ArrayList<>();
-    public List<Player> respawns = new ArrayList<>();
+    private List<Player> respawns = new ArrayList<>();
     private GameState status = GameState.restarting;
     private YamlConfiguration yml;
     private ArenaConfig cm;
@@ -1781,6 +1781,11 @@ public class Arena implements IArena {
         return spectators;
     }
 
+    @Override
+    public List<Player> getRespawns() {
+        return respawns;
+    }
+
     /**
      * Add a kill point to the game stats.
      */
@@ -2344,6 +2349,7 @@ public class Arena implements IArena {
         arenaByPlayer.entrySet().removeIf(entry -> entry.getValue() == this);
         players = null;
         spectators = null;
+        respawns = null;
         yml = null;
         cm = null;
         world = null;
@@ -2444,6 +2450,7 @@ public class Arena implements IArena {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 2)); //隐身效果
 
                 respawnSessions.put(player, seconds);
+                respawns.add(player);
 
                 //开始重生倒计时
                 new BukkitRunnable() {

@@ -86,6 +86,12 @@ public interface IArena {
      */
     List<Player> getSpectators();
 
+
+    /**
+     * Get a list of spectators.
+     */
+    List<Player> getRespawns();
+
     /**
      * Get the player's team.
      * This will work if the player is alive only.
