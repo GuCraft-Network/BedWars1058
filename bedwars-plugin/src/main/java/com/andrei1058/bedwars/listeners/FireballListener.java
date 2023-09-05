@@ -90,7 +90,7 @@ public class FireballListener implements Listener {
         fireball = BedWars.nms.setFireballDirection(fireball, direction);
         fireball.setVelocity(fireball.getDirection().multiply(fireballSpeedMultiplier));
         fireball.setYield((float) fireballExplosionSize);
-        fireball.setMetadata("bw2023", new FixedMetadataValue(BedWars.plugin, "ceva"));
+        fireball.setMetadata("bw1058", new FixedMetadataValue(BedWars.plugin, "ceva"));
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 1));//缓慢效果
         BedWars.nms.minusAmount(player, handItem, 1);
     }
