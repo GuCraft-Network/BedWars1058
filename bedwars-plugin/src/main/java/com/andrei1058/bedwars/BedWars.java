@@ -748,10 +748,10 @@ public class BedWars extends JavaPlugin {
     private void warnings() {
         Bukkit.getScheduler().runTaskLaterAsynchronously(BedWars.plugin, () -> {
             if (Bukkit.getPluginManager().isPluginEnabled("Multiverse-Core")) {
-                this.getLogger().severe(ChatColor.RED + "[BedWars1058] Multiverse-Core detected! Please remove it or make sure it won't touch BedWars maps!"); // run after 5 ticks to make sure its after any update spam on join
+                this.getLogger().severe(ChatColor.RED + "Multiverse-Core detected! Please remove it or make sure it won't touch BedWars maps!"); // run after 5 ticks to make sure its after any update spam on join
             }
             if (Bukkit.getServer().getSpawnRadius() > 0) {
-                Bukkit.getScheduler().runTaskLaterAsynchronously(BedWars.plugin, () -> this.getLogger().severe(ChatColor.RED + "[BedWars1058] Your spawn-protection in server.properties is enabled. " + ChatColor.YELLOW + "This might mess with BedWars arenas!" + ChatColor.GRAY + " It is highly reccomend setting it to 0."), 5);
+                Bukkit.getScheduler().runTaskLaterAsynchronously(BedWars.plugin, () -> this.getLogger().severe(ChatColor.RED + "Your spawn-protection in server.properties is enabled. " + ChatColor.YELLOW + "This might mess with BedWars arenas!" + ChatColor.GRAY + " It is highly reccomend setting it to 0."), 5);
             }
         }, 105L);
     }
