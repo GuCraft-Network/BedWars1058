@@ -155,7 +155,7 @@ public class BwSidebar implements ISidebar {
             line = line
                     .replace("{serverIp}", BedWars.config.getString(ConfigPath.GENERAL_CONFIG_PLACEHOLDERS_REPLACEMENTS_SERVER_IP))
                     .replace("{version}", plugin.getDescription().getVersion())
-                    .replace("{server}", config.getString(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_SERVER_ID))
+                    .replace("{server}", getServer())
                     .replace("{playername}", player.getName())
                     .replace("{player}", player.getDisplayName())
                     .replace("{money}", String.valueOf(getEconomy().getMoney(player)));
@@ -173,6 +173,15 @@ public class BwSidebar implements ISidebar {
         return lines;
     }
 
+    private String getServer() {
+        if (BedWars.getServerType() == ServerType.BUNGEE && !autoscale) {
+            return GetCurServerName.getGameName();
+        } else {
+            config.getString(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_SERVER_ID);
+        }
+        return null;
+    }
+
     @Contract(pure = true)
     private @NotNull List<PlaceholderProvider> getPlaceholders() {
         List<PlaceholderProvider> providers = new ArrayList<>();
@@ -183,11 +192,7 @@ public class BwSidebar implements ISidebar {
         providers.add(new PlaceholderProvider("{date}", () -> dateFormat.format(new Date(System.currentTimeMillis()))));
         providers.add(new PlaceholderProvider("{serverIp}", () -> BedWars.config.getString(ConfigPath.GENERAL_CONFIG_PLACEHOLDERS_REPLACEMENTS_SERVER_IP)));
         providers.add(new PlaceholderProvider("{version}", () -> plugin.getDescription().getVersion()));
-        if (BedWars.getServerType() == ServerType.BUNGEE && !autoscale) {
-            providers.add(new PlaceholderProvider("{server}", () -> GetCurServerName.getGameName()));
-        } else {
-            providers.add(new PlaceholderProvider("{server}", () -> config.getString(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_SERVER_ID)));
-        }
+        providers.add(new PlaceholderProvider("{server}", () -> config.getString(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_SERVER_ID)));
         PlayerLevel level = PlayerLevel.getLevelByPlayer(getPlayer().getUniqueId());
         if (null != level) {
             providers.add(new PlaceholderProvider("{progress}", level::getProgress));
@@ -601,7 +606,7 @@ public class BwSidebar implements ISidebar {
         strings = new ArrayList<>();
         for (String string : Language.getList(getPlayer(), path)) {
             String parsed = string.replace("{vPrefix}", BedWars.getChatSupport().getPrefix(targetPlayer))
-                    .replace("{vSuffix}", BedWars.getChatSupport().getSuffix(targetPlayer)).replace("{vPrefixColor}",BedWars.getChatSupport().getPrefixColor(targetPlayer));
+                    .replace("{vSuffix}", BedWars.getChatSupport().getSuffix(targetPlayer)).replace("{vPrefixColor}", BedWars.getChatSupport().getPrefixColor(targetPlayer));
 
             if (null != replacements) {
                 for (Map.Entry<String, String> entry : replacements.entrySet()) {
