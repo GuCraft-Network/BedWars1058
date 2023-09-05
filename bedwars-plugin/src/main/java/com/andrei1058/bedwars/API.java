@@ -213,11 +213,6 @@ public class API implements com.andrei1058.bedwars.api.BedWars {
         }
 
         @Override
-        public ConfigManager getSignsConfig() {
-            return BedWars.signs;
-        }
-
-        @Override
         public ConfigManager getGeneratorsConfig() {
             return BedWars.generators;
         }

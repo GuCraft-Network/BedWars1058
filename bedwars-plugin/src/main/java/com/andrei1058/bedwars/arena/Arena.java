@@ -117,7 +117,7 @@ public class Arena implements IArena {
     public boolean allowSpectate = true;
     private List<Player> players = new ArrayList<>();
     private List<Player> spectators = new ArrayList<>();
-    private List<Block> signs = new ArrayList<>();
+    private List<Player> respawners = new ArrayList<>();
     private GameState status = GameState.restarting;
     private YamlConfiguration yml;
     private ArenaConfig cm;
@@ -1642,15 +1642,6 @@ public class Arena implements IArena {
     }
 
     /**
-     * Get the join signs for this arena
-     *
-     * @return signs.
-     */
-    public List<Block> getSigns() {
-        return signs;
-    }
-
-    /**
      * Get the island radius
      */
     public int getIslandRadius() {
@@ -2353,7 +2344,6 @@ public class Arena implements IArena {
         arenaByPlayer.entrySet().removeIf(entry -> entry.getValue() == this);
         players = null;
         spectators = null;
-        signs = null;
         yml = null;
         cm = null;
         world = null;

@@ -275,13 +275,6 @@ public interface IArena {
     int getPlayerBedsDestroyed(Player p);
 
     /**
-     * Get the join signs for this arena
-     *
-     * @return signs.
-     */
-    List<Block> getSigns();
-
-    /**
      * Get the island radius
      */
     int getIslandRadius();

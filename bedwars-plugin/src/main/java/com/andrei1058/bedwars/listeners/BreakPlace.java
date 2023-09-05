@@ -391,42 +391,6 @@ public class BreakPlace implements Listener {
         }
     }
 
-    /**
-     * update game signs
-     */
-    @EventHandler
-    public void onSignChange(SignChangeEvent e) {
-        if (e == null) return;
-        Player p = e.getPlayer();
-        if (Objects.requireNonNull(e.getLine(0)).equalsIgnoreCase("[" + mainCmd + "]")) {
-            File dir = new File(plugin.getDataFolder(), "/Arenas");
-            boolean exists = false;
-            if (dir.exists()) {
-                for (File f : Objects.requireNonNull(dir.listFiles())) {
-                    if (f.isFile()) {
-                        if (f.getName().contains(".yml")) {
-                            if (Objects.equals(e.getLine(1), f.getName().replace(".yml", ""))) {
-                                exists = true;
-                            }
-                        }
-                    }
-                }
-                List<String> s;
-                if (signs.getYml().get("locations") == null) {
-                    s = new ArrayList<>();
-                } else {
-                    s = new ArrayList<>(signs.getYml().getStringList("locations"));
-                }
-                if (exists) {
-                    s.add(e.getLine(1) + "," + signs.stringLocationConfigFormat(e.getBlock().getLocation()));
-                    signs.set("locations", s);
-                }
-            } else {
-                p.sendMessage("§c▪ §7You didn't set any arena yet!");
-            }
-        }
-    }
-
     @EventHandler
     public void onBucketFill(PlayerBucketFillEvent e) {
         if (e.isCancelled()) return;
