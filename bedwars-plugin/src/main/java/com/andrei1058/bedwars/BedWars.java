@@ -106,7 +106,7 @@ public class BedWars extends JavaPlugin {
     private static final String version = Bukkit.getServer().getClass().getName().split("\\.")[3];
     public static boolean debug = true, autoscale = false;
     public static String mainCmd = "bw", link = "https://www.ac66.net";
-    public static ConfigManager signs, generators;
+    public static ConfigManager generators;
     public static MainConfig config;
     public static ShopManager shop;
     public static StatsManager statsManager;
@@ -651,11 +651,27 @@ public class BedWars extends JavaPlugin {
         if (null == pluginDescription) {
             return false;
         }
-
         String[] versionString = pluginDescription.getVersion().split("\\.");
+        if (version.equals("2.3.0-SNAPSHOT")) {
+            String adapterPath;
+            try {
+                adapterPath = "com.andrei1058.bedwars.arena.mapreset.slime.SlimeAdapter";
+                Constructor<?> constructor = Class.forName(adapterPath).getConstructor(Plugin.class);
+                getLogger().info("Loading restore adapter: " + adapterPath + " ...");
+
+                RestoreAdapter candidate = (RestoreAdapter) constructor.newInstance(this);
+                api.setRestoreAdapter(candidate);
+                getLogger().info("Hook into " + candidate.getDisplayName() + " as restore adapter.");
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                this.getLogger().info("Something went wrong! Using internal reset adapter...");
+            }
+        }
+        return false;
 
 
-        try {
+        /*try {
             int major = Integer.parseInt(versionString[0]);
             int minor = Integer.parseInt(versionString[1]);
             int release = versionString.length > 3 ? Integer.parseInt(versionString[3]) : 0;
@@ -682,7 +698,7 @@ public class BedWars extends JavaPlugin {
             e.printStackTrace();
             this.getLogger().info("Something went wrong! Using internal reset adapter...");
         }
-        return false;
+        return false;*/
     }
 
     private void registerDelayedCommands() {
