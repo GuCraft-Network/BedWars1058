@@ -2489,7 +2489,7 @@ public class Arena implements IArena {
                             }
                         }
                     }
-                }.runTaskTimerAsynchronously(plugin, 0L, 20L);
+                }.runTaskTimerAsynchronously(plugin, 2L, 20L);
 
                 Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> {
                     player.setAllowFlight(true);
