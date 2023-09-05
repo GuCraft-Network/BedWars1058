@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.andrei1058.bedwars.BedWars.nms;
+import static com.andrei1058.bedwars.BedWars.plugin;
 import static com.andrei1058.bedwars.api.language.Language.getMsg;
 
 public class PlayerDrops {
@@ -77,7 +78,7 @@ public class PlayerDrops {
                 victim.getEnderChest().forEach(item -> {
                     if (item != null) {
                         victim.getWorld().dropItemNaturally(dropsLocation, item);
-                        victim.sendMessage(getMsg(victim, Messages.INTERACT_ENDERCHEST_ITEM_DROP.replace("{PlayerName}", victim.getDisplayName())));
+                        victim.sendMessage(getMsg(victim, Messages.INTERACT_ENDERCHEST_ITEM_DROP.replace("{Player}", plugin.getName()).replace("{PlayerName}", victim.getDisplayName())));
                     }
                 });
                 victim.getEnderChest().clear();
