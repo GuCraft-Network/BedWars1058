@@ -833,7 +833,7 @@ public class Arena implements IArena {
             }
         } else if (status == GameState.playing || status == GameState.starting && (startingTask != null && startingTask.getCountdown() <= 1)) {
             addSpectator(p, false, null);
-            p.sendMessage(getMsg(p,Messages.ARENA_JOIN_DENIED_NO_TIME));
+            p.sendMessage(getMsg(p, Messages.ARENA_JOIN_DENIED_NO_TIME));
             /* stop code if status playing*/
             return false;
         }
@@ -1111,6 +1111,35 @@ public class Arena implements IArena {
                 new ReJoin(p, this, team, cacheList);
             }
 
+            if (status == GameState.playing) {
+                for (Player on : getPlayers()) {
+                    on.sendMessage(
+                            getMsg(on, Messages.COMMAND_LEAVE_MSG_INGAME)
+                                    .replace("{vPrefix}", getChatSupport().getPrefix(p))
+                                    .replace("{vSuffix}", getChatSupport().getSuffix(p))
+                                    .replace("{playername}", p.getName())
+                                    .replace("{player}", p.getDisplayName())
+                                    .replace("{PlayerColor}", team.getColor().chat().toString())
+                    );
+                }
+                for (Player on : getSpectators()) {
+                    on.sendMessage(getMsg(on, Messages.COMMAND_LEAVE_MSG_INGAME).replace("{vPrefix}", getChatSupport().getPrefix(p)).replace("{playername}", p.getName()).replace("{player}", p.getDisplayName()).replace("{PlayerColor}", team.getColor().chat().toString()));
+                }
+            } else {
+                for (Player on : getPlayers()) {
+                    on.sendMessage(
+                            getMsg(on, Messages.COMMAND_LEAVE_MSG)
+                                    .replace("{vPrefix}", getChatSupport().getPrefix(p))
+                                    .replace("{vSuffix}", getChatSupport().getSuffix(p))
+                                    .replace("{playername}", p.getName())
+                                    .replace("{player}", p.getDisplayName()
+                                    )
+                    );
+                }
+                for (Player on : getSpectators()) {
+                    on.sendMessage(getMsg(on, Messages.COMMAND_LEAVE_MSG).replace("{vPrefix}", getChatSupport().getPrefix(p)).replace("{playername}", p.getName()).replace("{player}", p.getDisplayName()));
+                }
+            }
             // pvp log out
             if (team != null) {
                 ITeam killerTeam = getTeam(lastDamager);
@@ -1146,19 +1175,6 @@ public class Arena implements IArena {
                     PlayerDrops.handlePlayerDrops(this, p, lastDamager, team, killerTeam, cause, new ArrayList<>(Arrays.asList(p.getInventory().getContents())));
                 }
             }
-        }
-        for (Player on : getPlayers()) {
-            on.sendMessage(
-                    getMsg(on, Messages.COMMAND_LEAVE_MSG)
-                            .replace("{vPrefix}", getChatSupport().getPrefix(p))
-                            .replace("{vSuffix}", getChatSupport().getSuffix(p))
-                            .replace("{playername}", p.getName())
-                            .replace("{player}", p.getDisplayName()
-                            )
-            );
-        }
-        for (Player on : getSpectators()) {
-            on.sendMessage(getMsg(on, Messages.COMMAND_LEAVE_MSG).replace("{vPrefix}", getChatSupport().getPrefix(p)).replace("{playername}", p.getName()).replace("{player}", p.getDisplayName()));
         }
 
         if (getServerType() == ServerType.SHARED) {

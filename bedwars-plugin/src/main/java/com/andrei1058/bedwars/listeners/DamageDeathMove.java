@@ -229,7 +229,8 @@ public class DamageDeathMove implements Listener {
                 .replace("{amount}", new DecimalFormat("00.#").format(((Player) e.getEntity()).getHealth() - e.getFinalDamage()))
                 .replace("{TeamColor}", team.getColor().chat().toString())
                 .replace("{TeamName}", team.getDisplayName(lang))
-                .replace("{PlayerName}", ChatColor.stripColor(p.getDisplayName()));
+                .replace("{PlayerName}", ChatColor.stripColor(p.getDisplayName()))
+                .replace("{vPrefixColor}", getChatSupport().getPrefixColor(p));
         damager.sendMessage(message);
     }
 
