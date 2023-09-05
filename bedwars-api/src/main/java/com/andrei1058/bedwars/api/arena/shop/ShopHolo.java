@@ -62,6 +62,18 @@ public class ShopHolo {
         if (api == null) api = Bukkit.getServer().getServicesManager().getRegistration(BedWars.class).getProvider();
     }
 
+    public static void clearForArena(IArena a) {
+        for (ShopHolo sh : new ArrayList<>(getShopHolo())) {
+            if (sh.a == a) {
+                shopHolo.remove(sh);
+            }
+        }
+    }
+
+    public static List<ShopHolo> getShopHolo() {
+        return shopHolo;
+    }
+
     public void update() {
         if (l == null) {
             Bukkit.broadcastMessage("LOCATION IS NULL");
@@ -87,23 +99,11 @@ public class ShopHolo {
         }
     }
 
-    public static void clearForArena(IArena a) {
-        for (ShopHolo sh : new ArrayList<>(getShopHolo())) {
-            if (sh.a == a) {
-                shopHolo.remove(sh);
-            }
-        }
-    }
-
     public IArena getA() {
         return a;
     }
 
     public String getIso() {
         return iso;
-    }
-
-    public static List<ShopHolo> getShopHolo() {
-        return shopHolo;
     }
 }

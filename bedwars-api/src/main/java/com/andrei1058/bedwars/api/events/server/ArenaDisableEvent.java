@@ -38,6 +38,10 @@ public class ArenaDisableEvent extends Event {
         this.worldName = worldName;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     /**
      * Get the arena name
      */
@@ -51,10 +55,6 @@ public class ArenaDisableEvent extends Event {
 
     @Override
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

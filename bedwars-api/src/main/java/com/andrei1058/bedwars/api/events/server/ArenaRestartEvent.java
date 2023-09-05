@@ -37,6 +37,10 @@ public class ArenaRestartEvent extends Event {
         this.worldName = worldName;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     /**
      * Get the arena name.
      */
@@ -51,9 +55,5 @@ public class ArenaRestartEvent extends Event {
 
     public String getWorldName() {
         return worldName;
-    }
-
-    public static HandlerList getHandlerList() {
-        return HANDLERS;
     }
 }

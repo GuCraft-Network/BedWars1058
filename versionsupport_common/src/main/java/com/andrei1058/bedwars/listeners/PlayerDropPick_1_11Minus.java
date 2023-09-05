@@ -40,7 +40,7 @@ public class PlayerDropPick_1_11Minus implements Listener {
     private static BedWars api;
 
     // Why is it unused????????
-    public PlayerDropPick_1_11Minus(BedWars bedWars){
+    public PlayerDropPick_1_11Minus(BedWars bedWars) {
         api = bedWars;
     }
 
@@ -75,7 +75,7 @@ public class PlayerDropPick_1_11Minus implements Listener {
             return;
         }
 
-        if (e.getItem().getItemStack().getType() == Material.ARROW){
+        if (e.getItem().getItemStack().getType() == Material.ARROW) {
             e.getItem().setItemStack(api.getVersionSupport().createItemStack(e.getItem().getItemStack().getType().toString(), e.getItem().getItemStack().getAmount(), (short) 0));
             return;
         }
@@ -92,16 +92,15 @@ public class PlayerDropPick_1_11Minus implements Listener {
 
                     //Call ore pick up event
 
-                    if (!api.getAFKUtil().isPlayerAFK(e.getPlayer())){
+                    if (!api.getAFKUtil().isPlayerAFK(e.getPlayer())) {
                         PlayerGeneratorCollectEvent event = new PlayerGeneratorCollectEvent(e.getPlayer(), e.getItem(), a);
                         Bukkit.getPluginManager().callEvent(event);
-                        if (event.isCancelled()){
+                        if (event.isCancelled()) {
                             e.setCancelled(true);
                         } else {
                             e.getItem().getItemStack().setItemMeta(itemMeta);
                         }
-                    }
-                    else {  //Cancel Event if play is afk
+                    } else {  //Cancel Event if play is afk
                         e.setCancelled(true);
                     }
                 }

@@ -33,10 +33,11 @@ Steps to reproduce the behavior:
 <!-- If applicable, add screenshots to help explain your problem. -->
 
 **System (please complete the following information):**
- - OS: <!-- e.g. MacOS, Windows Server, Linux -->
- - Server software <!-- e.g. spigot, paper -->
- - Server Version <!-- e.g. 1.8.8 -->
- - Plugin Version <!-- e.g. 21.11.2 -->
+
+- OS: <!-- e.g. MacOS, Windows Server, Linux -->
+- Server software <!-- e.g. spigot, paper -->
+- Server Version <!-- e.g. 1.8.8 -->
+- Plugin Version <!-- e.g. 21.11.2 -->
 
 **Additional context**
 <!-- Add any other context about the problem here. -->

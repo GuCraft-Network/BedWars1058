@@ -75,6 +75,15 @@ public class v1_8_R3 extends VersionSupport {
         }
     }
 
+    private static ArmorStand createArmorStand(String name, Location loc) {
+        ArmorStand a = loc.getWorld().spawn(loc, ArmorStand.class);
+        a.setGravity(false);
+        a.setVisible(false);
+        a.setCustomNameVisible(true);
+        a.setCustomName(name);
+        return a;
+    }
+
     public void spawnSilverfish(Location loc, ITeam bedWarsTeam, double speed, double health, int despawn, double damage) {
         new Despawnable(Silverfish.spawn(loc, bedWarsTeam, speed, health, despawn, damage), bedWarsTeam, despawn,
                 Messages.SHOP_UTILITY_NPC_SILVERFISH_NAME, PlayerKillEvent.PlayerKillCause.SILVERFISH_FINAL_KILL, PlayerKillEvent.PlayerKillCause.SILVERFISH);
@@ -220,50 +229,6 @@ public class v1_8_R3 extends VersionSupport {
         p.updateInventory();
     }
 
-    public static class VillagerShop extends EntityVillager {
-        @SuppressWarnings("rawtypes")
-        VillagerShop(Location loc) {
-            super(((CraftWorld) loc.getWorld()).getHandle());
-            try {
-                Field bField = PathfinderGoalSelector.class.getDeclaredField("b");
-                bField.setAccessible(true);
-                Field cField = PathfinderGoalSelector.class.getDeclaredField("c");
-                cField.setAccessible(true);
-                bField.set(this.goalSelector, new UnsafeList());
-                bField.set(this.targetSelector, new UnsafeList());
-                cField.set(this.goalSelector, new UnsafeList());
-                cField.set(this.targetSelector, new UnsafeList());
-            } catch (Exception ignored) {
-            }
-            this.setLocation(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
-            this.setPositionRotation(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
-            (((CraftWorld) loc.getWorld()).getHandle()).addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM);
-            persistent = true;
-        }
-
-        public void move(double d0, double d1, double d2) {
-        }
-
-        public void collide(net.minecraft.server.v1_8_R3.Entity entity) {
-        }
-
-        public boolean damageEntity(DamageSource damagesource, float f) {
-            return false;
-        }
-
-        public void g(double d0, double d1, double d2) {
-        }
-
-        public void makeSound(String s, float f, float f1) {
-
-        }
-
-        protected void initAttributes() {
-            super.initAttributes();
-            this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(0.0D);
-        }
-    }
-
     private void spawnVillager(Location loc) {
         VillagerShop nmsEntity = new VillagerShop(loc);
         NBTTagCompound tag = nmsEntity.getNBTTag();
@@ -306,16 +271,6 @@ public class v1_8_R3 extends VersionSupport {
         NBTTagCompound compound = (nmsStack.hasTag()) ? nmsStack.getTag() : new NBTTagCompound();
         return compound.getDouble("generic.attackDamage");
     }
-
-    private static ArmorStand createArmorStand(String name, Location loc) {
-        ArmorStand a = loc.getWorld().spawn(loc, ArmorStand.class);
-        a.setGravity(false);
-        a.setVisible(false);
-        a.setCustomNameVisible(true);
-        a.setCustomName(name);
-        return a;
-    }
-
 
     @SuppressWarnings("rawtypes")
     private void registerEntity(String name, int id, Class customClass) {
@@ -539,7 +494,7 @@ public class v1_8_R3 extends VersionSupport {
     @Override
     public org.bukkit.Material materialNetheriteLeggings() {
         return Material.DIAMOND_LEGGINGS; //Netherite doesn't exist
-     }
+    }
 
     @Override
     public org.bukkit.Material materialElytra() {
@@ -749,30 +704,75 @@ public class v1_8_R3 extends VersionSupport {
             ((CraftPlayer) inWorld).getHandle().playerConnection.sendPacket(particlePacket);
         }
     }
+
     @Override
     public void clearArrowsFromPlayerBody(Player player) {
-        ((CraftLivingEntity)player).getHandle().getDataWatcher().watch(9, (byte)-1);
+        ((CraftLivingEntity) player).getHandle().getDataWatcher().watch(9, (byte) -1);
     }
 
     @Override
-    public void placeTowerBlocks(org.bukkit.block.Block b, IArena a, TeamColor color, int x, int y, int z){
+    public void placeTowerBlocks(org.bukkit.block.Block b, IArena a, TeamColor color, int x, int y, int z) {
         b.getRelative(x, y, z).setType(Material.WOOL);
         setBlockTeamColor(b.getRelative(x, y, z), color);
         a.addPlacedBlock(b.getRelative(x, y, z));
     }
 
     @Override
-    public void placeLadder(org.bukkit.block.Block b, int x, int y, int z, IArena a, int ladderdata){
+    public void placeLadder(org.bukkit.block.Block b, int x, int y, int z, IArena a, int ladderdata) {
         b.getRelative(x, y, z).setType(Material.LADDER);
         //noinspection deprecation
-        b.getRelative(x, y, z).setData((byte)ladderdata);
+        b.getRelative(x, y, z).setData((byte) ladderdata);
         a.addPlacedBlock(b.getRelative(x, y, z));
     }
 
     @Override
-    public void playVillagerEffect(Player player, Location location){
+    public void playVillagerEffect(Player player, Location location) {
         PacketPlayOutWorldParticles pwp = new PacketPlayOutWorldParticles(EnumParticle.VILLAGER_HAPPY, true, (float) location.getX(), (float) location.getY(), (float) location.getZ(), (float) 0, (float) 0, (float) 0, (float) 0, 1);
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(pwp);
+    }
+
+    public static class VillagerShop extends EntityVillager {
+        @SuppressWarnings("rawtypes")
+        VillagerShop(Location loc) {
+            super(((CraftWorld) loc.getWorld()).getHandle());
+            try {
+                Field bField = PathfinderGoalSelector.class.getDeclaredField("b");
+                bField.setAccessible(true);
+                Field cField = PathfinderGoalSelector.class.getDeclaredField("c");
+                cField.setAccessible(true);
+                bField.set(this.goalSelector, new UnsafeList());
+                bField.set(this.targetSelector, new UnsafeList());
+                cField.set(this.goalSelector, new UnsafeList());
+                cField.set(this.targetSelector, new UnsafeList());
+            } catch (Exception ignored) {
+            }
+            this.setLocation(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
+            this.setPositionRotation(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
+            (((CraftWorld) loc.getWorld()).getHandle()).addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM);
+            persistent = true;
+        }
+
+        public void move(double d0, double d1, double d2) {
+        }
+
+        public void collide(net.minecraft.server.v1_8_R3.Entity entity) {
+        }
+
+        public boolean damageEntity(DamageSource damagesource, float f) {
+            return false;
+        }
+
+        public void g(double d0, double d1, double d2) {
+        }
+
+        public void makeSound(String s, float f, float f1) {
+
+        }
+
+        protected void initAttributes() {
+            super.initAttributes();
+            this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(0.0D);
+        }
     }
 
 }

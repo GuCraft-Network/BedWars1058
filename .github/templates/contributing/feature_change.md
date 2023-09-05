@@ -1,7 +1,9 @@
 ### Requirements for Adding, Changing, or Removing a Feature
 
-* Fill out the template below. Any pull request that does not include enough information to be reviewed in a timely manner may be closed at the maintainers' discretion.
-* The pull request must contribute a change that has been endorsed by the maintainer team. See details in the template below.
+* Fill out the template below. Any pull request that does not include enough information to be reviewed in a timely
+  manner may be closed at the maintainers' discretion.
+* The pull request must contribute a change that has been endorsed by the maintainer team. See details in the template
+  below.
 
 ### Issue
 

@@ -40,6 +40,10 @@ public class PlayerLangChangeEvent extends Event {
         this.newLang = newLang;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     /**
      * Check if event is cancelled
      */
@@ -68,7 +72,6 @@ public class PlayerLangChangeEvent extends Event {
         return oldLang;
     }
 
-
     /**
      * Get new Language iso
      */
@@ -78,10 +81,6 @@ public class PlayerLangChangeEvent extends Event {
 
     @Override
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

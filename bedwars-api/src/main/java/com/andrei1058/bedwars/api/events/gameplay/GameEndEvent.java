@@ -50,6 +50,10 @@ public class GameEndEvent extends Event {
         this.aliveWinners = new ArrayList<>(aliveWinners);
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     /**
      * Get a list of winners including eliminated teammates
      */
@@ -88,10 +92,6 @@ public class GameEndEvent extends Event {
     }
 
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

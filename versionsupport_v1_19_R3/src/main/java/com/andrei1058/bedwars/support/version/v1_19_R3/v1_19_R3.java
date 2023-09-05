@@ -73,6 +73,17 @@ public class v1_19_R3 extends VersionSupport {
         this.despawnableFactory = new DespawnableFactory(this);
     }
 
+    private static ArmorStand createArmorStand(String name, Location loc) {
+        if (loc == null) return null;
+        if (loc.getWorld() == null) return null;
+        ArmorStand a = loc.getWorld().spawn(loc, ArmorStand.class);
+        a.setGravity(false);
+        a.setVisible(false);
+        a.setCustomNameVisible(true);
+        a.setCustomName(name);
+        return a;
+    }
+
     @Override
     public void registerVersionListeners() {
         new VersionCommon(this);
@@ -266,17 +277,6 @@ public class v1_19_R3 extends VersionSupport {
             throw new RuntimeException("Provided item has no Tag");
         }
         return tag.k("generic.attackDamage");
-    }
-
-    private static ArmorStand createArmorStand(String name, Location loc) {
-        if (loc == null) return null;
-        if (loc.getWorld() == null) return null;
-        ArmorStand a = loc.getWorld().spawn(loc, ArmorStand.class);
-        a.setGravity(false);
-        a.setVisible(false);
-        a.setCustomNameVisible(true);
-        a.setCustomName(name);
-        return a;
     }
 
     @Override

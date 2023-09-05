@@ -59,23 +59,54 @@ public class Silverfish extends EntitySilverfish {
         }
         this.team = team;
         this.goalSelector.a(1, new PathfinderGoalFloat(this));
-        this.goalSelector.a(2, new PathfinderGoalMeleeAttack(this,1.9D, false));
+        this.goalSelector.a(2, new PathfinderGoalMeleeAttack(this, 1.9D, false));
         this.targetSelector.a(1, new PathfinderGoalHurtByTarget(this, true));
         this.goalSelector.a(3, new PathfinderGoalRandomStroll(this, 2D));
         this.targetSelector.a(2, new PathfinderGoalNearestAttackableTarget(this, EntityHuman.class, 20, true, false, player -> {
-            return ((EntityHuman)player).isAlive() && !team.wasMember(((EntityHuman)player).getUniqueID()) && !team.getArena().isReSpawning(((EntityHuman)player).getUniqueID())
-                    && !team.getArena().isSpectator(((EntityHuman)player).getUniqueID());
+            return ((EntityHuman) player).isAlive() && !team.wasMember(((EntityHuman) player).getUniqueID()) && !team.getArena().isReSpawning(((EntityHuman) player).getUniqueID())
+                    && !team.getArena().isSpectator(((EntityHuman) player).getUniqueID());
         }));
         this.targetSelector.a(3, new PathfinderGoalNearestAttackableTarget(this, IGolem.class, 20, true, false, golem -> {
-            return ((IGolem)golem).getTeam() != team;
+            return ((IGolem) golem).getTeam() != team;
         }));
         this.targetSelector.a(4, new PathfinderGoalNearestAttackableTarget(this, Silverfish.class, 20, true, false, sf -> {
-            return ((Silverfish)sf).getTeam() != team;
+            return ((Silverfish) sf).getTeam() != team;
         }));
+    }
+
+    public static LivingEntity spawn(Location loc, ITeam team, double speed, double health, int despawn, double damage) {
+        WorldServer mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
+        Silverfish customEnt = new Silverfish(mcWorld, team);
+        customEnt.setLocation(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
+        customEnt.getAttributeInstance(GenericAttributes.maxHealth).setValue(health);
+        customEnt.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(speed);
+        customEnt.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(damage);
+        ((CraftLivingEntity) customEnt.getBukkitEntity()).setRemoveWhenFarAway(false);
+        customEnt.setCustomName(Language.getDefaultLanguage().m(Messages.SHOP_UTILITY_NPC_SILVERFISH_NAME)
+                .replace("{despawn}", String.valueOf(despawn)
+                        .replace("{health}", StringUtils.repeat(Language.getDefaultLanguage().m(Messages.FORMATTING_DESPAWNABLE_UTILITY_NPC_HEALTH) + " ", 10))
+                        .replace("{TeamColor}", team.getColor().chat().toString())));
+        customEnt.setCustomNameVisible(true);
+        mcWorld.addEntity(customEnt, CreatureSpawnEvent.SpawnReason.CUSTOM);
+        return (LivingEntity) customEnt.getBukkitEntity();
     }
 
     public ITeam getTeam() {
         return team;
+    }
+
+    @Override
+    public void die() {
+        super.die();
+        team = null;
+        VersionCommon.api.getVersionSupport().getDespawnablesList().remove(this.getUniqueID());
+    }
+
+    @Override
+    public void die(DamageSource damagesource) {
+        super.die(damagesource);
+        team = null;
+        VersionCommon.api.getVersionSupport().getDespawnablesList().remove(this.getUniqueID());
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -133,36 +164,5 @@ public class Silverfish extends EntitySilverfish {
             }
 
         }
-    }
-
-    public static LivingEntity spawn(Location loc, ITeam team, double speed, double health, int despawn, double damage) {
-        WorldServer mcWorld = ((CraftWorld)loc.getWorld()).getHandle();
-        Silverfish customEnt = new Silverfish(mcWorld, team);
-        customEnt.setLocation(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
-        customEnt.getAttributeInstance(GenericAttributes.maxHealth).setValue(health);
-        customEnt.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(speed);
-        customEnt.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(damage);
-        ((CraftLivingEntity)customEnt.getBukkitEntity()).setRemoveWhenFarAway(false);
-        customEnt.setCustomName(Language.getDefaultLanguage().m(Messages.SHOP_UTILITY_NPC_SILVERFISH_NAME)
-                .replace("{despawn}", String.valueOf(despawn)
-                        .replace("{health}", StringUtils.repeat(Language.getDefaultLanguage().m(Messages.FORMATTING_DESPAWNABLE_UTILITY_NPC_HEALTH)+" ", 10))
-                        .replace("{TeamColor}", team.getColor().chat().toString())));
-        customEnt.setCustomNameVisible(true);
-        mcWorld.addEntity(customEnt, CreatureSpawnEvent.SpawnReason.CUSTOM);
-        return (LivingEntity) customEnt.getBukkitEntity();
-    }
-
-    @Override
-    public void die() {
-        super.die();
-        team = null;
-        VersionCommon.api.getVersionSupport().getDespawnablesList().remove(this.getUniqueID());
-    }
-
-    @Override
-    public void die(DamageSource damagesource) {
-        super.die(damagesource);
-        team = null;
-        VersionCommon.api.getVersionSupport().getDespawnablesList().remove(this.getUniqueID());
     }
 }

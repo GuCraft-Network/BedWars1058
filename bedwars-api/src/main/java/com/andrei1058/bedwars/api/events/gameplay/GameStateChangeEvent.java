@@ -41,6 +41,9 @@ public class GameStateChangeEvent extends Event {
         this.newState = newState;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
 
     public IArena getArena() {
         return arena;
@@ -55,10 +58,6 @@ public class GameStateChangeEvent extends Event {
     }
 
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

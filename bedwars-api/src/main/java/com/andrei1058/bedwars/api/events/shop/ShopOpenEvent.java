@@ -28,14 +28,13 @@ import org.bukkit.event.HandlerList;
 public class ShopOpenEvent extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
-
-    private Player player;
     private final IArena arena;
+    private Player player;
     private boolean cancelled = false;
 
     /**
      * Triggered when the shop NPS is clicked.
-     * 
+     *
      * @deprecated Use {@link #ShopOpenEvent(Player, IArena)}
      */
     @Deprecated
@@ -52,6 +51,10 @@ public class ShopOpenEvent extends Event {
         this.arena = arena;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     public IArena getArena() {
         return arena;
     }
@@ -63,20 +66,16 @@ public class ShopOpenEvent extends Event {
         return player;
     }
 
-    public void setCancelled(boolean cancelled) {
-        this.cancelled = cancelled;
-    }
-
     public boolean isCancelled() {
         return cancelled;
     }
 
-    @Override
-    public HandlerList getHandlers() {
-        return HANDLERS;
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 
-    public static HandlerList getHandlerList() {
+    @Override
+    public HandlerList getHandlers() {
         return HANDLERS;
     }
 }

@@ -47,6 +47,10 @@ public class PlayerXpGainEvent extends Event {
         this.xpSource = xpSource;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     /**
      * Get the player that have received new xp.
      */
@@ -68,19 +72,15 @@ public class PlayerXpGainEvent extends Event {
         return xpSource;
     }
 
-    /**
-     * Lets you know why did the player received new xp.
-     */
-    public enum XpSource {
-        PER_MINUTE, PER_TEAMMATE, GAME_WIN, BED_DESTROYED, FINAL_KILL, REGULAR_KILL, OTHER
-    }
-
     @Override
     public HandlerList getHandlers() {
         return HANDLERS;
     }
 
-    public static HandlerList getHandlerList() {
-        return HANDLERS;
+    /**
+     * Lets you know why did the player received new xp.
+     */
+    public enum XpSource {
+        PER_MINUTE, PER_TEAMMATE, GAME_WIN, BED_DESTROYED, FINAL_KILL, REGULAR_KILL, OTHER
     }
 }

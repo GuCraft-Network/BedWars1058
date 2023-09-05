@@ -155,11 +155,6 @@ public class ConfigPath {
     public static final String GENERAL_CONFIGURATION_MARK_LEAVE_AS_ABANDON = "mark-leave-as-abandon";
 
     public static final String GENERAL_CONFIG_PLACEHOLDERS_REPLACEMENTS_SERVER_IP = "server-ip";
-
-    private static final String GENERAL_CHAT = "chat-settings.";
-    public static final String GENERAL_CHAT_FORMATTING = GENERAL_CHAT+"format";
-    public static final String GENERAL_CHAT_GLOBAL = GENERAL_CHAT+"global";
-
     public static final String ARENA_DISPLAY_NAME = "display-name";
     public static final String ARENA_CONFIGURATION_MAX_BUILD_Y = "max-build-y";
     public static final String ARENA_CONFIGURATION_MIN_BUILD_Y = "min-build-y";
@@ -180,7 +175,6 @@ public class ConfigPath {
     public static final String ARENA_SPEC_LOC = "spectator-loc";
     public static final String ARENA_TEAM_KILL_DROPS_LOC = "kill-drops-loc";
     public static final String ARENA_Y_LEVEL_KILL = "y-kill-height";
-
     public static final String SOUNDS_COUNTDOWN_TICK = "game-countdown-others";
     public static final String SOUNDS_COUNTDOWN_TICK_X = "game-countdown-s";
     public static final String SOUND_GAME_START = "game-countdown-start";
@@ -189,57 +183,21 @@ public class ConfigPath {
     public static final String SOUNDS_INSUFF_MONEY = "shop-insufficient-money";
     public static final String SOUNDS_BOUGHT = "shop-bought";
     public static final String SOUNDS_KILL = "kill";
-
-
-    private static final String GENERAL_PARTY_SETTINGS_PATH = "party-settings";
-    public static final String GENERAL_CONFIGURATION_ALLOW_PARTIES = GENERAL_PARTY_SETTINGS_PATH + ".allow-parties";
-    public static final String GENERAL_ALESSIODP_PARTIES_RANK = GENERAL_PARTY_SETTINGS_PATH + ".alessioDP-choose-arena-rank";
-
-    private static final String GENERAL_TNT_JUMP_PATH = "tnt-jump-settings";
-    public static final String GENERAL_TNT_JUMP_BARYCENTER_IN_Y = GENERAL_TNT_JUMP_PATH + ".barycenter-alteration-in-y";
-    public static final String GENERAL_TNT_JUMP_STRENGTH_REDUCTION = GENERAL_TNT_JUMP_PATH + ".strength-reduction-constant";
-    public static final String GENERAL_TNT_JUMP_Y_REDUCTION = GENERAL_TNT_JUMP_PATH + ".y-axis-reduction-constant";
-    public static final String GENERAL_TNT_JUMP_DAMAGE_SELF = GENERAL_TNT_JUMP_PATH + ".damage-self";
-    public static final String GENERAL_TNT_JUMP_DAMAGE_TEAMMATES = GENERAL_TNT_JUMP_PATH + ".damage-teammates";
-    public static final String GENERAL_TNT_JUMP_DAMAGE_OTHERS = GENERAL_TNT_JUMP_PATH + ".damage-others";
-
     public static final String GENERAL_TNT_BLAST_PROTECTION = "blast-protection";
-    public static final String GENERAL_TNT_PROTECTION_END_STONE_BLAST = GENERAL_TNT_BLAST_PROTECTION+".end-stone";
-    public static final String GENERAL_TNT_PROTECTION_GLASS_BLAST = GENERAL_TNT_BLAST_PROTECTION+".glass";
-    public static final String GENERAL_TNT_RAY_BLOCKED_BY_GLASS = GENERAL_TNT_BLAST_PROTECTION+".ray-blocked-by-glass";
-
+    public static final String GENERAL_TNT_PROTECTION_END_STONE_BLAST = GENERAL_TNT_BLAST_PROTECTION + ".end-stone";
+    public static final String GENERAL_TNT_PROTECTION_GLASS_BLAST = GENERAL_TNT_BLAST_PROTECTION + ".glass";
+    public static final String GENERAL_TNT_RAY_BLOCKED_BY_GLASS = GENERAL_TNT_BLAST_PROTECTION + ".ray-blocked-by-glass";
     public static final String GENERAL_TNT_PRIME = "tnt-prime-settings";
-    public static final String GENERAL_TNT_AUTO_IGNITE = GENERAL_TNT_PRIME+".auto-ignite";
-    public static final String GENERAL_TNT_FUSE_TICKS = GENERAL_TNT_PRIME+".fuse-ticks";
-
-    private static final String GENERAL_FIREBALL_PATH = "fireball";
-    public static final String GENERAL_FIREBALL_EXPLOSION_SIZE = GENERAL_FIREBALL_PATH + ".explosion-size";
-    public static final String GENERAL_FIREBALL_SPEED_MULTIPLIER = GENERAL_FIREBALL_PATH + ".speed-multiplier";
-    public static final String GENERAL_FIREBALL_MAKE_FIRE = GENERAL_FIREBALL_PATH + ".make-fire";
-    private static final String GENERAL_FIREBALL_KNOCKBACK_PATH = GENERAL_FIREBALL_PATH + ".knockback";
-    public static final String GENERAL_FIREBALL_KNOCKBACK_VERTICAL = GENERAL_FIREBALL_KNOCKBACK_PATH + ".vertical";
-    public static final String GENERAL_FIREBALL_KNOCKBACK_HORIZONTAL = GENERAL_FIREBALL_KNOCKBACK_PATH + ".horizontal";
-    public static final String GENERAL_FIREBALL_COOLDOWN = GENERAL_FIREBALL_PATH + ".cooldown";
-    private static final String GENERAL_FIREBALL_DAMAGE_PATH = GENERAL_FIREBALL_PATH + ".damage";
-    public static final String GENERAL_FIREBALL_DAMAGE_SELF = GENERAL_FIREBALL_DAMAGE_PATH + ".self";
-    public static final String GENERAL_FIREBALL_DAMAGE_ENEMY = GENERAL_FIREBALL_DAMAGE_PATH + ".enemy";
-    public static final String GENERAL_FIREBALL_DAMAGE_TEAMMATES = GENERAL_FIREBALL_DAMAGE_PATH + ".teammates";
-
-
+    public static final String GENERAL_TNT_AUTO_IGNITE = GENERAL_TNT_PRIME + ".auto-ignite";
+    public static final String GENERAL_TNT_FUSE_TICKS = GENERAL_TNT_PRIME + ".fuse-ticks";
     public static final String GENERAL_CONFIGURATION_PERFORMANCE_PATH = "performance-settings";
     public static final String GENERAL_CONFIGURATION_PERFORMANCE_ROTATE_GEN = GENERAL_CONFIGURATION_PERFORMANCE_PATH + ".rotate-generators";
     public static final String GENERAL_CONFIGURATION_PERFORMANCE_SPOIL_TNT_PLAYERS = GENERAL_CONFIGURATION_PERFORMANCE_PATH + ".spoil-tnt-players";
     public static final String GENERAL_CONFIGURATION_PERFORMANCE_GENERATOR_SPLIT = GENERAL_CONFIGURATION_PERFORMANCE_PATH + ".split-island-generator";
-
     public static final String GENERAL_CONFIGURATION_PERFORMANCE_PAPER_FEATURES = GENERAL_CONFIGURATION_PERFORMANCE_PATH + ".paper-features";
-
-    private static final String GENERAL_CONFIGURATION_HEAL_POOL = GENERAL_CONFIGURATION_PERFORMANCE_PATH+".heal-pool";
-    public static final String GENERAL_CONFIGURATION_HEAL_POOL_ENABLE = GENERAL_CONFIGURATION_HEAL_POOL+".enable";
-    public static final String GENERAL_CONFIGURATION_HEAL_POOL_SEEN_TEAM_ONLY = GENERAL_CONFIGURATION_HEAL_POOL+".seen-by-team-only";
     public static final String SHOP_SETTINGS_PATH = "shop-settings";
     public static final String SHOP_SPECIALS_PATH = "shop-specials";
     public static final String SHOP_QUICK_DEFAULTS_PATH = "quick-buy-defaults";
-
     public static final String SHOP_SPECIAL_TOWER_ENABLE = SHOP_SPECIALS_PATH + ".tower.enable";
     public static final String SHOP_SPECIAL_TOWER_MATERIAL = SHOP_SPECIALS_PATH + ".tower.material";
     public static final String SHOP_SPECIAL_SILVERFISH_ENABLE = SHOP_SPECIALS_PATH + ".silverfish.enable";
@@ -249,51 +207,42 @@ public class ConfigPath {
     public static final String SHOP_SPECIAL_SILVERFISH_DAMAGE = SHOP_SPECIALS_PATH + ".silverfish.damage";
     public static final String SHOP_SPECIAL_SILVERFISH_SPEED = SHOP_SPECIALS_PATH + ".silverfish.speed";
     public static final String SHOP_SPECIAL_SILVERFISH_DESPAWN = SHOP_SPECIALS_PATH + ".silverfish.despawn";
-
     public static final String SHOP_SPECIAL_IRON_GOLEM_ENABLE = SHOP_SPECIALS_PATH + ".iron-golem.enable";
     public static final String SHOP_SPECIAL_IRON_GOLEM_MATERIAL = SHOP_SPECIALS_PATH + ".iron-golem.material";
     public static final String SHOP_SPECIAL_IRON_GOLEM_DATA = SHOP_SPECIALS_PATH + ".iron-golem.data";
     public static final String SHOP_SPECIAL_IRON_GOLEM_HEALTH = SHOP_SPECIALS_PATH + ".iron-golem.health";
     public static final String SHOP_SPECIAL_IRON_GOLEM_DESPAWN = SHOP_SPECIALS_PATH + ".iron-golem.despawn";
     public static final String SHOP_SPECIAL_IRON_GOLEM_SPEED = SHOP_SPECIALS_PATH + ".iron-golem.speed";
-
     public static final String SHOP_SETTINGS_QUICK_BUY_CATEGORY_PATH = SHOP_SETTINGS_PATH + ".quick-buy-category";
     public static final String SHOP_SETTINGS_QUICK_BUY_BUTTON_MATERIAL = SHOP_SETTINGS_QUICK_BUY_CATEGORY_PATH + ".material";
     public static final String SHOP_SETTINGS_QUICK_BUY_BUTTON_AMOUNT = SHOP_SETTINGS_QUICK_BUY_CATEGORY_PATH + ".amount";
     public static final String SHOP_SETTINGS_QUICK_BUY_BUTTON_DATA = SHOP_SETTINGS_QUICK_BUY_CATEGORY_PATH + ".data";
     public static final String SHOP_SETTINGS_QUICK_BUY_BUTTON_ENCHANTED = SHOP_SETTINGS_QUICK_BUY_CATEGORY_PATH + ".enchanted";
-
     public static final String SHOP_SETTINGS_SEPARATOR_REGULAR_PATH = SHOP_SETTINGS_PATH + ".regular-separator-item";
     public static final String SHOP_SETTINGS_SEPARATOR_REGULAR_MATERIAL = SHOP_SETTINGS_SEPARATOR_REGULAR_PATH + ".material";
     public static final String SHOP_SETTINGS_SEPARATOR_REGULAR_AMOUNT = SHOP_SETTINGS_SEPARATOR_REGULAR_PATH + ".amount";
     public static final String SHOP_SETTINGS_SEPARATOR_REGULAR_DATA = SHOP_SETTINGS_SEPARATOR_REGULAR_PATH + ".data";
     public static final String SHOP_SETTINGS_SEPARATOR_REGULAR_ENCHANTED = SHOP_SETTINGS_SEPARATOR_REGULAR_PATH + ".enchanted";
-
     public static final String SHOP_SETTINGS_SEPARATOR_SELECTED_PATH = SHOP_SETTINGS_PATH + ".selected-separator-item";
     public static final String SHOP_SETTINGS_SEPARATOR_SELECTED_MATERIAL = SHOP_SETTINGS_SEPARATOR_SELECTED_PATH + ".material";
     public static final String SHOP_SETTINGS_SEPARATOR_SELECTED_AMOUNT = SHOP_SETTINGS_SEPARATOR_SELECTED_PATH + ".amount";
     public static final String SHOP_SETTINGS_SEPARATOR_SELECTED_DATA = SHOP_SETTINGS_SEPARATOR_SELECTED_PATH + ".data";
     public static final String SHOP_SETTINGS_SEPARATOR_SELECTED_ENCHANTED = SHOP_SETTINGS_SEPARATOR_SELECTED_PATH + ".enchanted";
-
     public static final String SHOP_SETTINGS_QUICK_BUY_EMPTY_PATH = SHOP_SETTINGS_PATH + ".quick-buy-empty-item";
     public static final String SHOP_SETTINGS_QUICK_BUY_EMPTY_MATERIAL = SHOP_SETTINGS_QUICK_BUY_EMPTY_PATH + ".material";
     public static final String SHOP_SETTINGS_QUICK_BUY_EMPTY_AMOUNT = SHOP_SETTINGS_QUICK_BUY_EMPTY_PATH + ".amount";
     public static final String SHOP_SETTINGS_QUICK_BUY_EMPTY_DATA = SHOP_SETTINGS_QUICK_BUY_EMPTY_PATH + ".data";
     public static final String SHOP_SETTINGS_QUICK_BUY_EMPTY_ENCHANTED = SHOP_SETTINGS_QUICK_BUY_EMPTY_PATH + ".enchanted";
-
     public static final String SHOP_CATEGORY_ITEM_MATERIAL = ".category-item.material";
     public static final String SHOP_CATEGORY_ITEM_DATA = ".category-item.data";
     public static final String SHOP_CATEGORY_ITEM_AMOUNT = ".category-item.amount";
     public static final String SHOP_CATEGORY_ITEM_ENCHANTED = ".category-item.enchanted";
-
     public static final String SHOP_CONTENT_TIER_SETTINGS_COST = ".tier-settings.cost";
     public static final String SHOP_CONTENT_TIER_SETTINGS_CURRENCY = ".tier-settings.currency";
-
     public static final String SHOP_CONTENT_TIER_ITEM_MATERIAL = ".tier-item.material";
     public static final String SHOP_CONTENT_TIER_ITEM_DATA = ".tier-item.data";
     public static final String SHOP_CONTENT_TIER_ITEM_AMOUNT = ".tier-item.amount";
     public static final String SHOP_CONTENT_TIER_ITEM_ENCHANTED = ".tier-item.enchanted";
-
     public static final String SHOP_CATEGORY_SLOT = ".category-slot";
     public static final String SHOP_CONTENT_BUY_ITEMS_PATH = "buy-items";
     public static final String SHOP_CONTENT_BUY_CMDS_PATH = "buy-cmds";
@@ -304,7 +253,6 @@ public class ConfigPath {
     public static final String SHOP_CATEGORY_CONTENT_WEIGHT = "content-settings.weight";
     public static final String SHOP_CATEGORY_CONTENT_CONTENT_TIERS = "content-tiers";
     public static final String SHOP_CATEGORY_CONTENT_PATH = ".category-content";
-
     public static final String SHOP_PATH_CATEGORY_BLOCKS = "blocks-category";
     public static final String SHOP_PATH_CATEGORY_MELEE = "melee-category";
     public static final String SHOP_PATH_CATEGORY_ARMOR = "armor-category";
@@ -312,9 +260,35 @@ public class ConfigPath {
     public static final String SHOP_PATH_CATEGORY_RANGED = "ranged-category";
     public static final String SHOP_PATH_CATEGORY_POTIONS = "potions-category";
     public static final String SHOP_PATH_CATEGORY_UTILITY = "utility-category";
-
     public static final String TEAM_NAME_PATH = "team-name-{arena}-{team}";
-
     public static final String LOBBY_VOID_TELEPORT_ENABLED = "lobby-settings.void-tp";
     public static final String LOBBY_VOID_TELEPORT_HEIGHT = "lobby-settings.void-height";
+    private static final String GENERAL_CHAT = "chat-settings.";
+    public static final String GENERAL_CHAT_FORMATTING = GENERAL_CHAT + "format";
+    public static final String GENERAL_CHAT_GLOBAL = GENERAL_CHAT + "global";
+    private static final String GENERAL_PARTY_SETTINGS_PATH = "party-settings";
+    public static final String GENERAL_CONFIGURATION_ALLOW_PARTIES = GENERAL_PARTY_SETTINGS_PATH + ".allow-parties";
+    public static final String GENERAL_ALESSIODP_PARTIES_RANK = GENERAL_PARTY_SETTINGS_PATH + ".alessioDP-choose-arena-rank";
+    private static final String GENERAL_TNT_JUMP_PATH = "tnt-jump-settings";
+    public static final String GENERAL_TNT_JUMP_BARYCENTER_IN_Y = GENERAL_TNT_JUMP_PATH + ".barycenter-alteration-in-y";
+    public static final String GENERAL_TNT_JUMP_STRENGTH_REDUCTION = GENERAL_TNT_JUMP_PATH + ".strength-reduction-constant";
+    public static final String GENERAL_TNT_JUMP_Y_REDUCTION = GENERAL_TNT_JUMP_PATH + ".y-axis-reduction-constant";
+    public static final String GENERAL_TNT_JUMP_DAMAGE_SELF = GENERAL_TNT_JUMP_PATH + ".damage-self";
+    public static final String GENERAL_TNT_JUMP_DAMAGE_TEAMMATES = GENERAL_TNT_JUMP_PATH + ".damage-teammates";
+    public static final String GENERAL_TNT_JUMP_DAMAGE_OTHERS = GENERAL_TNT_JUMP_PATH + ".damage-others";
+    private static final String GENERAL_FIREBALL_PATH = "fireball";
+    public static final String GENERAL_FIREBALL_EXPLOSION_SIZE = GENERAL_FIREBALL_PATH + ".explosion-size";
+    public static final String GENERAL_FIREBALL_SPEED_MULTIPLIER = GENERAL_FIREBALL_PATH + ".speed-multiplier";
+    public static final String GENERAL_FIREBALL_MAKE_FIRE = GENERAL_FIREBALL_PATH + ".make-fire";
+    public static final String GENERAL_FIREBALL_COOLDOWN = GENERAL_FIREBALL_PATH + ".cooldown";
+    private static final String GENERAL_FIREBALL_KNOCKBACK_PATH = GENERAL_FIREBALL_PATH + ".knockback";
+    public static final String GENERAL_FIREBALL_KNOCKBACK_VERTICAL = GENERAL_FIREBALL_KNOCKBACK_PATH + ".vertical";
+    public static final String GENERAL_FIREBALL_KNOCKBACK_HORIZONTAL = GENERAL_FIREBALL_KNOCKBACK_PATH + ".horizontal";
+    private static final String GENERAL_FIREBALL_DAMAGE_PATH = GENERAL_FIREBALL_PATH + ".damage";
+    public static final String GENERAL_FIREBALL_DAMAGE_SELF = GENERAL_FIREBALL_DAMAGE_PATH + ".self";
+    public static final String GENERAL_FIREBALL_DAMAGE_ENEMY = GENERAL_FIREBALL_DAMAGE_PATH + ".enemy";
+    public static final String GENERAL_FIREBALL_DAMAGE_TEAMMATES = GENERAL_FIREBALL_DAMAGE_PATH + ".teammates";
+    private static final String GENERAL_CONFIGURATION_HEAL_POOL = GENERAL_CONFIGURATION_PERFORMANCE_PATH + ".heal-pool";
+    public static final String GENERAL_CONFIGURATION_HEAL_POOL_ENABLE = GENERAL_CONFIGURATION_HEAL_POOL + ".enable";
+    public static final String GENERAL_CONFIGURATION_HEAL_POOL_SEEN_TEAM_ONLY = GENERAL_CONFIGURATION_HEAL_POOL + ".seen-by-team-only";
 }

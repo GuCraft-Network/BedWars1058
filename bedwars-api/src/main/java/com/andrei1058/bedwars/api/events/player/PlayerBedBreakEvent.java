@@ -53,6 +53,10 @@ public class PlayerBedBreakEvent extends Event {
         this.subTitle = subTitle;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     /**
      * Get the player team.
      */
@@ -90,10 +94,6 @@ public class PlayerBedBreakEvent extends Event {
     }
 
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 

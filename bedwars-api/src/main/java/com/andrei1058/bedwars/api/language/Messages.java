@@ -25,9 +25,41 @@ import com.andrei1058.bedwars.api.configuration.ConfigPath;
 @SuppressWarnings("WeakerAccess")
 public class Messages {
 
+    public static final String SHOP_PATH = "shop-items-messages";
+    public static final String SHOP_LORE_STATUS_CANT_AFFORD = "shop-lore-status-cant-afford";
+    public static final String SHOP_LORE_STATUS_CAN_BUY = "shop-lore-status-can-buy";
+    public static final String SHOP_LORE_STATUS_MAXED = "shop-lore-status-tier-maxed";
+    public static final String SHOP_LORE_STATUS_ARMOR = "shop-lore-status-armor";
+    public static final String SHOP_LORE_QUICK_ADD = "shop-lore-quick-add";
+    public static final String SHOP_LORE_QUICK_REMOVE = "shop-lore-quick-remove";
+    public static final String SHOP_INDEX_NAME = SHOP_PATH + ".inventory-name";
+    public static final String SHOP_QUICK_ADD_NAME = SHOP_PATH + ".quick-buy-add-inventory-name";
+    public static final String SHOP_SEPARATOR_NAME = SHOP_PATH + ".separator-item-name";
+    public static final String SHOP_SEPARATOR_LORE = SHOP_PATH + ".separator-item-lore";
+    public static final String SHOP_QUICK_BUY_NAME = SHOP_PATH + ".quick-buy-item-name";
+    public static final String SHOP_QUICK_BUY_LORE = SHOP_PATH + ".quick-buy-item-lore";
+    public static final String SHOP_QUICK_EMPTY_NAME = SHOP_PATH + ".quick-buy-empty-item-name";
+    public static final String SHOP_QUICK_EMPTY_LORE = SHOP_PATH + ".quick-buy-empty-item-lore";
+    public static final String SHOP_CATEGORY_INVENTORY_NAME = SHOP_PATH + ".%category%.inventory-name";
+    public static final String SHOP_CATEGORY_ITEM_NAME = SHOP_PATH + ".%category%.category-item-name";
+    public static final String SHOP_CATEGORY_ITEM_LORE = SHOP_PATH + ".%category%.category-item-lore";
+    public static final String SHOP_CONTENT_TIER_ITEM_NAME = SHOP_PATH + ".%category%.content-item-%content%-name";
+    public static final String SHOP_CONTENT_TIER_ITEM_LORE = SHOP_PATH + ".%category%.content-item-%content%-lore";
+    public static final String SHOP_CAN_BUY_COLOR = SHOP_PATH + ".can-buy-color";
+    public static final String SHOP_CANT_BUY_COLOR = SHOP_PATH + ".cant-buy-color";
+    /* MultiArena Lobby Item Messages */
+    public static final String GENERAL_CONFIGURATION_LOBBY_ITEMS_NAME = ConfigPath.GENERAL_CONFIGURATION_LOBBY_ITEMS_PATH + "-%path%-name";
+    public static final String GENERAL_CONFIGURATION_LOBBY_ITEMS_LORE = ConfigPath.GENERAL_CONFIGURATION_LOBBY_ITEMS_PATH + "-%path%-lore";
+    /* Spectator Items Messages */
+    public static final String GENERAL_CONFIGURATION_SPECTATOR_ITEMS_NAME = ConfigPath.GENERAL_CONFIGURATION_SPECTATOR_ITEMS_PATH + "-%path%-name";
+    public static final String GENERAL_CONFIGURATION_SPECTATOR_ITEMS_LORE = ConfigPath.GENERAL_CONFIGURATION_SPECTATOR_ITEMS_PATH + "-%path%-lore";
+    /* Arena waiting Items Messages */
+    public static final String GENERAL_CONFIGURATION_WAITING_ITEMS_NAME = ConfigPath.GENERAL_CONFIGURATION_PRE_GAME_ITEMS_PATH + "-%path%-name";
+    public static final String GENERAL_CONFIGURATION_WAITING_ITEMS_LORE = ConfigPath.GENERAL_CONFIGURATION_PRE_GAME_ITEMS_PATH + "-%path%-lore";
     public static String PREFIX = "prefix";
-
-    /** next event related */
+    /**
+     * next event related
+     */
     public static String NEXT_EVENT_DIAMOND_UPGRADE_II = "next-event-diamondII";
     public static String NEXT_EVENT_DIAMOND_UPGRADE_III = "next-event-diamondIII";
     public static String NEXT_EVENT_EMERALD_UPGRADE_II = "next-event-emeraldII";
@@ -41,8 +73,9 @@ public class Messages {
     public static String NEXT_EVENT_TITLE_ANNOUNCE_SUDDEN_DEATH = "next-event-sudden-death-title";
     public static String NEXT_EVENT_SUBTITLE_ANNOUNCE_SUDDEN_DEATH = "next-event-sudden-death-sub-title";
     public static String NEXT_EVENT_CHAT_ANNOUNCE_SUDDEN_DEATH = "next-event-sudden-death-chat";
-
-    /** General commands reply */
+    /**
+     * General commands reply
+     */
     public static String COMMAND_MAIN = "cmd-main-list";
     public static String COMMAND_LANG_LIST_HEADER = "cmd-lang-list-header";
     public static String COMMAND_LANG_LIST_FORMAT = "cmd-lang-list-format";
@@ -101,8 +134,9 @@ public class Messages {
     public static String COMMAND_FORCESTART_SUCCESS = "cmd-start";
     public static String COMMAND_FORCESTART_NO_PERM = "cmd-start-no-perm";
     public static String COMMAND_COOLDOWN = "cmd-cooldown";
-
-    /** Arena join/ leave related */
+    /**
+     * Arena join/ leave related
+     */
     public static String ARENA_JOIN_VIP_KICK = "arena-kicked-by-vip";
     public static String ARENA_START_COUNTDOWN_STOPPED_INSUFF_PLAYERS_CHAT = "arena-countdown-stopped";
     //public static String ARENA_PLAYER_QUIT = "player.quit";
@@ -112,8 +146,9 @@ public class Messages {
     public static String ARENA_JOIN_DENIED_NO_TIME = "arena-join-denied-no-time";
     public static String ARENA_SPECTATE_DENIED_SELECTOR = "arena-spectate-denied-selector";
     public static String ARENA_LEAVE_PARTY_DISBANDED = "arena-leave-party-disbanded";
-
-    /** Arena status/ status change related */
+    /**
+     * Arena status/ status change related
+     */
     public static String ARENA_STATUS_WAITING_NAME = "arena-status-waiting";
     public static String ARENA_STATUS_STARTING_NAME = "arena-status-starting";
     public static String ARENA_STATUS_PLAYING_NAME = "arena-status-playing";
@@ -126,24 +161,24 @@ public class Messages {
     public static String ARENA_STATUS_START_COUNTDOWN_CANCELLED_TITLE = "arena-countdown-stopped-subtitle";
     public static String ARENA_STATUS_START_COUNTDOWN_CANCELLED_SUB_TITLE = "arena-countdown-stopped-subtitle";
     public static String ARENA_DISPLAY_GROUP_PATH = "display-group-";
-
-    /** Arena GUI related */
+    /**
+     * Arena GUI related
+     */
     public static String ARENA_GUI_INV_NAME = "arena-selector-gui-name";
     public static String ARENA_GUI_ARENA_CONTENT_NAME = "arena-selector-content-name";
     public static String ARENA_GUI_ARENA_CONTENT_LORE = "arena-selector-content-lore";
     public static String ARENA_GUI_SKIPPED_ITEM_NAME = "arena-selector-skipped-item-name";
     public static String ARENA_GUI_SKIPPED_ITEM_LORE = "arena-selector-skipped-item-lore";
-
-    /** Spectator related */
+    /**
+     * Spectator related
+     */
     public static String ARENA_SPECTATOR_TELEPORTER_GUI_NAME = "spectator-tp-gui-name";
     //{player} - returns display name, {prefix} - returns the player rank
     public static String ARENA_SPECTATOR_TELEPORTER_GUI_HEAD_NAME = "spectator-tp-gui-head-name";
     //{health}, {food}
     public static String ARENA_SPECTATOR_TELEPORTER_GUI_HEAD_LORE = "spectator-tp-gui-head-lore";
-
     public static String ARENA_SPECTATOR_LEAVE_ITEM_NAME = "spectator-tp-name";
     public static String ARENA_SPECTATOR_LEAVE_ITEM_LORE = "spectator-tp-lore";
-
     public static String ARENA_SPECTATOR_FIRST_PERSON_ENTER_TITLE = "spectator-first-person-enter-title";
     public static String ARENA_SPECTATOR_FIRST_PERSON_ENTER_SUBTITLE = "spectator-first-person-enter-subtitle";
     public static String ARENA_SPECTATOR_FIRST_PERSON_LEAVE_TITLE = "spectator-first-person-quit-title";
@@ -151,19 +186,22 @@ public class Messages {
     public static String ARENA_MAX_BUILD_LIMIT_REACHED = "build-max-height-limit-reached";
     public static String ARENA_MIN_BUILD_LIMIT_REACHED = "build-min-height-limit-reached";
     public static String ARENA_FIREBALL_COOLDOWN = "arena-fireball-cooldown";
-
-    /** Stats related */
+    /**
+     * Stats related
+     */
     public static String PLAYER_STATS_GUI_PATH = "stats";
-    public static String PLAYER_STATS_GUI_INV_NAME = PLAYER_STATS_GUI_PATH+"-inv-name";
-
-    /** Arena generators related */
+    public static String PLAYER_STATS_GUI_INV_NAME = PLAYER_STATS_GUI_PATH + "-inv-name";
+    /**
+     * Arena generators related
+     */
     public static String GENERATOR_HOLOGRAM_TIER = "generator-tier";
     public static String GENERATOR_HOLOGRAM_TYPE_DIAMOND = "generator-diamond";
     public static String GENERATOR_HOLOGRAM_TYPE_EMERALD = "generator-emerald";
     public static String GENERATOR_HOLOGRAM_TIMER = "generator-timer";
     public static String GENERATOR_UPGRADE_CHAT_ANNOUNCEMENT = "generator-upgrade-announce";
-
-    /** General formatting */
+    /**
+     * General formatting
+     */
     public static String FORMATTING_CHAT_LOBBY = "format-chat-lobby";
     public static String FORMATTING_CHAT_WAITING = "format-chat-waiting";
     public static String FORMATTING_CHAT_SHOUT = "format-chat-global";
@@ -180,14 +218,12 @@ public class Messages {
     public static String FORMATTING_SCOREBOARD_TAB_SUFFIX_STARTING = "format-sb-tab-suffix.starting";
     public static String FORMATTING_SCOREBOARD_TAB_PREFIX_PLAYING = "format-sb-tab-prefix.playing";
     public static String FORMATTING_SCOREBOARD_TAB_SUFFIX_PLAYING = "format-sb-tab-suffix.playing";
-
     public static String FORMATTING_SIDEBAR_TAB_HEADER_LOBBY = "format-sb-tab-header.lobby";
     public static String FORMATTING_SIDEBAR_TAB_HEADER_WAITING = "format-sb-tab-header.waiting";
     public static String FORMATTING_SIDEBAR_TAB_HEADER_STARTING = "format-sb-tab-header.starting";
     public static String FORMATTING_SIDEBAR_TAB_HEADER_PLAYING = "format-sb-tab-header.playing";
     public static String FORMATTING_SIDEBAR_TAB_HEADER_RESTARTING = "format-sb-tab-header.restarting";
     public static String FORMATTING_SIDEBAR_TAB_HEADER_SPECTATOR = "format-sb-tab-header.spectator";
-
     public static String FORMATTING_SIDEBAR_TAB_FOOTER_LOBBY = "format-sb-tab-footer.lobby";
     public static String FORMATTING_SIDEBAR_TAB_FOOTER_WAITING = "format-sb-tab-footer.waiting";
     public static String FORMATTING_SIDEBAR_TAB_FOOTER_STARTING = "format-sb-tab-footer.starting";
@@ -205,7 +241,6 @@ public class Messages {
     public static String FORMATTING_SPECTATOR_TEAM = "format-spectator-team";
     @Deprecated
     public static String FORMATTING_SPECTATOR_COLOR = "format-spectator-color";
-
     public static String FORMATTING_SCOREBOARD_TEAM_ELIMINATED = "format-sb-team-eliminated";
     public static String FORMATTING_SCOREBOARD_BED_DESTROYED = "format-sb-bed-destroyed";
     public static String FORMATTING_SCOREBOARD_TEAM_ALIVE = "format-sb-team-alive";
@@ -229,8 +264,9 @@ public class Messages {
     public static String FORMAT_UPGRADE_COLOR_CAN_AFFORD = "format-upgrade-color-can-afford";
     public static String FORMAT_UPGRADE_COLOR_UNLOCKED = "format-upgrade-color-unlocked";
     public static String FORMAT_UPGRADE_TRAP_COST = "format-upgrade-trap-cost";
-
-    /** Meaning/ Translations */
+    /**
+     * Meaning/ Translations
+     */
     public static String MEANING_FULL = "meaning-full";
     public static String MEANING_SHOUT = "meaning-shout";
     public static String MEANING_NEVER = "meaning-never";
@@ -246,14 +282,16 @@ public class Messages {
     public static String MEANING_VAULT_SINGULAR = "meaning-vault-singular";
     public static String MEANING_VAULT_PLURAL = "meaning-vault-plural";
     public static String MEANING_NO_TRAP = "meaning-no-trap";
-
-    /** Scoreboard related */
+    /**
+     * Scoreboard related
+     */
     public static String SCOREBOARD_DEFAULT_WAITING = "scoreboard.Default.waiting";
     public static String SCOREBOARD_DEFAULT_STARTING = "scoreboard.Default.starting";
     public static String SCOREBOARD_DEFAULT_PLAYING = "scoreboard.Default.playing";
     public static String SCOREBOARD_LOBBY = "scoreboard.lobby";
-
-    /** Player interact related */
+    /**
+     * Player interact related
+     */
     public static String INTERACT_CANNOT_PLACE_BLOCK = "interact-cant-place";
     public static String INTERACT_CANNOT_BREAK_BLOCK = "interact-cant-break";
     public static String INTERACT_CANNOT_BREAK_OWN_BED = "interact-cant-destroy-bed";
@@ -265,17 +303,16 @@ public class Messages {
     public static String INTERACT_ENDERCHEST_ITEM_DROP = "interact-enderchest-item-drop";
     public static String INTERACT_INVISIBILITY_REMOVED_DAMGE_TAKEN = "interact-invisibility-removed-damaged";
     public static String INTERACT_INVISIBILITY_REMOVED_TRAP = "interact-invisibility-removed-trap";
-
-
-    /** PvP related */
+    /**
+     * PvP related
+     */
     public static String PLAYER_DIE_RESPAWN_TITLE = "player-respawn-title";
     public static String PLAYER_DIE_RESPAWN_SUBTITLE = "player-respawn-subtitle";
     public static String PLAYER_DIE_RESPAWN_CHAT = "player-respawn-timer-chat";
     public static String PLAYER_DIE_RESPAWNED_TITLE = "player-respawned-title";
     public static String PLAYER_DIE_ELIMINATED_CHAT = "player-eliminated-chat";
-
     public static String PLAYER_DIE_VOID_FALL_REGULAR_KILL = "player-die-void-regular";
-    public static String PLAYER_DIE_VOID_FALL_FINAL_KILL =  "player-die-void-final";
+    public static String PLAYER_DIE_VOID_FALL_FINAL_KILL = "player-die-void-final";
     public static String PLAYER_DIE_KNOCKED_IN_VOID_REGULAR_KILL = "player-die-knocked-void-regular";
     public static String PLAYER_DIE_KNOCKED_IN_VOID_FINAL_KILL = "player-die-knocked-void-final";
     public static String PLAYER_DIE_KNOCKED_BY_REGULAR_KILL = "player-die-knocked-fall-regular";
@@ -296,15 +333,14 @@ public class Messages {
     public static String PLAYER_DIE_IRON_GOLEM_FINAL_KILL = "player-die-golem-final";
     public static String PLAYER_DIE_PVP_LOG_OUT_REGULAR = "player-die-pvp-log-out-regular";
     public static String PLAYER_DIE_PVP_LOG_OUT_FINAL = "player-die-pvp-log-out-final";
-
     public static String PLAYER_DIE_REWARD_DIAMOND = "player-loot-diamond";
     public static String PLAYER_DIE_REWARD_IRON = "player-loot-iron";
     public static String PLAYER_DIE_REWARD_GOLD = "player-loot-gold";
     public static String PLAYER_DIE_REWARD_EMERALD = "player-loot-emerald";
-
     public static String PLAYER_HIT_BOW = "player-hit-bow";
-
-    /** Misc */
+    /**
+     * Misc
+     */
     public static String GAME_END_GAME_OVER_PLAYER_TITLE = "game-end-game-over-title";
     public static String GAME_END_VICTORY_PLAYER_TITLE = "game-end-victory-title";
     public static String GAME_END_TOP_PLAYER_CHAT = "game-end-top-chat";
@@ -315,25 +351,22 @@ public class Messages {
     public static String XP_REWARD_BED_DESTROY = "xp-reward-bed-destroyed";
     public static String XP_REWARD_REGULAR_KILL = "xp-reward-regular-kill";
     public static String XP_REWARD_FINAL_KILL = "xp-reward-final-kill";
-
     public static String MONEY_REWARD_WIN = "money-reward-game-win";
     public static String MONEY_REWARD_PER_MINUTE = "money-reward-per-teammate";
     public static String MONEY_REWARD_PER_TEAMMATE = "money-reward-per-minute";
     public static String MONEY_REWARD_BED_DESTROYED = "money-reward-bed-destroyed";
     public static String MONEY_REWARD_FINAL_KILL = "money-reward-final-kill";
     public static String MONEY_REWARD_REGULAR_KILL = "money-reward-regular-kill";
-
     public static String BED_HOLOGRAM_DEFEND = "bed-hologram-defend";
     public static String BED_HOLOGRAM_DESTROYED = "bed-hologram-destroyed";
     public static String TEAM_ELIMINATED_CHAT = "team-eliminated";
-
-
-    /** Upgrades/ Shop*/
+    /**
+     * Upgrades/ Shop
+     */
     public static String NPC_NAME_TEAM_UPGRADES = "npc-team-upgrades";
     public static String NPC_NAME_TEAM_SHOP = "npc-team-shop";
     public static String NPC_NAME_SOLO_UPGRADES = "npc-solo-upgrades";
     public static String NPC_NAME_SOLO_SHOP = "npc-solo-shop";
-
     public static String UPGRADES_MENU_GUI_NAME_PATH = "upgrades-menu-gui-name-";
     public static String UPGRADES_CATEGORY_GUI_NAME_PATH = "upgrades-category-gui-name-";
     public static String UPGRADES_CATEGORY_ITEM_NAME_PATH = "upgrades-category-item-name-";
@@ -350,7 +383,6 @@ public class Messages {
     public static String UPGRADES_TRAP_CUSTOM_TITLE = "upgrades-base-trap-title-";
     public static String UPGRADES_TRAP_CUSTOM_SUBTITLE = "upgrades-base-trap-subtitle-";
     public static String UPGRADES_TRAP_CUSTOM_MSG = "upgrades-base-trap-msg-";
-
     public static String UPGRADES_LORE_REPLACEMENT_INSUFFICIENT_MONEY = "upgrades-lore-insuff-money";
     public static String UPGRADES_LORE_REPLACEMENT_CLICK_TO_BUY = "upgrades-lore-click-buy";
     public static String UPGRADES_LORE_REPLACEMENT_UNLOCKED = "upgrades-lore-unlocked";
@@ -361,46 +393,10 @@ public class Messages {
     public static String UPGRADES_TRAP_DEFAULT_TITLE = "upgrades-trap-default-title";
     public static String UPGRADES_TRAP_DEFAULT_SUBTITLE = "upgrades-trap-default-subtitle";
     public static String UPGRADES_TRAP_DEFAULT_MSG = "upgrades-trap-default-msg";
-
     public static String SHOP_NEW_PURCHASE = "shop-new-purchase";
     public static String SHOP_UTILITY_NPC_SILVERFISH_NAME = "shop-utility-silverfish";
     public static String SHOP_UTILITY_NPC_IRON_GOLEM_NAME = "shop-utility-iron-golem";
     public static String SHOP_INSUFFICIENT_MONEY = "shop-insuff-money";
     public static String SHOP_INSUFFICIENT_SPACE = "shop-insuff-space";
     public static String SHOP_ALREADY_BOUGHT = "shop-already-bought";
-    public static final String SHOP_PATH = "shop-items-messages";
-    public static final String SHOP_LORE_STATUS_CANT_AFFORD = "shop-lore-status-cant-afford";
-    public static final String SHOP_LORE_STATUS_CAN_BUY = "shop-lore-status-can-buy";
-    public static final String SHOP_LORE_STATUS_MAXED  = "shop-lore-status-tier-maxed";
-    public static final String SHOP_LORE_STATUS_ARMOR = "shop-lore-status-armor";
-    public static final String SHOP_LORE_QUICK_ADD  = "shop-lore-quick-add";
-    public static final String SHOP_LORE_QUICK_REMOVE  = "shop-lore-quick-remove";
-    public static final String SHOP_INDEX_NAME = SHOP_PATH + ".inventory-name";
-    public static final String SHOP_QUICK_ADD_NAME = SHOP_PATH + ".quick-buy-add-inventory-name";
-    public static final String SHOP_SEPARATOR_NAME = SHOP_PATH + ".separator-item-name";
-    public static final String SHOP_SEPARATOR_LORE = SHOP_PATH + ".separator-item-lore";
-    public static final String SHOP_QUICK_BUY_NAME = SHOP_PATH + ".quick-buy-item-name";
-    public static final String SHOP_QUICK_BUY_LORE = SHOP_PATH + ".quick-buy-item-lore";
-    public static final String SHOP_QUICK_EMPTY_NAME = SHOP_PATH + ".quick-buy-empty-item-name";
-    public static final String SHOP_QUICK_EMPTY_LORE = SHOP_PATH + ".quick-buy-empty-item-lore";
-
-    public static final String SHOP_CATEGORY_INVENTORY_NAME = SHOP_PATH + ".%category%.inventory-name";
-    public static final String SHOP_CATEGORY_ITEM_NAME = SHOP_PATH + ".%category%.category-item-name";
-    public static final String SHOP_CATEGORY_ITEM_LORE = SHOP_PATH + ".%category%.category-item-lore";
-    public static final String SHOP_CONTENT_TIER_ITEM_NAME = SHOP_PATH + ".%category%.content-item-%content%-name";
-    public static final String SHOP_CONTENT_TIER_ITEM_LORE = SHOP_PATH + ".%category%.content-item-%content%-lore";
-    public static final String SHOP_CAN_BUY_COLOR = SHOP_PATH+ ".can-buy-color";
-    public static final String SHOP_CANT_BUY_COLOR = SHOP_PATH+ ".cant-buy-color";
-
-    /* MultiArena Lobby Item Messages */
-    public static final String GENERAL_CONFIGURATION_LOBBY_ITEMS_NAME = ConfigPath.GENERAL_CONFIGURATION_LOBBY_ITEMS_PATH+"-%path%-name";
-    public static final String GENERAL_CONFIGURATION_LOBBY_ITEMS_LORE = ConfigPath.GENERAL_CONFIGURATION_LOBBY_ITEMS_PATH+"-%path%-lore";
-
-    /* Spectator Items Messages */
-    public static final String GENERAL_CONFIGURATION_SPECTATOR_ITEMS_NAME = ConfigPath.GENERAL_CONFIGURATION_SPECTATOR_ITEMS_PATH+"-%path%-name";
-    public static final String GENERAL_CONFIGURATION_SPECTATOR_ITEMS_LORE = ConfigPath.GENERAL_CONFIGURATION_SPECTATOR_ITEMS_PATH+"-%path%-lore";
-
-    /* Arena waiting Items Messages */
-    public static final String GENERAL_CONFIGURATION_WAITING_ITEMS_NAME = ConfigPath.GENERAL_CONFIGURATION_PRE_GAME_ITEMS_PATH+"-%path%-name";
-    public static final String GENERAL_CONFIGURATION_WAITING_ITEMS_LORE = ConfigPath.GENERAL_CONFIGURATION_PRE_GAME_ITEMS_PATH+"-%path%-lore";
 }

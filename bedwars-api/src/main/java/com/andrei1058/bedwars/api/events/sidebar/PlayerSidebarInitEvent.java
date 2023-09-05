@@ -19,11 +19,11 @@ public class PlayerSidebarInitEvent extends Event implements Cancellable {
         this.sidebar = sidebar;
     }
 
-    public HandlerList getHandlers() {
+    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 
-    public static HandlerList getHandlerList() {
+    public HandlerList getHandlers() {
         return HANDLERS;
     }
 

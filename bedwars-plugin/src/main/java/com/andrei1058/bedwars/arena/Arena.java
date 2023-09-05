@@ -1132,12 +1132,11 @@ public class Arena implements IArena {
                                     .replace("{vPrefix}", getChatSupport().getPrefix(p))
                                     .replace("{vSuffix}", getChatSupport().getSuffix(p))
                                     .replace("{playername}", p.getName())
-                                    .replace("{player}", p.getDisplayName()
-                                    )
-                    );
+                                    .replace("{player}", p.getDisplayName())
+                                    .replace("{vPrefixColor}", getChatSupport().getPrefixColor(p)));
                 }
                 for (Player on : getSpectators()) {
-                    on.sendMessage(getMsg(on, Messages.COMMAND_LEAVE_MSG).replace("{vPrefix}", getChatSupport().getPrefix(p)).replace("{playername}", p.getName()).replace("{player}", p.getDisplayName()));
+                    on.sendMessage(getMsg(on, Messages.COMMAND_LEAVE_MSG).replace("{vPrefix}", getChatSupport().getPrefix(p)).replace("{playername}", p.getName()).replace("{player}", p.getDisplayName()).replace("{vPrefixColor}", getChatSupport().getPrefixColor(p)));
                 }
             }
             // pvp log out

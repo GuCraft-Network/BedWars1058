@@ -19,19 +19,15 @@ public class BlockRay implements Iterator<Block> {
 
     private final double multiple;
     private final int parts;
-    private int consumed;
-
     private final double xOffset;
     private final double yOffset;
     private final double zOffset;
-
+    private final Block[] blockQueue;
+    private int consumed;
     private double lcx;
     private double lcy;
     private double lcz;
-
     private int currentBlock;
-
-    private final Block[] blockQueue;
 
     /**
      * Constructs a BlockRay instance.
@@ -171,7 +167,7 @@ public class BlockRay implements Iterator<Block> {
         );
 
         // Get the resultant (cx, cy, cz) together
-        blockQueue[6] =  world.getBlockAt(
+        blockQueue[6] = world.getBlockAt(
                 currentXFloor,
                 currentYFloor,
                 currentZFloor

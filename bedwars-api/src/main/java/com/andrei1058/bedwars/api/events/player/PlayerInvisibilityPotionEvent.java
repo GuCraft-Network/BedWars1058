@@ -45,9 +45,8 @@ public class PlayerInvisibilityPotionEvent extends Event {
         this.team = team;
     }
 
-
-    public enum Type {
-        ADDED, REMOVED
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
     }
 
     public Type getType() {
@@ -71,7 +70,7 @@ public class PlayerInvisibilityPotionEvent extends Event {
         return HANDLERS;
     }
 
-    public static HandlerList getHandlerList() {
-        return HANDLERS;
+    public enum Type {
+        ADDED, REMOVED
     }
 }

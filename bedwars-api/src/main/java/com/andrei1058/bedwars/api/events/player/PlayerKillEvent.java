@@ -50,53 +50,8 @@ public class PlayerKillEvent extends Event {
         this.cause = cause;
     }
 
-    public enum PlayerKillCause {
-        UNKNOWN(false, false, false),
-        UNKNOWN_FINAL_KILL(true, false, false),
-        EXPLOSION(false, false, false),
-        EXPLOSION_FINAL_KILL(true, false, false),
-        VOID(false, false, false),
-        VOID_FINAL_KILL(true, false, false),
-        PVP(false, false, false),
-        PVP_FINAL_KILL(true, false, false),
-        PLAYER_SHOOT(false, false, false),
-        PLAYER_SHOOT_FINAL_KILL(true, false, false),
-        SILVERFISH(false, true, false),
-        SILVERFISH_FINAL_KILL(true, true, false),
-        IRON_GOLEM(false, true, false),
-        IRON_GOLEM_FINAL_KILL(true, true, false),
-        PLAYER_PUSH(false, false, false),
-        /**
-         * Corresponds to FALL on ground.
-         */
-        PLAYER_PUSH_FINAL(true, false, false),
-        PLAYER_DISCONNECT(false, false, true),
-        PLAYER_DISCONNECT_FINAL(true, false, true);
-
-        private final boolean finalKill;
-        private final boolean despawnable;
-        private final boolean pvpLogOut;
-
-        PlayerKillCause(boolean finalKill, boolean despawnable, boolean pvpLogOut) {
-            this.finalKill = finalKill;
-            this.despawnable = despawnable;
-            this.pvpLogOut = pvpLogOut;
-        }
-
-        public boolean isFinalKill() {
-            return finalKill;
-        }
-
-        /**
-         * @return true if killed by a player's ironGolem, silverfish etc.
-         */
-        public boolean isDespawnable() {
-            return despawnable;
-        }
-
-        public boolean isPvpLogOut() {
-            return pvpLogOut;
-        }
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
     }
 
     /**
@@ -156,7 +111,52 @@ public class PlayerKillEvent extends Event {
         return HANDLERS;
     }
 
-    public static HandlerList getHandlerList() {
-        return HANDLERS;
+    public enum PlayerKillCause {
+        UNKNOWN(false, false, false),
+        UNKNOWN_FINAL_KILL(true, false, false),
+        EXPLOSION(false, false, false),
+        EXPLOSION_FINAL_KILL(true, false, false),
+        VOID(false, false, false),
+        VOID_FINAL_KILL(true, false, false),
+        PVP(false, false, false),
+        PVP_FINAL_KILL(true, false, false),
+        PLAYER_SHOOT(false, false, false),
+        PLAYER_SHOOT_FINAL_KILL(true, false, false),
+        SILVERFISH(false, true, false),
+        SILVERFISH_FINAL_KILL(true, true, false),
+        IRON_GOLEM(false, true, false),
+        IRON_GOLEM_FINAL_KILL(true, true, false),
+        PLAYER_PUSH(false, false, false),
+        /**
+         * Corresponds to FALL on ground.
+         */
+        PLAYER_PUSH_FINAL(true, false, false),
+        PLAYER_DISCONNECT(false, false, true),
+        PLAYER_DISCONNECT_FINAL(true, false, true);
+
+        private final boolean finalKill;
+        private final boolean despawnable;
+        private final boolean pvpLogOut;
+
+        PlayerKillCause(boolean finalKill, boolean despawnable, boolean pvpLogOut) {
+            this.finalKill = finalKill;
+            this.despawnable = despawnable;
+            this.pvpLogOut = pvpLogOut;
+        }
+
+        public boolean isFinalKill() {
+            return finalKill;
+        }
+
+        /**
+         * @return true if killed by a player's ironGolem, silverfish etc.
+         */
+        public boolean isDespawnable() {
+            return despawnable;
+        }
+
+        public boolean isPvpLogOut() {
+            return pvpLogOut;
+        }
     }
 }

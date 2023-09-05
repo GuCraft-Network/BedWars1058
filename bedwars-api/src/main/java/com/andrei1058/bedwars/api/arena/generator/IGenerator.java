@@ -60,11 +60,6 @@ public interface IGenerator {
     void dropItem(Location location);
 
     /**
-     * Change the item that this generator will spawn.
-     */
-    void setOre(ItemStack ore);
-
-    /**
      * Get the arena assigned to this generator.
      */
     IArena getArena();
@@ -75,16 +70,6 @@ public interface IGenerator {
     void rotate();
 
     /**
-     * Change item spawn delay. In seconds.
-     */
-    void setDelay(int delay);
-
-    /**
-     * Set how many items should the generator spawn at once.
-     */
-    void setAmount(int amount);
-
-    /**
      * Get the generator location.
      */
     Location getLocation();
@@ -93,6 +78,11 @@ public interface IGenerator {
      * Get generator ore.
      */
     ItemStack getOre();
+
+    /**
+     * Change the item that this generator will spawn.
+     */
+    void setOre(ItemStack ore);
 
     /**
      * This will hide generator holograms with a different iso.
@@ -109,11 +99,6 @@ public interface IGenerator {
      * If you want to have a different rotating type you should call this manually at {@link com.andrei1058.bedwars.api.events.gameplay.GameStateChangeEvent}
      */
     void enableRotation();
-
-    /**
-     * This is the limit when the generator will stop spawning new items until they are collected.
-     */
-    void setSpawnLimit(int value);
 
     /**
      * Get the team assigned to this generator.
@@ -135,9 +120,20 @@ public interface IGenerator {
     GeneratorType getType();
 
     /**
+     * Set generator type.
+     * This may break things.
+     */
+    void setType(GeneratorType type);
+
+    /**
      * Get the amount of items that are dropped once.
      */
     int getAmount();
+
+    /**
+     * Set how many items should the generator spawn at once.
+     */
+    void setAmount(int amount);
 
     /**
      * Get spawn rate delay.
@@ -145,9 +141,19 @@ public interface IGenerator {
     int getDelay();
 
     /**
+     * Change item spawn delay. In seconds.
+     */
+    void setDelay(int delay);
+
+    /**
      * Get seconds before next item spawn.
      */
     int getNextSpawn();
+
+    /**
+     * Set the remaining time till the next item spawn.
+     */
+    void setNextSpawn(int nextSpawn);
 
     /**
      * Get the spawn limit of the generators.
@@ -157,14 +163,9 @@ public interface IGenerator {
     int getSpawnLimit();
 
     /**
-     * Set the remaining time till the next item spawn.
+     * This is the limit when the generator will stop spawning new items until they are collected.
      */
-    void setNextSpawn(int nextSpawn);
-
-    /**
-     * Should the dropped items be stacked?
-     */
-    void setStack(boolean stack);
+    void setSpawnLimit(int value);
 
     /**
      * Check if the dropped items can be stacked.
@@ -172,10 +173,9 @@ public interface IGenerator {
     boolean isStack();
 
     /**
-     * Set generator type.
-     * This may break things.
+     * Should the dropped items be stacked?
      */
-    void setType(GeneratorType type);
+    void setStack(boolean stack);
 
     /**
      * This only must be called by the arena instance when it restarts.

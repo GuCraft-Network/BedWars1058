@@ -36,6 +36,10 @@ public class SetupSessionCloseEvent extends Event {
         this.setupSession = setupSession;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     /**
      * Get setup session.
      */
@@ -45,10 +49,6 @@ public class SetupSessionCloseEvent extends Event {
 
     @Override
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

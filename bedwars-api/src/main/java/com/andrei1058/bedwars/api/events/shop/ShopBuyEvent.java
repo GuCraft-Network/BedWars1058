@@ -38,7 +38,7 @@ public class ShopBuyEvent extends Event implements Cancellable {
 
     /**
      * Triggered when a player buys from the shop
-     * 
+     *
      * @deprecated Use {@link #ShopBuyEvent(Player, IArena, ICategoryContent)}
      */
     @Deprecated
@@ -55,6 +55,10 @@ public class ShopBuyEvent extends Event implements Cancellable {
         this.categoryContent = categoryContent;
         this.buyer = buyer;
         this.arena = arena;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
     }
 
     public IArena getArena() {
@@ -77,10 +81,6 @@ public class ShopBuyEvent extends Event implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 

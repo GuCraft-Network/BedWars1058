@@ -92,6 +92,17 @@ public class v1_18_R2 extends VersionSupport {
         loadDefaultEffects();
     }
 
+    private static ArmorStand createArmorStand(String name, Location loc) {
+        if (loc == null) return null;
+        if (loc.getWorld() == null) return null;
+        ArmorStand a = loc.getWorld().spawn(loc, ArmorStand.class);
+        a.setGravity(false);
+        a.setVisible(false);
+        a.setCustomNameVisible(true);
+        a.setCustomName(name);
+        return a;
+    }
+
     @Override
     public void registerVersionListeners() {
         new VersionCommon(this);
@@ -266,17 +277,6 @@ public class v1_18_R2 extends VersionSupport {
         ItemStack nmsStack = CraftItemStack.asNMSCopy(i);
         NBTTagCompound compound = (nmsStack.t() != null) ? nmsStack.t() : new NBTTagCompound();
         return compound.k("generic.attackDamage");
-    }
-
-    private static ArmorStand createArmorStand(String name, Location loc) {
-        if (loc == null) return null;
-        if (loc.getWorld() == null) return null;
-        ArmorStand a = loc.getWorld().spawn(loc, ArmorStand.class);
-        a.setGravity(false);
-        a.setVisible(false);
-        a.setCustomNameVisible(true);
-        a.setCustomName(name);
-        return a;
     }
 
     @Override
@@ -700,14 +700,14 @@ public class v1_18_R2 extends VersionSupport {
     }
 
     @Override
-    public void placeTowerBlocks(@NotNull Block b, @NotNull IArena a, @NotNull TeamColor color, int x, int y, int z){
+    public void placeTowerBlocks(@NotNull Block b, @NotNull IArena a, @NotNull TeamColor color, int x, int y, int z) {
         b.getRelative(x, y, z).setType(color.woolMaterial());
         a.addPlacedBlock(b.getRelative(x, y, z));
     }
 
     @Override
-    public void placeLadder(@NotNull Block b, int x, int y, int z, @NotNull IArena a, int ladderData){
-        Block block = b.getRelative(x,y,z);  //ladder block
+    public void placeLadder(@NotNull Block b, int x, int y, int z, @NotNull IArena a, int ladderData) {
+        Block block = b.getRelative(x, y, z);  //ladder block
         block.setType(Material.LADDER);
         Ladder ladder = (Ladder) block.getBlockData();
         a.addPlacedBlock(block);
@@ -732,7 +732,7 @@ public class v1_18_R2 extends VersionSupport {
     }
 
     @Override
-    public void playVillagerEffect(@NotNull Player player, Location location){
+    public void playVillagerEffect(@NotNull Player player, Location location) {
         player.spawnParticle(Particle.VILLAGER_HAPPY, location, 1);
     }
 

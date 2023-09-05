@@ -70,6 +70,15 @@ public class v1_12_R1 extends VersionSupport {
         }
     }
 
+    private static ArmorStand createArmorStand(String name, Location loc) {
+        ArmorStand a = loc.getWorld().spawn(loc, ArmorStand.class);
+        a.setGravity(false);
+        a.setVisible(false);
+        a.setCustomNameVisible(true);
+        a.setCustomName(name);
+        return a;
+    }
+
     @Override
     public String getTag(org.bukkit.inventory.ItemStack itemStack, String key) {
         net.minecraft.server.v1_12_R1.ItemStack i = CraftItemStack.asNMSCopy(itemStack);
@@ -146,7 +155,7 @@ public class v1_12_R1 extends VersionSupport {
     @Override
     public void minusAmount(Player p, org.bukkit.inventory.ItemStack i, int amount) {
         if (i.getAmount() - amount <= 0) {
-            if(p.getInventory().getItemInOffHand().equals(i)) {
+            if (p.getInventory().getItemInOffHand().equals(i)) {
                 p.getInventory().setItemInOffHand(null);
             } else {
                 p.getInventory().removeItem(i);
@@ -262,16 +271,6 @@ public class v1_12_R1 extends VersionSupport {
         //noinspection ConstantConditions
         return compound.getDouble("generic.attackDamage");
     }
-
-    private static ArmorStand createArmorStand(String name, Location loc) {
-        ArmorStand a = loc.getWorld().spawn(loc, ArmorStand.class);
-        a.setGravity(false);
-        a.setVisible(false);
-        a.setCustomNameVisible(true);
-        a.setCustomName(name);
-        return a;
-    }
-
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void registerEntity(String name, int id, Class customClass) {
@@ -706,26 +705,26 @@ public class v1_12_R1 extends VersionSupport {
 
     @Override
     public void clearArrowsFromPlayerBody(Player player) {
-        ((CraftLivingEntity)player).getHandle().getDataWatcher().set(new DataWatcherObject<>(10, DataWatcherRegistry.b),-1);
+        ((CraftLivingEntity) player).getHandle().getDataWatcher().set(new DataWatcherObject<>(10, DataWatcherRegistry.b), -1);
     }
 
     @Override
-    public void placeTowerBlocks(org.bukkit.block.Block b, IArena a, TeamColor color, int x, int y, int z){
+    public void placeTowerBlocks(org.bukkit.block.Block b, IArena a, TeamColor color, int x, int y, int z) {
         b.getRelative(x, y, z).setType(Material.WOOL);
         setBlockTeamColor(b.getRelative(x, y, z), color);
         a.addPlacedBlock(b.getRelative(x, y, z));
     }
 
     @Override
-    public void placeLadder(org.bukkit.block.Block b, int x, int y, int z, IArena a, int ladderdata){
+    public void placeLadder(org.bukkit.block.Block b, int x, int y, int z, IArena a, int ladderdata) {
         b.getRelative(x, y, z).setType(Material.LADDER);
         //noinspection deprecation
-        b.getRelative(x, y, z).setData((byte)ladderdata);
+        b.getRelative(x, y, z).setData((byte) ladderdata);
         a.addPlacedBlock(b.getRelative(x, y, z));
     }
 
     @Override
-    public void playVillagerEffect(Player player, Location location){
+    public void playVillagerEffect(Player player, Location location) {
         player.spawnParticle(Particle.VILLAGER_HAPPY, location, 1);
     }
 

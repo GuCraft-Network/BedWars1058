@@ -46,6 +46,10 @@ public class SpectatorTeleportToPlayerEvent extends Event {
         this.arena = arena;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     /**
      * Get the spectator
      */
@@ -79,10 +83,6 @@ public class SpectatorTeleportToPlayerEvent extends Event {
     }
 
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

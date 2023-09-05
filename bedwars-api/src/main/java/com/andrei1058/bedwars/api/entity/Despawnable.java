@@ -31,14 +31,13 @@ import java.util.UUID;
 
 public class Despawnable {
 
+    private static BedWars api;
     private LivingEntity e;
     private ITeam team;
     private int despawn = 250;
     private String namePath;
     private PlayerKillEvent.PlayerKillCause deathRegularCause, deathFinalCause;
     private UUID uuid;
-
-    private static BedWars api;
 
     public Despawnable(LivingEntity e, ITeam team, int despawn, String namePath, PlayerKillEvent.PlayerKillCause deathFinalCause, PlayerKillEvent.PlayerKillCause deathRegularCause) {
         this.e = e;
@@ -59,15 +58,15 @@ public class Despawnable {
     public void refresh() {
         if (e.isDead() || e == null || team == null || team.getArena() == null) {
             api.getVersionSupport().getDespawnablesList().remove(uuid);
-            if (team.getArena() == null){
-                e.damage(e.getHealth()+100);
+            if (team.getArena() == null) {
+                e.damage(e.getHealth() + 100);
             }
             return;
         }
         setName();
         despawn--;
         if (despawn == 0) {
-            e.damage(e.getHealth()+100);
+            e.damage(e.getHealth() + 100);
             api.getVersionSupport().getDespawnablesList().remove(e.getUniqueId());
         }
     }
@@ -104,8 +103,8 @@ public class Despawnable {
         return deathRegularCause;
     }
 
-    public void destroy(){
-        if (getEntity() != null){
+    public void destroy() {
+        if (getEntity() != null) {
             getEntity().damage(Integer.MAX_VALUE);
         }
         team = null;

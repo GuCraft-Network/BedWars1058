@@ -41,6 +41,9 @@ public class PlayerBaseEnterEvent extends Event {
         this.team = team;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
 
     /**
      * Get the team owing the entered base
@@ -57,10 +60,6 @@ public class PlayerBaseEnterEvent extends Event {
     }
 
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

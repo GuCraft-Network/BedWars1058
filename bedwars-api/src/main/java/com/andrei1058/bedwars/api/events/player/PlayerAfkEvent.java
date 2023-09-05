@@ -40,6 +40,10 @@ public class PlayerAfkEvent extends Event {
         this.player = player;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     /**
      * Get player
      */
@@ -54,6 +58,11 @@ public class PlayerAfkEvent extends Event {
         return afkType;
     }
 
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLERS;
+    }
+
     public enum AFKType {
         /**
          * When a player goes AFK
@@ -64,14 +73,5 @@ public class PlayerAfkEvent extends Event {
          * When a player comes back from AFK
          */
         END
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
-        return HANDLERS;
     }
 }

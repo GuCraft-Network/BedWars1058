@@ -48,7 +48,6 @@ public interface UpgradesIndex {
     boolean addContent(MenuContent content, int slot);
 
     /**
-     *
      * @return total amount of tiers in upgrades
      */
     int countTiers();

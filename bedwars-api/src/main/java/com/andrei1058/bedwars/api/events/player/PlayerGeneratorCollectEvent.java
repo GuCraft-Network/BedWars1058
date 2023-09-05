@@ -46,6 +46,10 @@ public class PlayerGeneratorCollectEvent extends Event {
         this.arena = arena;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     public IArena getArena() {
         return arena;
     }
@@ -84,10 +88,6 @@ public class PlayerGeneratorCollectEvent extends Event {
 
     @Override
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

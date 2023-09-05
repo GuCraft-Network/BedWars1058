@@ -44,6 +44,10 @@ public class PlayerReJoinEvent extends Event {
         this.respawnTime = respawnTime;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     /**
      * Get arena
      */
@@ -59,19 +63,21 @@ public class PlayerReJoinEvent extends Event {
     }
 
     /**
-     * Sets the amount of time until the player respawns
-     * @param respawnTime time in seconds
-     */
-    public void setRespawnTime(int respawnTime) {
-        this.respawnTime = respawnTime;
-    }
-
-    /**
      * Gets the amount of time until the player respawns
+     *
      * @return time in seconds
      */
     public int getRespawnTime() {
         return respawnTime;
+    }
+
+    /**
+     * Sets the amount of time until the player respawns
+     *
+     * @param respawnTime time in seconds
+     */
+    public void setRespawnTime(int respawnTime) {
+        this.respawnTime = respawnTime;
     }
 
     public boolean isCancelled() {
@@ -84,10 +90,6 @@ public class PlayerReJoinEvent extends Event {
 
     @Override
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

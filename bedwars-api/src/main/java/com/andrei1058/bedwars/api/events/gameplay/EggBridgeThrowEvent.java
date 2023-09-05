@@ -41,6 +41,10 @@ public class EggBridgeThrowEvent extends Event {
         this.arena = arena;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     /**
      * Get player
      */
@@ -64,10 +68,6 @@ public class EggBridgeThrowEvent extends Event {
     }
 
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

@@ -38,6 +38,10 @@ public class NextEventChangeEvent extends Event {
         this.newEvent = newEvent;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     /**
      * Get the arena where happened.
      *
@@ -66,10 +70,6 @@ public class NextEventChangeEvent extends Event {
     }
 
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

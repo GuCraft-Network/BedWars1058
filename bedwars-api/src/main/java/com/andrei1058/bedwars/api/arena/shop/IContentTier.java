@@ -33,11 +33,15 @@ public interface IContentTier {
     int getPrice();
 
     /**
+     * Set tier price.
+     */
+    void setPrice(int price);
+
+    /**
      * Get tier currency.
      * {@link Material#AIR} for vault.
      */
     Material getCurrency();
-
 
     /**
      * Set tier currency.
@@ -46,24 +50,15 @@ public interface IContentTier {
     void setCurrency(Material currency);
 
     /**
-     * Set tier price.
+     * Get item stack with name and lore in player's language
      */
-    void setPrice(int price);
+    ItemStack getItemStack();
 
     /**
      * Set tier preview item.
      */
     void setItemStack(ItemStack itemStack);
 
-    /**
-     * Set list of items that you receive on buy.
-     */
-    void setBuyItemsList(List<IBuyItem> buyItemsList);
-
-    /**
-     * Get item stack with name and lore in player's language
-     */
-    ItemStack getItemStack();
     /**
      * Get tier level
      */
@@ -73,4 +68,9 @@ public interface IContentTier {
      * Get items
      */
     List<IBuyItem> getBuyItemsList();
+
+    /**
+     * Set list of items that you receive on buy.
+     */
+    void setBuyItemsList(List<IBuyItem> buyItemsList);
 }

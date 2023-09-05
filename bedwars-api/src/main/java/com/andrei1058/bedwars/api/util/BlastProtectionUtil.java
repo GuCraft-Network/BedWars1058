@@ -53,11 +53,11 @@ public class BlastProtectionUtil {
 
         double alteredRayStep = 0.73;
         // x
-        for (double XrayRadius = alteredRayStep * -1; XrayRadius <= alteredRayStep; XrayRadius+= alteredRayStep) {
+        for (double XrayRadius = alteredRayStep * -1; XrayRadius <= alteredRayStep; XrayRadius += alteredRayStep) {
             // y
-            for (double YrayRadius = alteredRayStep * -1; YrayRadius <= alteredRayStep; YrayRadius+= alteredRayStep) {
+            for (double YrayRadius = alteredRayStep * -1; YrayRadius <= alteredRayStep; YrayRadius += alteredRayStep) {
                 // z
-                for (double ZrayRadius = alteredRayStep * -1; ZrayRadius <= alteredRayStep; ZrayRadius+= alteredRayStep) {
+                for (double ZrayRadius = alteredRayStep * -1; ZrayRadius <= alteredRayStep; ZrayRadius += alteredRayStep) {
                     targetVectors.add(pov.clone().toVector().toBlockVector().add(new Vector(XrayRadius, YrayRadius, ZrayRadius)));
                 }
             }

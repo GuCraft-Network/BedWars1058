@@ -30,10 +30,9 @@ import org.bukkit.event.HandlerList;
 
 public class UpgradeBuyEvent extends Event implements Cancellable {
     private static final HandlerList HANDLERS = new HandlerList();
-
+    private final IArena arena;
     private TeamUpgrade teamUpgrade;
     private Player player;
-    private final IArena arena;
     private ITeam team;
     private boolean cancelled = false;
 
@@ -45,6 +44,10 @@ public class UpgradeBuyEvent extends Event implements Cancellable {
         this.player = player;
         this.team = team;
         this.arena = team.getArena();
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
     }
 
     public IArena getArena() {
@@ -68,10 +71,6 @@ public class UpgradeBuyEvent extends Event implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 

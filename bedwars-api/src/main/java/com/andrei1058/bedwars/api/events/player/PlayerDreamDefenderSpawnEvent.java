@@ -44,11 +44,11 @@ public class PlayerDreamDefenderSpawnEvent extends Event {
         this.arena = arena;
     }
 
-    public HandlerList getHandlers() {
+    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 
-    public static HandlerList getHandlerList() {
+    public HandlerList getHandlers() {
         return HANDLERS;
     }
 

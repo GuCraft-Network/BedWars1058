@@ -52,6 +52,10 @@ public class PlayerLeaveArenaEvent extends Event {
         this(p, arena, null);
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     public Player getPlayer() {
         return player;
     }
@@ -79,10 +83,6 @@ public class PlayerLeaveArenaEvent extends Event {
     }
 
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

@@ -46,6 +46,10 @@ public class SpectatorFirstPersonLeaveEvent extends Event {
         this.subTitle = subtitle;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     /**
      * Get the spectator
      */
@@ -86,20 +90,20 @@ public class SpectatorFirstPersonLeaveEvent extends Event {
         return fadeIn;
     }
 
-    public int getFadeOut() {
-        return fadeOut;
-    }
-
-    public int getStay() {
-        return stay;
-    }
-
     public void setFadeIn(int fadeIn) {
         this.fadeIn = fadeIn;
     }
 
+    public int getFadeOut() {
+        return fadeOut;
+    }
+
     public void setFadeOut(int fadeOut) {
         this.fadeOut = fadeOut;
+    }
+
+    public int getStay() {
+        return stay;
     }
 
     public void setStay(int stay) {
@@ -107,10 +111,6 @@ public class SpectatorFirstPersonLeaveEvent extends Event {
     }
 
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 

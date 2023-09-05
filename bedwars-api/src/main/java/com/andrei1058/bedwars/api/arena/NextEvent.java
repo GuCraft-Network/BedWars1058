@@ -32,7 +32,7 @@ public enum NextEvent {
 
     private final String soundPath;
 
-    NextEvent(String soundPath){
+    NextEvent(String soundPath) {
         this.soundPath = soundPath;
     }
 

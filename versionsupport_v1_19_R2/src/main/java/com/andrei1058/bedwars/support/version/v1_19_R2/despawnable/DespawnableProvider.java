@@ -63,7 +63,7 @@ public abstract class DespawnableProvider<T> {
         bukkitEntity.setCustomNameVisible(true);
         bukkitEntity.setCustomName(getDisplayName(attr, team));
 
-        var entity = ((EntityInsentient)((CraftEntity)bukkitEntity).getHandle());
+        var entity = ((EntityInsentient) ((CraftEntity) bukkitEntity).getHandle());
         Objects.requireNonNull(entity.a(GenericAttributes.a)).a(attr.health());
         Objects.requireNonNull(entity.a(GenericAttributes.d)).a(attr.speed());
         Objects.requireNonNull(entity.a(GenericAttributes.f)).a(attr.damage());

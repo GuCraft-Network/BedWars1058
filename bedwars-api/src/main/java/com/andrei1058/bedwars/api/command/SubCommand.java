@@ -80,22 +80,6 @@ public abstract class SubCommand {
     }
 
     /**
-     * This is the command information in the subCommands list of the target parent
-     */
-    public void setDisplayInfo(TextComponent displayInfo) {
-        this.displayInfo = displayInfo;
-    }
-
-    /**
-     * This is the command priority in the sub-commands list
-     * You may use this method if you set showInList true
-     * Commands with a minor number will be displayed first
-     */
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
-    /**
      * Get parent command
      */
     public ParentCommand getParent() {
@@ -110,6 +94,15 @@ public abstract class SubCommand {
     }
 
     /**
+     * This is the command priority in the sub-commands list
+     * You may use this method if you set showInList true
+     * Commands with a minor number will be displayed first
+     */
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    /**
      * Get command description for subCommands list
      */
     public TextComponent getDisplayInfo() {
@@ -117,10 +110,10 @@ public abstract class SubCommand {
     }
 
     /**
-     * True if it is an arena setup sub-command
+     * This is the command information in the subCommands list of the target parent
      */
-    public void setArenaSetupCommand(boolean arenaSetupCommand) {
-        this.arenaSetupCommand = arenaSetupCommand;
+    public void setDisplayInfo(TextComponent displayInfo) {
+        this.displayInfo = displayInfo;
     }
 
     /**
@@ -128,6 +121,13 @@ public abstract class SubCommand {
      */
     public boolean isArenaSetupCommand() {
         return arenaSetupCommand;
+    }
+
+    /**
+     * True if it is an arena setup sub-command
+     */
+    public void setArenaSetupCommand(boolean arenaSetupCommand) {
+        this.arenaSetupCommand = arenaSetupCommand;
     }
 
     /**

@@ -36,6 +36,10 @@ public class GeneratorUpgradeEvent extends Event {
         this.generator = generator;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     /**
      * Get generator
      */
@@ -43,12 +47,7 @@ public class GeneratorUpgradeEvent extends Event {
         return generator;
     }
 
-
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

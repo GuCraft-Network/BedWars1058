@@ -34,29 +34,18 @@ import java.util.*;
 
 public class Language extends ConfigManager {
 
-    private final String iso;
-    private String prefix = "";
-    private static String prefixStatic = "";
     private static final HashMap<UUID, Language> langByPlayer = new HashMap<>();
     private static final List<Language> languages = new ArrayList<>();
+    private static String prefixStatic = "";
     private static Language defaultLanguage;
+    private final String iso;
+    private String prefix = "";
     private String serverIp;
 
     public Language(Plugin plugin, String iso) {
         super(plugin, "messages_" + iso, plugin.getDataFolder().getPath() + "/Languages");
         this.iso = iso;
         languages.add(this);
-    }
-
-    /**
-     * Set chat prefix.
-     */
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
-    }
-
-    public void setPrefixStatic(String prefix) {
-        prefixStatic = prefix;
     }
 
     /**
@@ -83,13 +72,6 @@ public class Language extends ConfigManager {
     }
 
     /**
-     * Get language display name.
-     */
-    public String getLangName() {
-        return getYml().getString("name");
-    }
-
-    /**
      * Get message in player's language.
      */
     public static String getMsg(Player p, String path) {
@@ -109,13 +91,6 @@ public class Language extends ConfigManager {
     }
 
     /**
-     * Check if a message was set.
-     */
-    public boolean exists(String path) {
-        return getYml().get(path) != null;
-    }
-
-    /**
      * Get a string list in player's language.
      */
     public static List<String> getList(Player p, String path) {
@@ -131,47 +106,6 @@ public class Language extends ConfigManager {
                 l.set(path, data);
             }
         }
-    }
-
-    /**
-     * Get a color translated message.
-     */
-    public String m(String path) {
-        String message = getYml().getString(path);
-        if (message == null) {
-            System.err.println("Missing message key " + path + " in language " + getIso());
-            message = "MISSING_LANG";
-        }
-        if (null == serverIp) {
-            BedWars api = Bukkit.getServicesManager().getRegistration(BedWars.class).getProvider();
-            if (null != api.getConfigs().getMainConfig()) {
-                serverIp = api.getConfigs().getMainConfig().
-                        getString(ConfigPath.GENERAL_CONFIG_PLACEHOLDERS_REPLACEMENTS_SERVER_IP);
-            }
-        }
-
-        return ChatColor.translateAlternateColorCodes('&', message
-                .replace("{prefix}", (prefix == null ? "" : prefix))
-                .replace("{serverIp}", serverIp == null ? "" : serverIp)
-                // deprecated
-                .replace("{server_ip}", serverIp == null ? "" : serverIp)
-        );
-    }
-
-    /**
-     * Get a color translated list.
-     */
-    public List<String> l(String path) {
-        List<String> result = new ArrayList<>();
-        List<String> lines = getYml().getStringList(path);
-        if (lines == null) {
-            System.err.println("Missing message list key " + path + " in language " + getIso());
-            lines = Collections.emptyList();
-        }
-        for (String line : lines) {
-            result.add(ChatColor.translateAlternateColorCodes('&', line));
-        }
-        return result;
     }
 
     public static HashMap<UUID, Language> getLangByPlayer() {
@@ -205,13 +139,6 @@ public class Language extends ConfigManager {
     }
 
     /**
-     * Get language iso code.
-     */
-    public String getIso() {
-        return iso;
-    }
-
-    /**
      * Get loaded languages list.
      */
     public static List<Language> getLanguages() {
@@ -238,14 +165,6 @@ public class Language extends ConfigManager {
             }
             l.save();
         }
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    public void addDefaultStatsMsg(YamlConfiguration yml, String path, String name, String... lore) {
-        if (yml.getDefaults() == null || !yml.getDefaults().contains(Messages.PLAYER_STATS_GUI_PATH + "-" + path + "-name"))
-            yml.addDefault(Messages.PLAYER_STATS_GUI_PATH + "-" + path + "-name", name);
-        if (yml.getDefaults() == null || !yml.getDefaults().contains(Messages.PLAYER_STATS_GUI_PATH + "-" + path + "-lore"))
-            yml.addDefault(Messages.PLAYER_STATS_GUI_PATH + "-" + path + "-lore", lore);
     }
 
     /**
@@ -291,38 +210,6 @@ public class Language extends ConfigManager {
         }
         yml.options().copyDefaults(true);
         language.save();
-    }
-
-    /**
-     * Create messages paths for new shop categories
-     */
-    @SuppressWarnings("DuplicateExpressions")
-    public void setupUnSetCategories() {
-        BedWars api = Bukkit.getServer().getServicesManager().getRegistration(BedWars.class).getProvider();
-        for (String s : api.getConfigs().getShopConfig().getYml().getConfigurationSection("").getKeys(false)) {
-            if (s.equalsIgnoreCase(ConfigPath.SHOP_SETTINGS_PATH)) continue;
-            if (s.equalsIgnoreCase(ConfigPath.SHOP_SPECIALS_PATH)) continue;
-            if (s.equals(ConfigPath.SHOP_QUICK_DEFAULTS_PATH)) continue;
-            if (!exists(Messages.SHOP_CATEGORY_INVENTORY_NAME.replace("%category%", s))) {
-                set(Messages.SHOP_CATEGORY_INVENTORY_NAME.replace("%category%", s), "&8Name not set");
-            }
-            if (!exists(Messages.SHOP_CATEGORY_ITEM_NAME.replace("%category%", s))) {
-                set(Messages.SHOP_CATEGORY_ITEM_NAME.replace("%category%", s), "&8Name not set");
-            }
-            if (!exists(Messages.SHOP_CATEGORY_ITEM_LORE.replace("%category%", s))) {
-                set(Messages.SHOP_CATEGORY_ITEM_LORE.replace("%category%", s), Collections.singletonList("&8Lore not set"));
-            }
-            if (api.getConfigs().getShopConfig().getYml().get(s + ConfigPath.SHOP_CATEGORY_CONTENT_PATH) == null)
-                continue;
-            for (String c : api.getConfigs().getShopConfig().getYml().getConfigurationSection(s + ConfigPath.SHOP_CATEGORY_CONTENT_PATH).getKeys(false)) {
-                if (!exists(Messages.SHOP_CONTENT_TIER_ITEM_NAME.replace("%category%", s).replace("%content%", c))) {
-                    set(Messages.SHOP_CONTENT_TIER_ITEM_NAME.replace("%category%", s).replace("%content%", c), "&8Name not set");
-                }
-                if (!exists(Messages.SHOP_CONTENT_TIER_ITEM_LORE.replace("%category%", s).replace("%content%", c))) {
-                    set(Messages.SHOP_CONTENT_TIER_ITEM_LORE.replace("%category%", s).replace("%content%", c), Collections.singletonList("&8Lore not set"));
-                }
-            }
-        }
     }
 
     /**
@@ -405,6 +292,13 @@ public class Language extends ConfigManager {
     }
 
     /**
+     * Get server default language.
+     */
+    public static Language getDefaultLanguage() {
+        return defaultLanguage;
+    }
+
+    /**
      * Change server default language.
      */
     public static void setDefaultLanguage(Language defaultLanguage) {
@@ -412,9 +306,115 @@ public class Language extends ConfigManager {
     }
 
     /**
-     * Get server default language.
+     * Set chat prefix.
      */
-    public static Language getDefaultLanguage() {
-        return defaultLanguage;
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
+    public void setPrefixStatic(String prefix) {
+        prefixStatic = prefix;
+    }
+
+    /**
+     * Get language display name.
+     */
+    public String getLangName() {
+        return getYml().getString("name");
+    }
+
+    /**
+     * Check if a message was set.
+     */
+    public boolean exists(String path) {
+        return getYml().get(path) != null;
+    }
+
+    /**
+     * Get a color translated message.
+     */
+    public String m(String path) {
+        String message = getYml().getString(path);
+        if (message == null) {
+            System.err.println("Missing message key " + path + " in language " + getIso());
+            message = "MISSING_LANG";
+        }
+        if (null == serverIp) {
+            BedWars api = Bukkit.getServicesManager().getRegistration(BedWars.class).getProvider();
+            if (null != api.getConfigs().getMainConfig()) {
+                serverIp = api.getConfigs().getMainConfig().
+                        getString(ConfigPath.GENERAL_CONFIG_PLACEHOLDERS_REPLACEMENTS_SERVER_IP);
+            }
+        }
+
+        return ChatColor.translateAlternateColorCodes('&', message
+                .replace("{prefix}", (prefix == null ? "" : prefix))
+                .replace("{serverIp}", serverIp == null ? "" : serverIp)
+                // deprecated
+                .replace("{server_ip}", serverIp == null ? "" : serverIp)
+        );
+    }
+
+    /**
+     * Get a color translated list.
+     */
+    public List<String> l(String path) {
+        List<String> result = new ArrayList<>();
+        List<String> lines = getYml().getStringList(path);
+        if (lines == null) {
+            System.err.println("Missing message list key " + path + " in language " + getIso());
+            lines = Collections.emptyList();
+        }
+        for (String line : lines) {
+            result.add(ChatColor.translateAlternateColorCodes('&', line));
+        }
+        return result;
+    }
+
+    /**
+     * Get language iso code.
+     */
+    public String getIso() {
+        return iso;
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public void addDefaultStatsMsg(YamlConfiguration yml, String path, String name, String... lore) {
+        if (yml.getDefaults() == null || !yml.getDefaults().contains(Messages.PLAYER_STATS_GUI_PATH + "-" + path + "-name"))
+            yml.addDefault(Messages.PLAYER_STATS_GUI_PATH + "-" + path + "-name", name);
+        if (yml.getDefaults() == null || !yml.getDefaults().contains(Messages.PLAYER_STATS_GUI_PATH + "-" + path + "-lore"))
+            yml.addDefault(Messages.PLAYER_STATS_GUI_PATH + "-" + path + "-lore", lore);
+    }
+
+    /**
+     * Create messages paths for new shop categories
+     */
+    @SuppressWarnings("DuplicateExpressions")
+    public void setupUnSetCategories() {
+        BedWars api = Bukkit.getServer().getServicesManager().getRegistration(BedWars.class).getProvider();
+        for (String s : api.getConfigs().getShopConfig().getYml().getConfigurationSection("").getKeys(false)) {
+            if (s.equalsIgnoreCase(ConfigPath.SHOP_SETTINGS_PATH)) continue;
+            if (s.equalsIgnoreCase(ConfigPath.SHOP_SPECIALS_PATH)) continue;
+            if (s.equals(ConfigPath.SHOP_QUICK_DEFAULTS_PATH)) continue;
+            if (!exists(Messages.SHOP_CATEGORY_INVENTORY_NAME.replace("%category%", s))) {
+                set(Messages.SHOP_CATEGORY_INVENTORY_NAME.replace("%category%", s), "&8Name not set");
+            }
+            if (!exists(Messages.SHOP_CATEGORY_ITEM_NAME.replace("%category%", s))) {
+                set(Messages.SHOP_CATEGORY_ITEM_NAME.replace("%category%", s), "&8Name not set");
+            }
+            if (!exists(Messages.SHOP_CATEGORY_ITEM_LORE.replace("%category%", s))) {
+                set(Messages.SHOP_CATEGORY_ITEM_LORE.replace("%category%", s), Collections.singletonList("&8Lore not set"));
+            }
+            if (api.getConfigs().getShopConfig().getYml().get(s + ConfigPath.SHOP_CATEGORY_CONTENT_PATH) == null)
+                continue;
+            for (String c : api.getConfigs().getShopConfig().getYml().getConfigurationSection(s + ConfigPath.SHOP_CATEGORY_CONTENT_PATH).getKeys(false)) {
+                if (!exists(Messages.SHOP_CONTENT_TIER_ITEM_NAME.replace("%category%", s).replace("%content%", c))) {
+                    set(Messages.SHOP_CONTENT_TIER_ITEM_NAME.replace("%category%", s).replace("%content%", c), "&8Name not set");
+                }
+                if (!exists(Messages.SHOP_CONTENT_TIER_ITEM_LORE.replace("%category%", s).replace("%content%", c))) {
+                    set(Messages.SHOP_CONTENT_TIER_ITEM_LORE.replace("%category%", s).replace("%content%", c), Collections.singletonList("&8Lore not set"));
+                }
+            }
+        }
     }
 }

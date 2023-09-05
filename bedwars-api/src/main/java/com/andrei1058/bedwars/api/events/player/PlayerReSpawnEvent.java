@@ -45,6 +45,10 @@ public class PlayerReSpawnEvent extends Event {
         this.team = team;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     /**
      * Get the arena
      */
@@ -67,10 +71,6 @@ public class PlayerReSpawnEvent extends Event {
     }
 
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

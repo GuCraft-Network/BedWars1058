@@ -56,14 +56,6 @@ public class Cuboid implements Region {
         return protect;
     }
 
-    public void setMaxY(int maxY) {
-        this.maxY = maxY;
-    }
-
-    public void setMinY(int minY) {
-        this.minY = minY;
-    }
-
     public void setProtect(boolean protect) {
         this.protect = protect;
     }
@@ -72,7 +64,15 @@ public class Cuboid implements Region {
         return maxY;
     }
 
+    public void setMaxY(int maxY) {
+        this.maxY = maxY;
+    }
+
     public int getMinY() {
         return minY;
+    }
+
+    public void setMinY(int minY) {
+        this.minY = minY;
     }
 }

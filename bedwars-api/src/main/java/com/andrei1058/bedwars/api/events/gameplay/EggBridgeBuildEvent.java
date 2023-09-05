@@ -43,6 +43,10 @@ public class EggBridgeBuildEvent extends Event {
         this.block = block;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     /**
      * Get the arena
      */
@@ -65,10 +69,6 @@ public class EggBridgeBuildEvent extends Event {
     }
 
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

@@ -60,35 +60,6 @@ public class IGolem extends EntityIronGolem {
         super(entityTypes, world);
     }
 
-    @SuppressWarnings("rawtypes")
-    @Override
-    protected void u() {
-        this.bQ.a(1, new PathfinderGoalFloat(this));
-        this.bQ.a(2, new PathfinderGoalMeleeAttack(this, 1.5D, false));
-        this.bR.a(3, new PathfinderGoalHurtByTarget(this));
-        this.bQ.a(4, new PathfinderGoalRandomStroll(this, 1D));
-        this.bQ.a(5, new PathfinderGoalRandomLookaround(this));
-        this.bR.a(6, new PathfinderGoalNearestAttackableTarget(
-                this, EntityHuman.class, 20, true, false,
-                player -> !((EntityHuman)player).getBukkitEntity().isDead() &&
-                        !team.wasMember(((EntityHuman)player).getBukkitEntity().getUniqueId()) &&
-                        !team.getArena().isReSpawning(((EntityHuman)player).getBukkitEntity().getUniqueId())
-                && !team.getArena().isSpectator(((EntityHuman)player).getBukkitEntity().getUniqueId()))
-        );
-        this.bR.a(7, new PathfinderGoalNearestAttackableTarget(
-                this, IGolem.class, 20, true, false,
-                golem -> ((IGolem)golem).getTeam() != team)
-        );
-        this.bR.a(8, new PathfinderGoalNearestAttackableTarget(
-                this, Silverfish.class, 20, true, false,
-                sf -> ((Silverfish)sf).getTeam() != team)
-        );
-    }
-
-    public ITeam getTeam() {
-        return team;
-    }
-
     public static LivingEntity spawn(Location loc, ITeam bedWarsTeam, double speed, double health, int despawn) {
         WorldServer mcWorld = ((CraftWorld) Objects.requireNonNull(loc.getWorld())).getHandle();
         IGolem customEnt = new IGolem(EntityTypes.P, mcWorld, bedWarsTeam);
@@ -97,7 +68,7 @@ public class IGolem extends EntityIronGolem {
         Objects.requireNonNull(customEnt.a(GenericAttributes.a)).a(health);
         Objects.requireNonNull(customEnt.a(GenericAttributes.d)).a(speed);
 
-        if (!CraftEventFactory.doEntityAddEventCalling(mcWorld, customEnt, CreatureSpawnEvent.SpawnReason.CUSTOM)){
+        if (!CraftEventFactory.doEntityAddEventCalling(mcWorld, customEnt, CreatureSpawnEvent.SpawnReason.CUSTOM)) {
             mcWorld.O.a(customEnt);
         }
 
@@ -109,6 +80,35 @@ public class IGolem extends EntityIronGolem {
                         .replace("{health}", StringUtils.repeat(Language.getDefaultLanguage().m(Messages.FORMATTING_DESPAWNABLE_UTILITY_NPC_HEALTH) + " ", 10))
                         .replace("{TeamColor}", bedWarsTeam.getColor().chat().toString())));
         return (LivingEntity) customEnt.getBukkitEntity();
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    protected void u() {
+        this.bQ.a(1, new PathfinderGoalFloat(this));
+        this.bQ.a(2, new PathfinderGoalMeleeAttack(this, 1.5D, false));
+        this.bR.a(3, new PathfinderGoalHurtByTarget(this));
+        this.bQ.a(4, new PathfinderGoalRandomStroll(this, 1D));
+        this.bQ.a(5, new PathfinderGoalRandomLookaround(this));
+        this.bR.a(6, new PathfinderGoalNearestAttackableTarget(
+                this, EntityHuman.class, 20, true, false,
+                player -> !((EntityHuman) player).getBukkitEntity().isDead() &&
+                        !team.wasMember(((EntityHuman) player).getBukkitEntity().getUniqueId()) &&
+                        !team.getArena().isReSpawning(((EntityHuman) player).getBukkitEntity().getUniqueId())
+                        && !team.getArena().isSpectator(((EntityHuman) player).getBukkitEntity().getUniqueId()))
+        );
+        this.bR.a(7, new PathfinderGoalNearestAttackableTarget(
+                this, IGolem.class, 20, true, false,
+                golem -> ((IGolem) golem).getTeam() != team)
+        );
+        this.bR.a(8, new PathfinderGoalNearestAttackableTarget(
+                this, Silverfish.class, 20, true, false,
+                sf -> ((Silverfish) sf).getTeam() != team)
+        );
+    }
+
+    public ITeam getTeam() {
+        return team;
     }
 
     @Override

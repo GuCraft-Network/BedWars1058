@@ -59,6 +59,28 @@ public class Silverfish extends EntitySilverfish {
         super(entityTypes, world);
     }
 
+    public static LivingEntity spawn(Location loc, ITeam team, double speed, double health, int despawn, double damage) {
+        WorldServer mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
+        Silverfish customEnt = new Silverfish(EntityTypes.aA, mcWorld, team);
+        customEnt.a(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
+        customEnt.a(GenericAttributes.a).a(health);
+        customEnt.a(GenericAttributes.d).a(speed);
+        customEnt.a(GenericAttributes.f).a(damage);
+
+        if (!CraftEventFactory.doEntityAddEventCalling(mcWorld, customEnt, CreatureSpawnEvent.SpawnReason.CUSTOM)) {
+            mcWorld.O.a(customEnt);
+        }
+        ((CraftLivingEntity) customEnt.getBukkitEntity()).setRemoveWhenFarAway(false);
+        ((CraftLivingEntity) customEnt.getBukkitEntity()).setRemoveWhenFarAway(true);
+        ((CraftLivingEntity) customEnt.getBukkitEntity()).setPersistent(true);
+
+        customEnt.getBukkitEntity().setCustomName(Language.getDefaultLanguage().m(Messages.SHOP_UTILITY_NPC_SILVERFISH_NAME)
+                .replace("{despawn}", String.valueOf(despawn)
+                        .replace("{health}", StringUtils.repeat(Language.getDefaultLanguage().m(Messages.FORMATTING_DESPAWNABLE_UTILITY_NPC_HEALTH) + " ", 10))
+                        .replace("{TeamColor}", team.getColor().chat().toString())));
+        return (LivingEntity) customEnt.getBukkitEntity();
+    }
+
     @Override
     protected void u() {
         this.bQ.a(1, new PathfinderGoalFloat(this));
@@ -81,28 +103,6 @@ public class Silverfish extends EntitySilverfish {
 
     public ITeam getTeam() {
         return team;
-    }
-
-    public static LivingEntity spawn(Location loc, ITeam team, double speed, double health, int despawn, double damage) {
-        WorldServer mcWorld = ((CraftWorld) loc.getWorld()).getHandle();
-        Silverfish customEnt = new Silverfish(EntityTypes.aA, mcWorld, team);
-        customEnt.a(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
-        customEnt.a(GenericAttributes.a).a(health);
-        customEnt.a(GenericAttributes.d).a(speed);
-        customEnt.a(GenericAttributes.f).a(damage);
-
-        if (!CraftEventFactory.doEntityAddEventCalling(mcWorld, customEnt, CreatureSpawnEvent.SpawnReason.CUSTOM)) {
-            mcWorld.O.a(customEnt);
-        }
-        ((CraftLivingEntity) customEnt.getBukkitEntity()).setRemoveWhenFarAway(false);
-        ((CraftLivingEntity) customEnt.getBukkitEntity()).setRemoveWhenFarAway(true);
-        ((CraftLivingEntity) customEnt.getBukkitEntity()).setPersistent(true);
-
-        customEnt.getBukkitEntity().setCustomName(Language.getDefaultLanguage().m(Messages.SHOP_UTILITY_NPC_SILVERFISH_NAME)
-                .replace("{despawn}", String.valueOf(despawn)
-                        .replace("{health}", StringUtils.repeat(Language.getDefaultLanguage().m(Messages.FORMATTING_DESPAWNABLE_UTILITY_NPC_HEALTH) + " ", 10))
-                        .replace("{TeamColor}", team.getColor().chat().toString())));
-        return (LivingEntity) customEnt.getBukkitEntity();
     }
 
     @Override

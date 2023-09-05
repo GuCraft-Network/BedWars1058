@@ -47,6 +47,10 @@ public class PlayerLevelUpEvent extends Event {
         this.newXpTarget = levelUpXp;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     /**
      * Get player.
      */
@@ -70,10 +74,6 @@ public class PlayerLevelUpEvent extends Event {
 
     @Override
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

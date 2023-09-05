@@ -44,49 +44,6 @@ import static com.andrei1058.bedwars.support.version.common.VersionCommon.api;
 
 public class ItemDropPickListener {
 
-    // 1.11 or older
-    public static class PlayerDrop implements Listener {
-        @EventHandler
-        public void onDrop(PlayerDropItemEvent e){
-            if (manageDrop(e.getPlayer(), e.getItemDrop())) e.setCancelled(true);
-        }
-    }
-
-    // 1.11 or older
-    public static class PlayerPickup implements Listener {
-        @SuppressWarnings("deprecation")
-        @EventHandler
-        public void onDrop(PlayerPickupItemEvent e){
-            if (managePickup(e.getItem(), e.getPlayer())) e.setCancelled(true);
-        }
-    }
-
-    // 1.13 or newer
-    public static class EntityDrop implements Listener {
-        @EventHandler
-        public void onDrop(EntityDropItemEvent e){
-            if (manageDrop(e.getEntity(), e.getItemDrop())) e.setCancelled(true);
-        }
-    }
-
-    // 1.12 or newer
-    public static class EntityPickup implements Listener {
-        @EventHandler
-        public void onPickup(EntityPickupItemEvent e){
-            if (managePickup(e.getItem(), e.getEntity())) e.setCancelled(true);
-        }
-    }
-
-    // 1.9 or newer
-    public static class ArrowCollect implements Listener {
-        @EventHandler
-        public void onArrowPick(PlayerPickupArrowEvent e){
-            if (api.getArenaUtil().isSpectating(e.getPlayer())) {
-                e.setCancelled(true);
-            }
-        }
-    }
-
     /**
      * @return true if event should be cancelled
      */
@@ -125,7 +82,7 @@ public class ItemDropPickListener {
                     ItemMeta itemMeta = new ItemStack(material).getItemMeta();
 
                     //Call ore pick up event
-                    if (!api.getAFKUtil().isPlayerAFK(((Player) player).getPlayer())){
+                    if (!api.getAFKUtil().isPlayerAFK(((Player) player).getPlayer())) {
                         PlayerGeneratorCollectEvent event = new PlayerGeneratorCollectEvent((Player) player, item, a);
                         Bukkit.getPluginManager().callEvent(event);
                         if (event.isCancelled()) {
@@ -133,7 +90,7 @@ public class ItemDropPickListener {
                         } else {
                             item.getItemStack().setItemMeta(itemMeta);
                         }
-                    }else return true; //Cancel event if player is afk
+                    } else return true; //Cancel event if player is afk
                 }
             }
         }
@@ -168,5 +125,48 @@ public class ItemDropPickListener {
         }
 
         return a.getRespawnSessions().containsKey(player);
+    }
+
+    // 1.11 or older
+    public static class PlayerDrop implements Listener {
+        @EventHandler
+        public void onDrop(PlayerDropItemEvent e) {
+            if (manageDrop(e.getPlayer(), e.getItemDrop())) e.setCancelled(true);
+        }
+    }
+
+    // 1.11 or older
+    public static class PlayerPickup implements Listener {
+        @SuppressWarnings("deprecation")
+        @EventHandler
+        public void onDrop(PlayerPickupItemEvent e) {
+            if (managePickup(e.getItem(), e.getPlayer())) e.setCancelled(true);
+        }
+    }
+
+    // 1.13 or newer
+    public static class EntityDrop implements Listener {
+        @EventHandler
+        public void onDrop(EntityDropItemEvent e) {
+            if (manageDrop(e.getEntity(), e.getItemDrop())) e.setCancelled(true);
+        }
+    }
+
+    // 1.12 or newer
+    public static class EntityPickup implements Listener {
+        @EventHandler
+        public void onPickup(EntityPickupItemEvent e) {
+            if (managePickup(e.getItem(), e.getEntity())) e.setCancelled(true);
+        }
+    }
+
+    // 1.9 or newer
+    public static class ArrowCollect implements Listener {
+        @EventHandler
+        public void onArrowPick(PlayerPickupArrowEvent e) {
+            if (api.getArenaUtil().isSpectating(e.getPlayer())) {
+                e.setCancelled(true);
+            }
+        }
     }
 }

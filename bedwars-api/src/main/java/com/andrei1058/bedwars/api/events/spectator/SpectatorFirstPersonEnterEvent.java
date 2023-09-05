@@ -35,7 +35,8 @@ import java.util.function.Function;
 public class SpectatorFirstPersonEnterEvent extends Event implements Cancellable {
 
     private static final HandlerList HANDLERS = new HandlerList();
-
+    // A list of all players spectating in first person
+    private static List<UUID> spectatingInFirstPerson = new ArrayList<>();
     private final Player spectator;
     private final Player target;
     private final IArena arena;
@@ -45,9 +46,6 @@ public class SpectatorFirstPersonEnterEvent extends Event implements Cancellable
     private int fadeIn = 0;
     private int stay = 40;
     private int fadeOut = 10;
-
-    // A list of all players spectating in first person
-    private static List<UUID> spectatingInFirstPerson = new ArrayList<>();
 
     /**
      * Called when a spectator enters the first person spectating system.
@@ -60,6 +58,10 @@ public class SpectatorFirstPersonEnterEvent extends Event implements Cancellable
         this.subTitle = subtitle;
         if (!spectatingInFirstPerson.contains(spectator.getUniqueId()))
             spectatingInFirstPerson.add(spectator.getUniqueId());
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
     }
 
     /**
@@ -102,6 +104,13 @@ public class SpectatorFirstPersonEnterEvent extends Event implements Cancellable
     }
 
     /**
+     * Set first person enter title and subtitle. Leave "" for empty msg
+     */
+    public void setSubTitle(Function<Player, String> subTitle) {
+        this.subTitle = subTitle;
+    }
+
+    /**
      * Get first person enter subtitle
      */
 
@@ -117,23 +126,8 @@ public class SpectatorFirstPersonEnterEvent extends Event implements Cancellable
         this.title = title;
     }
 
-    /**
-     * Set first person enter title and subtitle. Leave "" for empty msg
-     */
-    public void setSubTitle(Function<Player, String> subTitle) {
-        this.subTitle = subTitle;
-    }
-
     public int getStay() {
         return stay;
-    }
-
-    public int getFadeOut() {
-        return fadeOut;
-    }
-
-    public int getFadeIn() {
-        return fadeIn;
     }
 
     public void setStay(int stay) {
@@ -141,9 +135,17 @@ public class SpectatorFirstPersonEnterEvent extends Event implements Cancellable
         this.stay = stay;
     }
 
+    public int getFadeOut() {
+        return fadeOut;
+    }
+
     public void setFadeOut(int fadeOut) {
         if (fadeOut < 0) return;
         this.fadeOut = fadeOut;
+    }
+
+    public int getFadeIn() {
+        return fadeIn;
     }
 
     public void setFadeIn(int fadeIn) {
@@ -152,10 +154,6 @@ public class SpectatorFirstPersonEnterEvent extends Event implements Cancellable
     }
 
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

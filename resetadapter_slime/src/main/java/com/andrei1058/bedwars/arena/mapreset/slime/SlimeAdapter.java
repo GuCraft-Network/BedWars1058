@@ -107,10 +107,11 @@ public class SlimeAdapter extends RestoreAdapter {
                 // This method must be called synchronously
                 SlimeWorld finalWorld = world;
                 Bukkit.getScheduler().runTask(getOwner(), () -> slime.generateWorld(finalWorld));
-            } catch (UnknownWorldException | IOException | CorruptedWorldException | NewerFormatException | WorldInUseException ex) {
+            } catch (UnknownWorldException | IOException | CorruptedWorldException | NewerFormatException |
+                     WorldInUseException ex) {
                 api.getArenaUtil().removeFromEnableQueue(a);
                 ex.printStackTrace();
-            } catch (ConcurrentModificationException thisShouldNotHappenSWM){
+            } catch (ConcurrentModificationException thisShouldNotHappenSWM) {
                 // this should not happen since they say to use #load async
                 // https://github.com/Grinderwolf/Slime-World-Manager/blob/develop/.docs/api/load-world.md
                 thisShouldNotHappenSWM.printStackTrace();
@@ -154,7 +155,7 @@ public class SlimeAdapter extends RestoreAdapter {
 
     @Override
     public void onDisable(IArena a) {
-        if(api.isShuttingDown()) {
+        if (api.isShuttingDown()) {
             Bukkit.unloadWorld(a.getWorldName(), false);
             return;
         }
@@ -206,7 +207,9 @@ public class SlimeAdapter extends RestoreAdapter {
                     slime.generateWorld(sw);
                     s.teleportPlayer();
                 });
-            } catch (UnknownWorldException | IOException | CorruptedWorldException | NewerFormatException | WorldInUseException | WorldAlreadyExistsException | InvalidWorldException | WorldTooBigException | WorldLoadedException ex) {
+            } catch (UnknownWorldException | IOException | CorruptedWorldException | NewerFormatException |
+                     WorldInUseException | WorldAlreadyExistsException | InvalidWorldException | WorldTooBigException |
+                     WorldLoadedException ex) {
                 s.getPlayer().sendMessage(ChatColor.RED + "An error occurred! Please check console.");
                 ex.printStackTrace();
                 s.close();
@@ -288,7 +291,8 @@ public class SlimeAdapter extends RestoreAdapter {
                 // Note that this method should be called asynchronously
                 SlimeWorld world = slime.loadWorld(slime.getLoader("file"), name1, true, spm);
                 world.clone(name2, slime.getLoader("file"));
-            } catch (UnknownWorldException | IOException | CorruptedWorldException | NewerFormatException | WorldInUseException | WorldAlreadyExistsException ex) {
+            } catch (UnknownWorldException | IOException | CorruptedWorldException | NewerFormatException |
+                     WorldInUseException | WorldAlreadyExistsException ex) {
                 ex.printStackTrace();
             }
         });
@@ -372,7 +376,8 @@ public class SlimeAdapter extends RestoreAdapter {
         try {
             getOwner().getLogger().log(Level.INFO, "Converting " + name + " to the Slime format.");
             slime.importWorld(new File(Bukkit.getWorldContainer(), name), name, sl);
-        } catch (WorldAlreadyExistsException | InvalidWorldException | WorldLoadedException | WorldTooBigException | IOException e) {
+        } catch (WorldAlreadyExistsException | InvalidWorldException | WorldLoadedException | WorldTooBigException |
+                 IOException e) {
             if (player != null) {
                 player.sendMessage(ChatColor.RED + "Could not convert " + name + " to the Slime format.");
                 player.sendMessage(ChatColor.RED + "Check the console for details.");

@@ -41,6 +41,9 @@ public class PlayerBaseLeaveEvent extends Event {
         this.team = team;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
 
     /**
      * Get the team owing the exited base
@@ -57,10 +60,6 @@ public class PlayerBaseLeaveEvent extends Event {
     }
 
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

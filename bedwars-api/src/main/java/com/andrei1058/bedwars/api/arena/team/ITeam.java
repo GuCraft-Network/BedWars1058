@@ -143,7 +143,7 @@ public interface ITeam {
     /**
      * Rejoin a team.
      *
-     * @param p target player.
+     * @param p           target player.
      * @param respawnTime the time until the player should respawn.
      */
     void reJoin(Player p, int respawnTime);
@@ -232,6 +232,13 @@ public interface ITeam {
     boolean isBedDestroyed();
 
     /**
+     * This will also disable team generators if true.
+     *
+     * @param bedDestroyed team members will no longer be able to respawn if you set this to true.
+     */
+    void setBedDestroyed(boolean bedDestroyed);
+
+    /**
      * Get team spawn location.
      *
      * @return spawn point.
@@ -251,13 +258,6 @@ public interface ITeam {
      * @return upgrades point.
      */
     Location getTeamUpgrades();
-
-    /**
-     * This will also disable team generators if true.
-     *
-     * @param bedDestroyed team members will no longer be able to respawn if you set this to true.
-     */
-    void setBedDestroyed(boolean bedDestroyed);
 
     /**
      * Get team iron generator.

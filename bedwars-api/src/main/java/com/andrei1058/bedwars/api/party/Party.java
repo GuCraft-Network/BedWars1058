@@ -49,7 +49,7 @@ public interface Party {
     void removePlayer(Player owner, Player target);
 
     default Player getOwner(Player member) {
-        for (Player m: this.getMembers(member)) {
+        for (Player m : this.getMembers(member)) {
             if (isOwner(m)) {
                 return m;
             }
@@ -58,7 +58,7 @@ public interface Party {
     }
 
     default void promote(@NotNull Player owner, @NotNull Player target) {
-        String msg = ChatColor.RED+"Not implemented! Contact an administrator";
+        String msg = ChatColor.RED + "Not implemented! Contact an administrator";
         owner.sendMessage(msg);
         target.sendMessage(msg);
     }

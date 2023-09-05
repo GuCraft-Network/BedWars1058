@@ -44,6 +44,10 @@ public class PlayerJoinArenaEvent extends Event {
         this.spectator = spectator;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     /**
      * Get arena
      */
@@ -80,10 +84,6 @@ public class PlayerJoinArenaEvent extends Event {
     }
 
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

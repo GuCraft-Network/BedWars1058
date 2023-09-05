@@ -36,6 +36,10 @@ public class ArenaEnableEvent extends Event {
         this.arena = a;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
     /**
      * Get the arena
      */
@@ -45,10 +49,6 @@ public class ArenaEnableEvent extends Event {
 
     @Override
     public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

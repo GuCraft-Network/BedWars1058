@@ -49,6 +49,132 @@ public interface BedWars {
      */
     IStats getStatsUtil();
 
+    /**
+     * Get afk system methods. It will only work if the game is started.
+     */
+    AFKUtil getAFKUtil();
+
+    ArenaUtil getArenaUtil();
+
+    Configs getConfigs();
+
+    /**
+     * Get shop util.
+     */
+    ShopUtil getShopUtil();
+
+    /**
+     * Get shop util.
+     */
+    @SuppressWarnings("unused")
+    TeamUpgradesUtil getTeamUpgradesUtil();
+
+    /**
+     * Get levels methods.
+     */
+    Level getLevelsUtil();
+
+    /**
+     * Get party util.
+     */
+    Party getPartyUtil();
+
+    /**
+     * Get active setup session.
+     *
+     * @param player player uuid.
+     * @return null if no session was found.
+     */
+    ISetupSession getSetupSession(UUID player);
+
+    /**
+     * Check if a player is in setup session.
+     */
+    boolean isInSetupSession(UUID player);
+
+    /**
+     * Get server type.
+     **/
+    ServerType getServerType();
+
+    /**
+     * Get a player language iso code
+     */
+    @SuppressWarnings("unused")
+    String getLangIso(Player p);
+
+    /**
+     * Get bedWars main command
+     */
+    ParentCommand getBedWarsCommand();
+
+    /**
+     * Get the restore adapter.
+     */
+    RestoreAdapter getRestoreAdapter();
+
+    /**
+     * Change the arena restore adapter.
+     *
+     * @param restoreAdapter your custom adapter.
+     */
+    void setRestoreAdapter(RestoreAdapter restoreAdapter) throws IllegalAccessError;
+
+    /**
+     * Change the party interface.
+     * You man need to unregister /party command yourself.
+     */
+    void setPartyAdapter(Party partyAdapter);
+
+    /**
+     * Get nms operations.
+     */
+    VersionSupport getVersionSupport();
+
+    /**
+     * Get server default language.
+     */
+    Language getDefaultLang();
+
+    /**
+     * Get lobby world name.
+     */
+    String getLobbyWorld();
+
+    String getForCurrentVersion(String v18, String v12, String v13);
+
+    @SuppressWarnings("unused")
+    void setLevelAdapter(Level level);
+
+    boolean isAutoScale();
+
+    /**
+     * Get language by iso code.
+     */
+    @SuppressWarnings("unused")
+    Language getLanguageByIso(String isoCode);
+
+    /**
+     * Get a player language.
+     */
+    Language getPlayerLanguage(Player player);
+
+    /**
+     * This is my standard location where to store addons configurations.
+     * Make sure to create a folder in it with your addon name.
+     */
+    @SuppressWarnings("unused")
+    File getAddonsPath();
+
+    /**
+     * Scoreboard options.
+     */
+    ScoreboardUtil getScoreboardUtil();
+
+    boolean isShuttingDown();
+
+    ISidebarService getScoreboardManager();
+
     interface IStats {
         /**
          * Get player first play date.
@@ -120,12 +246,6 @@ public interface BedWars {
         int getPlayerGamesPlayed(UUID p);
     }
 
-
-    /**
-     * Get afk system methods. It will only work if the game is started.
-     */
-    AFKUtil getAFKUtil();
-
     interface AFKUtil {
         /**
          * Check if a player is AFK.
@@ -143,8 +263,6 @@ public interface BedWars {
         @SuppressWarnings("unused")
         int getPlayerTimeAFK(Player player);
     }
-
-    ArenaUtil getArenaUtil();
 
     interface ArenaUtil {
 
@@ -185,16 +303,16 @@ public interface BedWars {
         void loadArena(String worldName, Player sender);
 
         /**
-         * Set how many games to the next serve restart.
-         * This is used only if {@link com.andrei1058.bedwars.api.server.ServerType#BUNGEE}
-         */
-        void setGamesBeforeRestart(int games);
-
-        /**
          * Get how many games till the next restart.
          * This is used only if {@link com.andrei1058.bedwars.api.server.ServerType#BUNGEE}
          */
         int getGamesBeforeRestart();
+
+        /**
+         * Set how many games to the next serve restart.
+         * This is used only if {@link com.andrei1058.bedwars.api.server.ServerType#BUNGEE}
+         */
+        void setGamesBeforeRestart(int games);
 
         /**
          * Get an arena by a player. Spectator or Player.
@@ -274,8 +392,6 @@ public interface BedWars {
         void sendLobbyCommandItems(Player p);
     }
 
-    Configs getConfigs();
-
     interface Configs {
         /**
          * Get plugin main configuration.
@@ -305,11 +421,6 @@ public interface BedWars {
         @SuppressWarnings("unused")
         ConfigManager getUpgradesConfig();
     }
-
-    /**
-     * Get shop util.
-     */
-    ShopUtil getShopUtil();
 
     interface ShopUtil {
 
@@ -344,12 +455,6 @@ public interface BedWars {
         void takeMoney(Player player, Material currency, int amount);
     }
 
-    /**
-     * Get shop util.
-     */
-    @SuppressWarnings("unused")
-    TeamUpgradesUtil getTeamUpgradesUtil();
-
     interface TeamUpgradesUtil {
         /**
          * Check if a player is watching the team upgrades menu.
@@ -370,116 +475,12 @@ public interface BedWars {
         /**
          * Get total tiers in team upgrades to be bought in the given arena.
          * Sum of tiers in team upgrades.
+         *
          * @param arena arena
          * @return count
          */
         int getTotalUpgradeTiers(IArena arena);
     }
-
-    /**
-     * Get levels methods.
-     */
-    Level getLevelsUtil();
-
-    /**
-     * Get party util.
-     */
-    Party getPartyUtil();
-
-    /**
-     * Get active setup session.
-     *
-     * @param player player uuid.
-     * @return null if no session was found.
-     */
-    ISetupSession getSetupSession(UUID player);
-
-    /**
-     * Check if a player is in setup session.
-     */
-    boolean isInSetupSession(UUID player);
-
-    /**
-     * Get server type.
-     **/
-    ServerType getServerType();
-
-    /**
-     * Get a player language iso code
-     */
-    @SuppressWarnings("unused")
-    String getLangIso(Player p);
-
-
-    /**
-     * Get bedWars main command
-     */
-    ParentCommand getBedWarsCommand();
-
-    /**
-     * Get the restore adapter.
-     */
-    RestoreAdapter getRestoreAdapter();
-
-    /**
-     * Change the arena restore adapter.
-     *
-     * @param restoreAdapter your custom adapter.
-     */
-    void setRestoreAdapter(RestoreAdapter restoreAdapter) throws IllegalAccessError;
-
-    /**
-     * Change the party interface.
-     * You man need to unregister /party command yourself.
-     */
-    void setPartyAdapter(Party partyAdapter);
-
-    /**
-     * Get nms operations.
-     */
-    VersionSupport getVersionSupport();
-
-    /**
-     * Get server default language.
-     */
-    Language getDefaultLang();
-
-    /**
-     * Get lobby world name.
-     */
-    String getLobbyWorld();
-
-    String getForCurrentVersion(String v18, String v12, String v13);
-
-    @SuppressWarnings("unused")
-    void setLevelAdapter(Level level);
-
-    boolean isAutoScale();
-
-    /**
-     * Get language by iso code.
-     */
-    @SuppressWarnings("unused")
-    Language getLanguageByIso(String isoCode);
-
-    /**
-     * Get a player language.
-     */
-    Language getPlayerLanguage(Player player);
-
-    /**
-     * This is my standard location where to store addons configurations.
-     * Make sure to create a folder in it with your addon name.
-     */
-    @SuppressWarnings("unused")
-    File getAddonsPath();
-
-    /**
-     * Scoreboard options.
-     */
-    ScoreboardUtil getScoreboardUtil();
-
-    boolean isShuttingDown();
 
     interface ScoreboardUtil {
 
@@ -490,10 +491,9 @@ public interface BedWars {
 
         /**
          * Restores user scoreboard based on plugin configuration.
+         *
          * @param delay 5 seconds delay. to be used on server join.
          */
         void givePlayerScoreboard(Player player, boolean delay);
     }
-
-    ISidebarService getScoreboardManager();
 }
