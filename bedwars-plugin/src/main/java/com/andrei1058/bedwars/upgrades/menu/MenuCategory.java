@@ -107,7 +107,7 @@ public class MenuCategory implements MenuContent {
                 return;
             }
         }
-        Inventory inv = Bukkit.createInventory(null, 45, Language.getMsg(player, Messages.UPGRADES_CATEGORY_GUI_NAME_PATH + name.replace("category-", "")));
+        Inventory inv = Bukkit.createInventory(null, 54, Language.getMsg(player, Messages.UPGRADES_CATEGORY_GUI_NAME_PATH + name.replace("category-", "")));
         for (Map.Entry<Integer, MenuContent> entry : menuContentBySlot.entrySet()) {
             inv.setItem(entry.getKey(), entry.getValue().getDisplayItem(player, team));
         }
