@@ -122,7 +122,7 @@ public class ChatFormatting implements Listener {
                     e.setFormat(parsePHolders(language.m(Messages.FORMATTING_CHAT_LOBBY), p, null));
                     return;
                 }
-                setRecipients(e, a.getSpectators(),a.getRespawns());
+                setRecipients(e, a.getSpectators(), a.getRespawns());
                 e.setFormat(parsePHolders(language.m(Messages.FORMATTING_CHAT_SPECTATOR), p, null));
                 return;
             }

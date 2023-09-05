@@ -157,6 +157,9 @@ public class Messages {
     public static String ARENA_STATUS_RESTARTING_NAME = "arena-status-restarting";
     public static String ARENA_STATUS_START_PLAYER_TITLE = "arena-start-title";
     public static String ARENA_STATUS_START_PLAYER_TUTORIAL = "arena-start-tutorial";
+    public static String ARENA_STATUS_START_PLAYER_TUTORIAL_RUSH = "arena-start-tutorial-rush";
+    public static String ARENA_STATUS_START_PLAYER_TUTORIAL_ULTIMATE = "arena-start-tutorial-ultimate";
+    public static String ARENA_STATUS_START_PLAYER_TUTORIAL_SWAP = "arena-start-tutorial-swap";
     public static String ARENA_STATUS_START_COUNTDOWN_CHAT = "arena-start-countdown";
     public static String ARENA_STATUS_START_COUNTDOWN_TITLE = "arena-start-countdown-title";
     public static String ARENA_STATUS_START_COUNTDOWN_SUB_TITLE = "arena-start-countdown-subtitle";

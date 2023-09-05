@@ -153,6 +153,10 @@ public class English extends Language {
                 "&e&l   Iron, Gold, Emerald, and Diamond from generators",
                 "&e&l             to access powerful upgrades.", "",
                 "&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"));
+
+        yml.addDefault(Messages.ARENA_STATUS_START_PLAYER_TUTORIAL_RUSH, Arrays.asList(""));
+        yml.addDefault(Messages.ARENA_STATUS_START_PLAYER_TUTORIAL_ULTIMATE, Arrays.asList(""));
+        yml.addDefault(Messages.ARENA_STATUS_START_PLAYER_TUTORIAL_SWAP, Arrays.asList(""));
         yml.addDefault(Messages.ARENA_JOIN_DENIED_SELECTOR, "{prefix}&cSorry but you can't join this arena at this moment. Use Right-Click to spectate!");
         yml.addDefault(Messages.ARENA_SPECTATE_DENIED_SELECTOR, "{prefix}&cSorry but you can't spectate this arena at this moment. Use Left-Click to join!");
         yml.addDefault(Messages.ARENA_JOIN_DENIED_NO_PROXY, "&cSorry but you must join an arena using BedWarsProxy. \n&eIf you want to setup an arena make sure to give yourself the bw.setup permission so you can join the server directly!");

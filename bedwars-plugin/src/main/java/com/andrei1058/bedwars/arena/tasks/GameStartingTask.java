@@ -172,9 +172,8 @@ public class GameStartingTask implements Runnable, StartingTask {
                 bwt.firstSpawn(p);
                 Sounds.playSound(ConfigPath.SOUND_GAME_START, p);
                 nms.sendTitle(p, getMsg(p, Messages.ARENA_STATUS_START_PLAYER_TITLE), null, 0, 30, 10);
-                for (String tut : getList(p, Messages.ARENA_STATUS_START_PLAYER_TUTORIAL)) {
-                    p.sendMessage(SupportPAPI.getSupportPAPI().replace(p, tut));
-                }
+                //DEOBF 不同组不同开局教程
+                sendTut(p, getArena().getGroup());
             }
         }
     }
@@ -182,4 +181,28 @@ public class GameStartingTask implements Runnable, StartingTask {
     public void cancel() {
         task.cancel();
     }
-}
+
+    private void sendTut(Player p, String group) {
+        if (group.startsWith("rush_")) {
+            for (String tut : getList(p, Messages.ARENA_STATUS_START_PLAYER_TUTORIAL_RUSH)) {
+                p.sendMessage(SupportPAPI.getSupportPAPI().replace(p, tut));
+                return;
+            }
+        }
+        if (group.startsWith("ultimate_")) {
+            for (String tut : getList(p, Messages.ARENA_STATUS_START_PLAYER_TUTORIAL_ULTIMATE)) {
+                p.sendMessage(SupportPAPI.getSupportPAPI().replace(p, tut));
+            }
+            return;
+        }
+        if (group.startsWith("swap_")) {
+            for (String tut : getList(p, Messages.ARENA_STATUS_START_PLAYER_TUTORIAL_SWAP)) {
+                p.sendMessage(SupportPAPI.getSupportPAPI().replace(p, tut));
+            }
+            return;
+        }
+        for (String tut : getList(p, Messages.ARENA_STATUS_START_PLAYER_TUTORIAL)) {
+            p.sendMessage(SupportPAPI.getSupportPAPI().replace(p, tut));
+        }
+    }
+} 

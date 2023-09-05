@@ -29,6 +29,11 @@ public class NoChat implements Chat {
     }
 
     @Override
+    public String getPrefixColor(Player p) {
+        return "";
+    }
+
+    @Override
     public String getSuffix(Player p) {
         return "";
     }

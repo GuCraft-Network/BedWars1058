@@ -2450,7 +2450,7 @@ public class Arena implements IArena {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 2)); //隐身效果
 
                 respawnSessions.put(player, seconds);
-                respawns.add(player);
+                arena.getRespawns().add(player);
 
                 //开始重生倒计时
                 new BukkitRunnable() {
