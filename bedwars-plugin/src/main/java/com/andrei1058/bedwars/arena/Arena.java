@@ -697,11 +697,11 @@ public class Arena implements IArena {
             return false;
         }
         if (getParty().hasParty(p)) {
-            if (!skipOwnerCheck) {
+            if (!skipOwnerCheck) {/*
                 if (!getParty().isOwner(p)) {
                     p.sendMessage(getMsg(p, Messages.COMMAND_JOIN_DENIED_NOT_PARTY_LEADER));
                     return false;
-                }
+                }*/
                 int partySize = (int) getParty().getMembers(p).stream().filter(member -> {
                     IArena arena = Arena.getArenaByPlayer(member);
                     if (arena == null) {
