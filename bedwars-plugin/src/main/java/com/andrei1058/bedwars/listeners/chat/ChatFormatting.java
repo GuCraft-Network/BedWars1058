@@ -133,8 +133,8 @@ public class ChatFormatting implements Listener {
             String msg = e.getMessage();
 
             // shout format
-            if (isShouting(msg, language)) {
-                if (!(p.hasPermission(Permissions.PERMISSION_SHOUT_COMMAND) || p.hasPermission(Permissions.PERMISSION_ALL))) {
+            if (isShouting(msg, language) && a.getMaxInTeam() != 1) {
+                if (!(p.hasPermission(Permissions.PERMISSION_ALL))) {
                     e.setCancelled(true);
                     p.sendMessage(Language.getMsg(p, Messages.COMMAND_NOT_FOUND_OR_INSUFF_PERMS));
                     return;
