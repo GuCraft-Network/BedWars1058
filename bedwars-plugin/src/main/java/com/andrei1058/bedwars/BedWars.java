@@ -33,6 +33,8 @@ import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.arena.ArenaManager;
 import com.andrei1058.bedwars.arena.VoidChunkGenerator;
 import com.andrei1058.bedwars.arena.despawnables.TargetListener;
+import com.andrei1058.bedwars.arena.feature.AntiDropFeature;
+import com.andrei1058.bedwars.arena.feature.GenSplitFeature;
 import com.andrei1058.bedwars.arena.feature.SpoilPlayerTNTFeature;
 import com.andrei1058.bedwars.arena.spectator.SpectatorListeners;
 import com.andrei1058.bedwars.arena.tasks.OneTick;
@@ -625,6 +627,13 @@ public class BedWars extends JavaPlugin {
         registerEvents(new ScoreboardListener());
 
         SpoilPlayerTNTFeature.init();
+
+        if (config.getBoolean(ConfigPath.GENERAL_CONFIGURATION_PERFORMANCE_GENERATOR_SPLIT)) {
+            GenSplitFeature.init();
+        }
+        if (config.getBoolean(ConfigPath.GENERAL_CONFIGURATION_ENABLE_ANTI_DROP)) {
+            AntiDropFeature.init();
+        }
     }
 
     /**

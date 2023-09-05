@@ -86,6 +86,5 @@ public class ArenaConfig extends ConfigManager {
         if (yml.get("voidKill") != null) {
             set("voidKill", null);
         }
-        set(ConfigPath.GENERAL_CONFIGURATION_ENABLE_GEN_SPLIT, null);
     }
 }
