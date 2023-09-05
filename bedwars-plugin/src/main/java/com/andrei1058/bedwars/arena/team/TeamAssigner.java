@@ -37,38 +37,103 @@ public class TeamAssigner implements ITeamAssigner {
 
     private final LinkedList<Player> skip = new LinkedList<>();
 
+    /**
+     * Finds the target team to add a player based on the following criteria:
+     * - If there is a team with fewer players than the maximum allowed per team, and fewer than maxPlayersPerTeam - 1 players,
+     * it returns that team.
+     * - If player amount > 2, it will check for teams with player count of 1 to return as target
+     * - If no such team is found, it returns the first team with available space (i.e., fewer players than maxPlayersPerTeam).
+     * - If no team with available space is found, it returns null (arena = full).
+     *
+     * @param teams             The list of teams to search for the target team.
+     * @param maxPlayersPerTeam The maximum number of players allowed per team.
+     * @param playerAmount      The amount of players in an arena.
+     * @return The target team to add a player, or null if no suitable team is found.
+     */
+    private static ITeam findTargetTeam(List<ITeam> teams, int maxPlayersPerTeam, int playerAmount) {
+        ITeam targetTeam = null;
+        int minPlayers = Integer.MAX_VALUE;
+
+        // Find a team with fewer players than maxPlayersPerTeam - 1
+        for (ITeam team : teams) {
+            int numPlayers = team.getSize();
+            if (numPlayers < minPlayers && numPlayers < maxPlayersPerTeam - 1) {
+                targetTeam = team;
+                minPlayers = numPlayers;
+            }
+
+            if (numPlayers == 1 && (playerAmount > 2)) {
+                BedWars.debug("found team with 1 player (" + team.getName() + ")");
+                return team;
+            }
+        }
+
+        // If no suitable team is found, find the first team with available space and no more than 1 player
+        if (targetTeam == null) {
+            for (ITeam team : teams) {
+                if (team.getSize() == 1 && playerAmount <= maxPlayersPerTeam) {
+                    // Skip teams with 1 player when playerAmount is set to 2
+                    continue;
+                }
+                if (team.getSize() < maxPlayersPerTeam - 1) {
+                    targetTeam = team;
+                    break;
+                }
+            }
+        }
+
+        return targetTeam;
+    }
+
+    /**
+     * Assigns teams to players in the given arena.
+     *
+     * @param arena The arena to assign teams in.
+     */
     public void assignTeams(IArena arena) {
 
-        // team up parties first
+        // setup team up parties first
         if (arena.getPlayers().size() > arena.getMaxInTeam() && arena.getMaxInTeam() > 1) {
             LinkedList<List<Player>> teams = new LinkedList<>();
 
+            // get all parties
             List<Player> members;
             for (Player player : arena.getPlayers()) {
+                if (!BedWars.getParty().isOwner(player)) continue; //prevent processing 1 party multiple times
+
                 members = BedWars.getParty().getMembers(player);
                 if (members == null) continue;
                 members = new ArrayList<>(members);
+
                 if (members.isEmpty()) continue;
                 members.removeIf(member -> !arena.isPlayer(member));
                 if (members.isEmpty()) continue;
+
                 teams.add(members);
             }
-            // prioritize bigger teams
 
+            // prioritize bigger teams
             if (!teams.isEmpty()) {
                 for (ITeam team : arena.getTeams()) {
-                    // sort
-                    teams.sort(Comparator.comparingInt(List::size));
-                    if (teams.get(0).isEmpty()) break;
+                    teams.sort(Comparator.comparingInt(List::size)); // sort teams based on player amount.
+                    if (teams.isEmpty()) break;
+                    if (teams.getFirst().isEmpty()) break;
+
                     for (int i = 0; i < arena.getMaxInTeam() && team.getMembers().size() < arena.getMaxInTeam(); i++) {
+                        if (teams.isEmpty()) break;
                         if (teams.get(0).size() > i) {
-                            Player toAdd = teams.get(0).remove(0);
-                            TeamAssignEvent e = new TeamAssignEvent(toAdd, team, arena);
-                            Bukkit.getPluginManager().callEvent(e);
-                            if (!e.isCancelled()) {
-                                toAdd.closeInventory();
-                                team.addPlayers(toAdd);
-                                skip.add(toAdd);
+                            List<Player> players = teams.poll(); // get and remove the head of teams list
+                            for (Player toAdd : players) {
+                                if (team.getSize() >= arena.getMaxInTeam())
+                                    continue; //prevent bigger teams from joining the same team.
+
+                                TeamAssignEvent e = new TeamAssignEvent(toAdd, team, arena);
+                                Bukkit.getPluginManager().callEvent(e);
+                                if (!e.isCancelled()) {
+                                    toAdd.closeInventory();
+                                    team.addPlayers(toAdd);
+                                    skip.add(toAdd);
+                                }
                             }
                         } else {
                             break;
@@ -78,19 +143,17 @@ public class TeamAssigner implements ITeamAssigner {
             }
         }
 
-        for (Player remaining : arena.getPlayers()) {
-            if (skip.contains(remaining)) continue;
-            for (ITeam team : arena.getTeams()) {
-                if (team.getMembers().size() < arena.getMaxInTeam()) {
-                    TeamAssignEvent e = new TeamAssignEvent(remaining, team, arena);
-                    Bukkit.getPluginManager().callEvent(e);
-                    if (!e.isCancelled()) {
-                        remaining.closeInventory();
-                        team.addPlayers(remaining);
-                    }
-                    break;
-                }
-            }
+        // Party teams are already filled
+        List<Player> remainingPlayers = new ArrayList<>();
+        for (Player player : arena.getPlayers()) { // Make sure to only get players who are NOT in a team already
+            if (skip.contains(player)) continue;
+            remainingPlayers.add(player);
+        }
+        if (remainingPlayers.isEmpty()) return;
+
+        for (Player player : remainingPlayers) {
+            player.closeInventory();
+            findTargetTeam(arena.getTeams(), arena.getMaxInTeam(), arena.getPlayers().size()).addPlayers(player);
         }
     }
 }
