@@ -260,6 +260,7 @@ public class Messages {
     public static String INTERACT_BED_DESTROY_SUBTITLE_ANNOUNCEMENT = "interact-bed-destroy-subtitle";
     public static String INTERACT_BED_DESTROY_CHAT_ANNOUNCEMENT_TO_VICTIM = "interact-bed-destroy-team";
     public static String INTERACT_CHEST_CANT_OPEN_TEAM_ELIMINATED = "interact-cant-open-chest";
+    public static String INTERACT_ENDERCHEST_ITEM_DROP = "interact-enderchest-item-drop";
     public static String INTERACT_INVISIBILITY_REMOVED_DAMGE_TAKEN = "interact-invisibility-removed-damaged";
     public static String INTERACT_INVISIBILITY_REMOVED_TRAP = "interact-invisibility-removed-trap";
 

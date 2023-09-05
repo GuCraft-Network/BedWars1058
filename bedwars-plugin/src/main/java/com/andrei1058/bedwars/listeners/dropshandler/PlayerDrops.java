@@ -40,9 +40,6 @@ import static com.andrei1058.bedwars.api.language.Language.getMsg;
 
 public class PlayerDrops {
 
-    private PlayerDrops() {
-    }
-
     /**
      * if bedWars should handle drops behavior.
      *
@@ -73,12 +70,14 @@ public class PlayerDrops {
             return true;
         }
         if (cause.isFinalKill()) {
+            dropItems(victim, inventory);//如果是最终击杀，先给击杀者掉落物
             // if is final kill drop items at generator
             if (victimsTeam != null) {
                 Location dropsLocation = new Location(victim.getWorld(), victimsTeam.getKillDropsLocation().getBlockX(), victimsTeam.getKillDropsLocation().getY(), victimsTeam.getKillDropsLocation().getZ());
                 victim.getEnderChest().forEach(item -> {
                     if (item != null) {
                         victim.getWorld().dropItemNaturally(dropsLocation, item);
+                        victim.sendMessage(getMsg(victim, Messages.INTERACT_ENDERCHEST_ITEM_DROP.replace("{PlayerName}", victim.getDisplayName())));
                     }
                 });
                 victim.getEnderChest().clear();
