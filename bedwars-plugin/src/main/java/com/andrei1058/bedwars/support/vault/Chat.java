@@ -26,5 +26,7 @@ public interface Chat {
 
     String getPrefix(Player p);
 
+    String getPrefixColor(Player p);
+
     String getSuffix(Player p);
 }

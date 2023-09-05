@@ -775,6 +775,7 @@ public class Arena implements IArena {
                 on.sendMessage(
                         getMsg(on, Messages.COMMAND_JOIN_PLAYER_JOIN_MSG)
                                 .replace("{vPrefix}", getChatSupport().getPrefix(p))
+                                .replace("{vPrefixColor}", getChatSupport().getPrefixColor(p))
                                 .replace("{vSuffix}", getChatSupport().getSuffix(p))
                                 .replace("{playername}", p.getName())
                                 .replace("{player}", p.getDisplayName())
