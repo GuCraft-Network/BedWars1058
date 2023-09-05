@@ -155,7 +155,7 @@ public class BwSidebar implements ISidebar {
             line = line
                     .replace("{serverIp}", BedWars.config.getString(ConfigPath.GENERAL_CONFIG_PLACEHOLDERS_REPLACEMENTS_SERVER_IP))
                     .replace("{version}", plugin.getDescription().getVersion())
-                    .replace("{server}", getServer())
+                    .replace("{server}", getServer(arena))
                     .replace("{playername}", player.getName())
                     .replace("{player}", player.getDisplayName())
                     .replace("{money}", String.valueOf(getEconomy().getMoney(player)));
@@ -173,9 +173,9 @@ public class BwSidebar implements ISidebar {
         return lines;
     }
 
-    private String getServer() {
+    private String getServer(IArena a) {
         if (BedWars.getServerType() == ServerType.BUNGEE && !autoscale) {
-            return GetCurServerName.getGameName();
+            return GetCurServerName.getGameName(a);
         } else {
             config.getString(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_SERVER_ID);
         }

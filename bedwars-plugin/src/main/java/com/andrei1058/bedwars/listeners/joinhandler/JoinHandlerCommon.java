@@ -36,7 +36,7 @@ public class JoinHandlerCommon implements Listener {
     @EventHandler
     public void requestLanguage(AsyncPlayerPreLoginEvent e) {
         String iso = BedWars.getRemoteDatabase().getLanguage(e.getUniqueId());
-        Bukkit.getScheduler().runTask(plugin, () -> Language.setPlayerLanguage(e.getUniqueId(), iso));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Language.setPlayerLanguage(e.getUniqueId(), iso));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
