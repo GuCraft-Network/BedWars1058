@@ -41,7 +41,6 @@ import com.andrei1058.bedwars.arena.upgrades.BaseListener;
 import com.andrei1058.bedwars.arena.upgrades.HealPoolListener;
 import com.andrei1058.bedwars.commands.bedwars.MainCommand;
 import com.andrei1058.bedwars.commands.leave.LeaveCommand;
-import com.andrei1058.bedwars.commands.party.PartyCommand;
 import com.andrei1058.bedwars.commands.rejoin.RejoinCommand;
 import com.andrei1058.bedwars.commands.shout.ShoutCommand;
 import com.andrei1058.bedwars.configuration.*;
@@ -425,11 +424,6 @@ public class BedWars extends JavaPlugin {
                     getLogger().info("Hook into Spigot Party API for Party and Friends Extended (by Simonsator) support!");
                     party = new PAFBungeecordRedisApi();
                 }
-
-                if (party instanceof NoParty) {
-                    party = new com.andrei1058.bedwars.support.party.Internal();
-                    getLogger().info("Loading internal Party system. /party");
-                }
             } else {
                 party = new NoParty();
             }
@@ -689,10 +683,6 @@ public class BedWars extends JavaPlugin {
         if (!(nms.isBukkitCommandRegistered("leave") && getServerType() == ServerType.BUNGEE)) {
             nms.registerCommand("leave", new LeaveCommand("leave"));
             nms.registerCommand("rejoin", new RejoinCommand("rejoin"));
-        }
-        if (getServerType() != ServerType.BUNGEE && config.getBoolean(ConfigPath.GENERAL_ENABLE_PARTY_CMD)) {
-            Bukkit.getLogger().info("Registering /party command..");
-            nms.registerCommand("party", new PartyCommand("party"));
         }
     }
 

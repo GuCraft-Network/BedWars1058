@@ -193,7 +193,6 @@ public class ConfigPath {
 
 
     private static final String GENERAL_PARTY_SETTINGS_PATH = "party-settings";
-    public static final String GENERAL_ENABLE_PARTY_CMD = GENERAL_PARTY_SETTINGS_PATH + ".enable-party-cmd";
     public static final String GENERAL_CONFIGURATION_ALLOW_PARTIES = GENERAL_PARTY_SETTINGS_PATH + ".allow-parties";
     public static final String GENERAL_ALESSIODP_PARTIES_RANK = GENERAL_PARTY_SETTINGS_PATH + ".alessioDP-choose-arena-rank";
 

@@ -57,7 +57,6 @@ public class MainConfig extends ConfigManager {
         yml.addDefault(ConfigPath.GENERAL_CONFIGURATION_MARK_LEAVE_AS_ABANDON, false);
         yml.addDefault(ConfigPath.GENERAL_CONFIGURATION_ENABLE_ANTI_DROP, true);
         // parties category
-        yml.addDefault(ConfigPath.GENERAL_ENABLE_PARTY_CMD, true);
         yml.addDefault(ConfigPath.GENERAL_CONFIGURATION_ALLOW_PARTIES, true);
         yml.addDefault(ConfigPath.GENERAL_ALESSIODP_PARTIES_RANK, 10);
         //
@@ -302,10 +301,6 @@ public class MainConfig extends ConfigManager {
         if (yml.get("game-scoreboard") != null) {
             set(ConfigPath.SB_CONFIG_SIDEBAR_USE_GAME_SIDEBAR, yml.getBoolean("game-scoreboard"));
             set("game-scoreboard", null);
-        }
-        if (yml.get("enable-party-cmd") != null) {
-            set(ConfigPath.GENERAL_ENABLE_PARTY_CMD, yml.getBoolean("enable-party-cmd"));
-            set("enable-party-cmd", null);
         }
         if (yml.get("allow-parties") != null) {
             set(ConfigPath.GENERAL_CONFIGURATION_ALLOW_PARTIES, yml.getBoolean("allow-parties"));
