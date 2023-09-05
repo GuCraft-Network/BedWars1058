@@ -53,11 +53,16 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static com.andrei1058.bedwars.BedWars.*;
@@ -129,6 +134,69 @@ public class DamageDeathMove implements Listener {
             if (e.getEntity().getLocation().getWorld().getName().equalsIgnoreCase(BedWars.getLobbyWorld())) {
                 e.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onDamageToFastDie(EntityDamageEvent e) {
+        if (!(e.getEntity() instanceof Player)) return;
+        Player p = (Player) e.getEntity();
+        IArena a = Arena.getArenaByPlayer(p);
+        if (a != null) {
+            if (a.getStatus() != GameState.playing) {
+                return;
+            }
+            if (a.isSpectator(p) || a.isReSpawning(p)) {
+                return;
+            }
+            if (e.getDamage() <= 0) {
+                return;
+            }
+            if (e.getFinalDamage() < p.getHealth() && !e.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
+                return;
+            }
+            e.setCancelled(true);
+            e.setDamage(0);
+
+            //掉落物
+            PlayerInventory inventory = p.getInventory();
+            List<ItemStack> items = new ArrayList<>();
+            for (ItemStack item : inventory.getContents()) {
+                if (item != null) {
+                    items.add(item);
+                }
+            }
+
+            //隐身
+            if (p.hasPotionEffect(PotionEffectType.INVISIBILITY) && a.getShowTime().containsKey(p)) {
+                p.removePotionEffect(PotionEffectType.INVISIBILITY);
+                ITeam team = a.getTeam(p);
+                p.sendMessage(getMsg(p, Messages.INTERACT_INVISIBILITY_REMOVED_DAMGE_TAKEN));
+                Bukkit.getPluginManager().callEvent(new PlayerInvisibilityPotionEvent(PlayerInvisibilityPotionEvent.Type.REMOVED, team, p, a));
+            }
+
+            //在死亡时清除所有药水效果
+            for (PotionEffect pf : p.getActivePotionEffects()) {
+                //移除所有
+                p.removePotionEffect(pf.getType());
+            }
+
+            //在死亡时关闭背包
+            p.closeInventory();
+            //在死亡时清空背包
+            p.getInventory().clear();
+            //死亡后经验为0
+            p.setLevel(0);
+            p.setExp(0);
+            //死亡后血量饱食度回满
+            p.setHealth(20);
+            p.setFoodLevel(20);
+
+            //callevent
+            PlayerDeathEvent deathEvent = new PlayerDeathEvent(p, items, 0, null);
+            PlayerRespawnEvent respawnEvent = new PlayerRespawnEvent(p, a.getSpectatorLocation(), false);
+            Bukkit.getPluginManager().callEvent(deathEvent);
+            Bukkit.getPluginManager().callEvent(respawnEvent);
         }
     }
 
@@ -272,9 +340,9 @@ public class DamageDeathMove implements Listener {
                                 BedWars.nms.showArmor(p, on);
                                 //BedWars.nms.showPlayer(p, on);
                             }
-                            a.getShowTime().remove(p);
                             p.removePotionEffect(PotionEffectType.INVISIBILITY);
                             ITeam team = a.getTeam(p);
+                            p.sendMessage(getMsg(p, Messages.INTERACT_INVISIBILITY_REMOVED_DAMGE_TAKEN));
                             Bukkit.getPluginManager().callEvent(new PlayerInvisibilityPotionEvent(PlayerInvisibilityPotionEvent.Type.REMOVED, team, p, a));
                         });
                     }
@@ -487,8 +555,10 @@ public class DamageDeathMove implements Listener {
                 e.getDrops().clear();
             }
 
+
             // send respawn packet
-            Bukkit.getScheduler().runTaskLater(plugin, () -> victim.spigot().respawn(), 3L);
+            //Bukkit.getScheduler().runTaskLater(plugin, () -> victim.spigot().respawn(), 3L);
+
             a.addPlayerDeath(victim);
 
             // reset last damager

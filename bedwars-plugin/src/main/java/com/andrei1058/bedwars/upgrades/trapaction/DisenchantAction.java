@@ -30,10 +30,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class DisenchantAction implements TrapAction {
 
-    private Enchantment enchantment;
-    private ApplyType type;
+    private final Enchantment enchantment;
+    private final ApplyType type;
 
-    public DisenchantAction(Enchantment enchantment, DisenchantAction.ApplyType type){
+    public DisenchantAction(Enchantment enchantment, DisenchantAction.ApplyType type) {
         this.enchantment = enchantment;
         this.type = type;
     }
@@ -45,29 +45,29 @@ public class DisenchantAction implements TrapAction {
 
     @Override
     public void onTrigger(@NotNull Player player, ITeam playerTeam, ITeam targetTeam) {
-        if (type == ApplyType.SWORD){
-            for (ItemStack i : player.getInventory()){
-                if (BedWars.nms.isSword(i)){
+        if (type == ApplyType.SWORD) {
+            for (ItemStack i : player.getInventory()) {
+                if (BedWars.nms.isSword(i)) {
                     i.removeEnchantment(enchantment);
                 }
                 player.updateInventory();
             }
-        } else if (type == ApplyType.ARMOR){
-            for (ItemStack i : player.getInventory()){
-                if (BedWars.nms.isArmor(i)){
+        } else if (type == ApplyType.ARMOR) {
+            for (ItemStack i : player.getInventory()) {
+                if (BedWars.nms.isArmor(i)) {
                     i.removeEnchantment(enchantment);
                 }
                 player.updateInventory();
             }
-            for (ItemStack i : player.getInventory().getArmorContents()){
-                if (BedWars.nms.isArmor(i)){
+            for (ItemStack i : player.getInventory().getArmorContents()) {
+                if (BedWars.nms.isArmor(i)) {
                     i.removeEnchantment(enchantment);
                 }
                 player.updateInventory();
             }
-        } else if (type == ApplyType.BOW){
-            for (ItemStack i : player.getInventory()){
-                if (BedWars.nms.isBow(i)){
+        } else if (type == ApplyType.BOW) {
+            for (ItemStack i : player.getInventory()) {
+                if (BedWars.nms.isBow(i)) {
                     i.removeEnchantment(enchantment);
                 }
                 player.updateInventory();
