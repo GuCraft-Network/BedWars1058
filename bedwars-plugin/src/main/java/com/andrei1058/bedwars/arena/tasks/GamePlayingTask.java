@@ -212,7 +212,6 @@ public class GamePlayingTask implements Runnable, PlayingTask {
                         //nms.showPlayer(e.getKey(), p);
                     }
                     e.getKey().removePotionEffect(PotionEffectType.INVISIBILITY);
-                    getArena().getShowTime().remove(e.getKey());
                     Bukkit.getPluginManager().callEvent(new PlayerInvisibilityPotionEvent(PlayerInvisibilityPotionEvent.Type.REMOVED, getArena().getTeam(e.getKey()), e.getKey(), getArena()));
                 } else {
                     getArena().getShowTime().replace(e.getKey(), e.getValue() - 1);

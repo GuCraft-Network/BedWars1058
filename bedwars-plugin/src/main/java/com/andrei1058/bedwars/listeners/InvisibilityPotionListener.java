@@ -23,7 +23,6 @@ package com.andrei1058.bedwars.listeners;
 import com.andrei1058.bedwars.api.arena.IArena;
 import com.andrei1058.bedwars.api.arena.team.ITeam;
 import com.andrei1058.bedwars.api.events.player.PlayerInvisibilityPotionEvent;
-import com.andrei1058.bedwars.api.language.Messages;
 import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.sidebar.SidebarService;
 import org.bukkit.Bukkit;
@@ -45,7 +44,6 @@ import java.util.List;
 
 import static com.andrei1058.bedwars.BedWars.nms;
 import static com.andrei1058.bedwars.BedWars.plugin;
-import static com.andrei1058.bedwars.api.language.Language.getMsg;
 
 /**
  * This is used to hide and show player name tag above head when he drinks an invisibility
@@ -59,17 +57,18 @@ public class InvisibilityPotionListener implements Listener {
     public void onPotion(@NotNull PlayerInvisibilityPotionEvent e) {
         if (e.getTeam() == null) return;
         Player p = e.getPlayer();
+        IArena a = Arena.getArenaByPlayer(e.getPlayer());
         if (e.getType() == PlayerInvisibilityPotionEvent.Type.ADDED) {
             this.invisiblePlayers.add(p);
             SidebarService.getInstance().handleInvisibility(
                     e.getTeam(), e.getPlayer(), e.getType() == PlayerInvisibilityPotionEvent.Type.ADDED
             );
         } else if (e.getType() == PlayerInvisibilityPotionEvent.Type.REMOVED) {
+            a.getShowTime().remove(p);
             this.invisiblePlayers.remove(e.getPlayer());
             SidebarService.getInstance().handleInvisibility(
                     e.getTeam(), e.getPlayer(), e.getType() == PlayerInvisibilityPotionEvent.Type.REMOVED
             );
-            p.sendMessage(getMsg(p, Messages.INTERACT_INVISIBILITY_REMOVED_DAMGE_TAKEN));
         }
     }
 
