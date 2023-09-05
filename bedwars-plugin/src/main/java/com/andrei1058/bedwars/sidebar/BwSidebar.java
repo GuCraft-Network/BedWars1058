@@ -183,7 +183,11 @@ public class BwSidebar implements ISidebar {
         providers.add(new PlaceholderProvider("{date}", () -> dateFormat.format(new Date(System.currentTimeMillis()))));
         providers.add(new PlaceholderProvider("{serverIp}", () -> BedWars.config.getString(ConfigPath.GENERAL_CONFIG_PLACEHOLDERS_REPLACEMENTS_SERVER_IP)));
         providers.add(new PlaceholderProvider("{version}", () -> plugin.getDescription().getVersion()));
-        providers.add(new PlaceholderProvider("{server}", () -> config.getString(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_SERVER_ID)));
+        if (BedWars.getServerType() == ServerType.BUNGEE && !autoscale) {
+            providers.add(new PlaceholderProvider("{server}", () -> getCurServerName.getName()));
+        } else {
+            providers.add(new PlaceholderProvider("{server}", () -> config.getString(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_SERVER_ID)));
+        }
         PlayerLevel level = PlayerLevel.getLevelByPlayer(getPlayer().getUniqueId());
         if (null != level) {
             providers.add(new PlaceholderProvider("{progress}", level::getProgress));
