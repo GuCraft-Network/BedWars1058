@@ -68,7 +68,7 @@ public class ConfigPath {
     public static final String GENERAL_CONFIGURATION_BUNGEE_OPTION_LOBBY_SERVERS = "bungee-settings.lobby-sockets";
     public static final String GENERAL_CONFIGURATION_BUNGEE_OPTION_SERVER_ID = "bungee-settings.server-id";
     public static final String GENERAL_CONFIGURATION_BUNGEE_OPTION_BWP_TIME_OUT = "bungee-settings.bwp-time-out";
-    public static final String GENERAL_CONFIGURATION_BUNGEE_OPTION_LOBBY_SERVER = "bungeecord-settings.lobby-server";
+    public static final String GENERAL_CONFIGURATION_BUNGEE_OPTION_LOBBY_SERVER = "bungee-settings.lobby-server";
 
     public static final String GENERAL_CONFIGURATION_ALLOW_FIRE_EXTINGUISH = "allow-fire-extinguish";
     public static final String GENERAL_CONFIGURATION_ENABLE_ANTI_DROP = "enable-anti-drop-feature";
@@ -126,7 +126,6 @@ public class ConfigPath {
     public static final String GENERAL_CONFIGURATION_NPC_LOC_STORAGE = "join-npc-locations";
     public static final String GENERAL_CONFIGURATION_DEFAULT_ITEMS = "start-items-per-group";
 
-    public static final String CENERAL_CONFIGURATION_ALLOWED_COMMANDS = "allowed-commands";
     public static final String SB_CONFIG_SIDEBAR_USE_LOBBY_SIDEBAR = "scoreboard-settings.sidebar.enable-lobby-sidebar";
     public static final String SB_CONFIG_SIDEBAR_USE_GAME_SIDEBAR = "scoreboard-settings.sidebar.enable-game-sidebar";
     public static final String SB_CONFIG_SIDEBAR_TITLE_REFRESH_INTERVAL = "scoreboard-settings.sidebar.title-refresh-interval";
