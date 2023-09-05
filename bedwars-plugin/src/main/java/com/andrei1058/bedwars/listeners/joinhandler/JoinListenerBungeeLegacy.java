@@ -57,7 +57,6 @@ public class JoinListenerBungeeLegacy implements Listener {
         if (reJoin != null) {
             // If is not allowed to rejoin
             if (!(p.hasPermission(Permissions.PERMISSION_REJOIN) || reJoin.canReJoin())) {
-                e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Language.getDefaultLanguage().m(Messages.REJOIN_DENIED));
                 reJoin.destroy(true);
             }
             // Stop here, rejoin handled. More will be handled at PlayerJoinEvent
