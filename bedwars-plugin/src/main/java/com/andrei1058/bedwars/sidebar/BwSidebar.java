@@ -89,7 +89,7 @@ public class BwSidebar implements ISidebar {
             }, 2L);
         }
         handlePlayerList();
-        setHeaderFooter();
+        //setHeaderFooter();
     }
 
     public Player getPlayer() {
