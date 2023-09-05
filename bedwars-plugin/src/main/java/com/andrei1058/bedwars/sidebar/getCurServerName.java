@@ -1,7 +1,6 @@
 package com.andrei1058.bedwars.sidebar;
 
 import com.andrei1058.bedwars.BedWars;
-import com.andrei1058.bedwars.sidebar.thread.RefreshPlaceholdersTask;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import org.bukkit.Bukkit;
@@ -19,6 +18,17 @@ public class GetCurServerName implements Listener, PluginMessageListener {
     private static String gamename = "Null";
     private String servername = "Null";
 
+    public static String getGameName() {
+        if (gamename.equals("Null")) {
+            return gamename;
+        } else {
+            Bukkit.getScheduler().runTaskLaterAsynchronously(BedWars.plugin, () -> {
+                SidebarService.getInstance().refreshPlaceholders();
+            }, 20L);
+        }
+        return gamename;
+    }
+
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         if (!("Null".equals(servername) && "Null".equals(gamename))) {
@@ -33,15 +43,6 @@ public class GetCurServerName implements Listener, PluginMessageListener {
                 ex.printStackTrace();
             }
         }, 2L);
-    }
-
-    public static String getGameName() {
-        if (gamename.equals("Null")) {
-            return gamename;
-        } else {
-            SidebarService.getInstance().refreshPlaceholders();
-        }
-        return gamename;
     }
 
     private void GetGameName() {

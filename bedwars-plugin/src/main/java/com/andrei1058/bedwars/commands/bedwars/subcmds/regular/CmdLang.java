@@ -63,7 +63,7 @@ public class CmdLang extends SubCommand {
         } else if (Language.isLanguageExist(args[0])) {
             if (Arena.getArenaByPlayer(p) == null) {
                 if (Language.setPlayerLanguage(p.getUniqueId(), args[0])) {
-                    Bukkit.getScheduler().runTaskLater(plugin, () -> p.sendMessage(getMsg(p, Messages.COMMAND_LANG_SELECTED_SUCCESSFULLY)), 3L);
+                    Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> p.sendMessage(getMsg(p, Messages.COMMAND_LANG_SELECTED_SUCCESSFULLY)), 3L);
                 } else {
                     p.sendMessage(getMsg(p, Messages.COMMAND_LANG_LIST_HEADER));
                     for (Language l : Language.getLanguages()) {
