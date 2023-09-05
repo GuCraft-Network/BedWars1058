@@ -1111,7 +1111,20 @@ public class Arena implements IArena {
                 new ReJoin(p, this, team, cacheList);
             }
 
-            if (status == GameState.playing) {
+            if (status != GameState.playing) {
+                for (Player on : getPlayers()) {
+                    on.sendMessage(
+                            getMsg(on, Messages.COMMAND_LEAVE_MSG)
+                                    .replace("{vPrefix}", getChatSupport().getPrefix(p))
+                                    .replace("{vSuffix}", getChatSupport().getSuffix(p))
+                                    .replace("{playername}", p.getName())
+                                    .replace("{player}", p.getDisplayName())
+                                    .replace("{vPrefixColor}", getChatSupport().getPrefixColor(p)));
+                }
+                for (Player on : getSpectators()) {
+                    on.sendMessage(getMsg(on, Messages.COMMAND_LEAVE_MSG).replace("{vPrefix}", getChatSupport().getPrefix(p)).replace("{playername}", p.getName()).replace("{player}", p.getDisplayName()).replace("{vPrefixColor}", getChatSupport().getPrefixColor(p)));
+                }
+            } else {
                 for (Player on : getPlayers()) {
                     on.sendMessage(
                             getMsg(on, Messages.COMMAND_LEAVE_MSG_INGAME)
@@ -1124,19 +1137,6 @@ public class Arena implements IArena {
                 }
                 for (Player on : getSpectators()) {
                     on.sendMessage(getMsg(on, Messages.COMMAND_LEAVE_MSG_INGAME).replace("{vPrefix}", getChatSupport().getPrefix(p)).replace("{playername}", p.getName()).replace("{player}", p.getDisplayName()).replace("{PlayerColor}", team.getColor().chat().toString()));
-                }
-            } else {
-                for (Player on : getPlayers()) {
-                    on.sendMessage(
-                            getMsg(on, Messages.COMMAND_LEAVE_MSG)
-                                    .replace("{vPrefix}", getChatSupport().getPrefix(p))
-                                    .replace("{vSuffix}", getChatSupport().getSuffix(p))
-                                    .replace("{playername}", p.getName())
-                                    .replace("{player}", p.getDisplayName())
-                                    .replace("{vPrefixColor}", getChatSupport().getPrefixColor(p)));
-                }
-                for (Player on : getSpectators()) {
-                    on.sendMessage(getMsg(on, Messages.COMMAND_LEAVE_MSG).replace("{vPrefix}", getChatSupport().getPrefix(p)).replace("{playername}", p.getName()).replace("{player}", p.getDisplayName()).replace("{vPrefixColor}", getChatSupport().getPrefixColor(p)));
                 }
             }
             // pvp log out
@@ -2462,30 +2462,27 @@ public class Arena implements IArena {
                     @Override
                     public void run() {
                         if (!respawnSessions.isEmpty()) {
-                            for (Map.Entry<Player, Integer> e : respawnSessions.entrySet()) {
-                                if (e.getValue() <= 0) {
-                                    IArena a = Arena.getArenaByPlayer(e.getKey());
-                                    if (a == null) {
-                                        respawnSessions.remove(e.getKey());
-                                        cancel();
-                                    }
-                                    ITeam t = a.getTeam(e.getKey());
-                                    if (t == null) {
-                                        a.addSpectator(e.getKey(), true, null);
-                                        cancel();
-                                    } else {
-                                        t.respawnMember(e.getKey());
-                                        e.getKey().setAllowFlight(false);
-                                        e.getKey().setFlying(false);
-                                        cancel();
-                                    }
-                                } else {
-                                    nms.sendTitle(e.getKey(), getMsg(e.getKey(), Messages.PLAYER_DIE_RESPAWN_TITLE).replace("{time}",
-                                            String.valueOf(e.getValue())), getMsg(e.getKey(), Messages.PLAYER_DIE_RESPAWN_SUBTITLE).replace("{time}",
-                                            String.valueOf(e.getValue())), 0, 30, 10);
-                                    e.getKey().sendMessage(getMsg(e.getKey(), Messages.PLAYER_DIE_RESPAWN_CHAT).replace("{time}", String.valueOf(e.getValue())));
-                                    respawnSessions.replace(e.getKey(), e.getValue() - 1);
+                            Integer respawnSeconds = respawnSessions.get(player);
+                            if (respawnSeconds <= 0) {
+                                IArena a = Arena.getArenaByPlayer(player);
+                                if (a == null) {
+                                    respawnSessions.remove(player);
                                 }
+                                ITeam t = a.getTeam(player);
+                                if (t == null) {
+                                    a.addSpectator(player, true, null);
+                                } else {
+                                    t.respawnMember(player);
+                                    player.setAllowFlight(false);
+                                    player.setFlying(false);
+                                }
+                                cancel();
+                            } else {
+                                nms.sendTitle(player, getMsg(player, Messages.PLAYER_DIE_RESPAWN_TITLE).replace("{time}",
+                                        String.valueOf(respawnSeconds)), getMsg(player, Messages.PLAYER_DIE_RESPAWN_SUBTITLE).replace("{time}",
+                                        String.valueOf(respawnSeconds)), 0, 30, 10);
+                                player.sendMessage(getMsg(player, Messages.PLAYER_DIE_RESPAWN_CHAT).replace("{time}", String.valueOf(respawnSeconds)));
+                                respawnSessions.replace(player, respawnSeconds - 1);
                             }
                         }
                     }
