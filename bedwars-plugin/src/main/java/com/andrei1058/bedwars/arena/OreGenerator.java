@@ -35,18 +35,17 @@ import com.andrei1058.bedwars.api.region.Cuboid;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-import static com.andrei1058.bedwars.BedWars.*;
+import static com.andrei1058.bedwars.BedWars.getGeneratorsCfg;
+import static com.andrei1058.bedwars.BedWars.nms;
 
 @SuppressWarnings("WeakerAccess")
 public class OreGenerator implements IGenerator {
@@ -189,28 +188,8 @@ public class OreGenerator implements IGenerator {
                 dropItem(location);
                 return;
             }
-            if (plugin.getConfig().getBoolean(ConfigPath.GENERAL_CONFIGURATION_ENABLE_GEN_SPLIT)) {
-                Object[] players = location.getWorld().getNearbyEntities(location, 1, 1, 1).stream().filter(entity -> entity.getType() == EntityType.PLAYER)
-                        .filter(entity -> arena.isPlayer((Player) entity)).toArray();
-                if (players.length <= 1) {
-                    dropItem(location);
-                    return;
-                }
-                for (Object o : players) {
-                    Player player = (Player) o;
-                    ItemStack item = ore.clone();
-                    item.setAmount(amount);
-                    player.playSound(player.getLocation(), Sound.valueOf(BedWars.getForCurrentVersion("ITEM_PICKUP", "ENTITY_ITEM_PICKUP", "ENTITY_ITEM_PICKUP")), 0.6f, 1.3f);
-                    Collection<ItemStack> excess = player.getInventory().addItem(item).values();
-                    for (ItemStack value : excess) {
-                        dropItem(player.getLocation(), value.getAmount());
-                    }
-                }
-                return;
-            } else {
-                dropItem(location);
-                return;
-            }
+            dropItem(location);
+            return;
         }
         lastSpawn--;
         for (IGenHolo e : armorStands.values()) {
