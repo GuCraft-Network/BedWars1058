@@ -934,7 +934,7 @@ public class Arena implements IArena {
                 }
             }
 
-            p.setGameMode(GameMode.ADVENTURE);
+            p.setGameMode(GameMode.SURVIVAL);
 
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 if (leaving.contains(p)) return;
