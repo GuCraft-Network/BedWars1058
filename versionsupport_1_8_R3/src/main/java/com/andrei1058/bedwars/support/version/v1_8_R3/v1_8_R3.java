@@ -238,6 +238,7 @@ public class v1_8_R3 extends VersionSupport {
         }
         nmsEntity.c(tag);
         tag.setInt("NoAI", 1);
+        tag.setInt("Silent", 2);
         nmsEntity.f(tag);
         ((CraftLivingEntity) nmsEntity.getBukkitEntity()).setRemoveWhenFarAway(false);
     }
