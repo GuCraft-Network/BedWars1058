@@ -1111,7 +1111,7 @@ public class Arena implements IArena {
                 new ReJoin(p, this, team, cacheList);
             }
 
-            if (status != GameState.playing) {
+            if (status == GameState.playing) {
                 for (Player on : getPlayers()) {
                     on.sendMessage(
                             getMsg(on, Messages.COMMAND_LEAVE_MSG)
@@ -1124,7 +1124,8 @@ public class Arena implements IArena {
                 for (Player on : getSpectators()) {
                     on.sendMessage(getMsg(on, Messages.COMMAND_LEAVE_MSG).replace("{vPrefix}", getChatSupport().getPrefix(p)).replace("{playername}", p.getName()).replace("{player}", p.getDisplayName()).replace("{vPrefixColor}", getChatSupport().getPrefixColor(p)));
                 }
-            } else {
+            }
+            if (status == GameState.waiting || status == GameState.starting) {
                 for (Player on : getPlayers()) {
                     on.sendMessage(
                             getMsg(on, Messages.COMMAND_LEAVE_MSG_INGAME)
