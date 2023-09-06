@@ -359,6 +359,7 @@ public class MainConfig extends ConfigManager {
         //
 
         BedWars.setDebug(yml.getBoolean("debug"));
+        /*
         new ConfigManager(plugin, "bukkit", Bukkit.getWorldContainer().getPath()).set("ticks-per.autosave", -1);
 
         Bukkit.spigot().getConfig().set("commands.send-namespaced", false);
@@ -366,7 +367,7 @@ public class MainConfig extends ConfigManager {
             Bukkit.spigot().getConfig().save("spigot.yml");
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
         try {
             BedWars.setServerType(ServerType.valueOf(Objects.requireNonNull(yml.getString("serverType")).toUpperCase()));

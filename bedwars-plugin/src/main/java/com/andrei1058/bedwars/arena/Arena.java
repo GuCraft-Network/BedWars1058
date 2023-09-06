@@ -673,11 +673,12 @@ public class Arena implements IArena {
                 "Default." + ConfigPath.GENERATOR_EMERALD_TIER_II_START : getGroup() + "." + ConfigPath.GENERATOR_EMERALD_TIER_II_START);
         plugin.getLogger().info("Load done: " + getArenaName());
 
-
+/*
         // entity tracking range - player
         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(new File("spigot.yml"));
         renderDistance = yaml.get("world-settings." + getWorldName() + ".entity-tracking-range.players") == null ?
                 yaml.getInt("world-settings.default.entity-tracking-range.players") : yaml.getInt("world-settings." + getWorldName() + ".entity-tracking-range.players");
+                */
     }
 
     /**
@@ -2464,19 +2465,21 @@ public class Arena implements IArena {
                         if (!respawnSessions.isEmpty()) {
                             Integer respawnSeconds = respawnSessions.get(player);
                             if (respawnSeconds <= 0) {
-                                IArena a = Arena.getArenaByPlayer(player);
-                                if (a == null) {
-                                    respawnSessions.remove(player);
-                                }
-                                ITeam t = a.getTeam(player);
-                                if (t == null) {
-                                    a.addSpectator(player, true, null);
-                                } else {
-                                    t.respawnMember(player);
-                                    player.setAllowFlight(false);
-                                    player.setFlying(false);
-                                }
                                 cancel();
+                                Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                                    IArena a = Arena.getArenaByPlayer(player);
+                                    if (a == null) {
+                                        respawnSessions.remove(player);
+                                    }
+                                    ITeam t = a.getTeam(player);
+                                    if (t == null) {
+                                        a.addSpectator(player, true, null);
+                                    } else {
+                                        t.respawnMember(player);
+                                        player.setAllowFlight(false);
+                                        player.setFlying(false);
+                                    }
+                                }, 1L);
                             } else {
                                 nms.sendTitle(player, getMsg(player, Messages.PLAYER_DIE_RESPAWN_TITLE).replace("{time}",
                                         String.valueOf(respawnSeconds)), getMsg(player, Messages.PLAYER_DIE_RESPAWN_SUBTITLE).replace("{time}",
