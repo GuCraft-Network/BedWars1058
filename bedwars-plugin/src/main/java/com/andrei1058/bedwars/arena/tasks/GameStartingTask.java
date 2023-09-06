@@ -186,8 +186,8 @@ public class GameStartingTask implements Runnable, StartingTask {
         if (group.startsWith("rush_")) {
             for (String tut : getList(p, Messages.ARENA_STATUS_START_PLAYER_TUTORIAL_RUSH)) {
                 p.sendMessage(SupportPAPI.getSupportPAPI().replace(p, tut));
-                return;
             }
+            return;
         }
         if (group.startsWith("ultimate_")) {
             for (String tut : getList(p, Messages.ARENA_STATUS_START_PLAYER_TUTORIAL_ULTIMATE)) {
