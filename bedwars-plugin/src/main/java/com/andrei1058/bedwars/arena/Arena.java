@@ -1113,7 +1113,7 @@ public class Arena implements IArena {
 
 
             if (status == GameState.waiting || status == GameState.starting) {
-                for (Player on : players()) {
+                for (Player on : players) {
                     on.sendMessage(
                             getMsg(on, Messages.COMMAND_LEAVE_MSG_INGAME)
                                     .replace("{vPrefix}", getChatSupport().getPrefix(p))
