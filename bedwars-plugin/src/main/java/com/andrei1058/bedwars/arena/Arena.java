@@ -1111,33 +1111,6 @@ public class Arena implements IArena {
                 new ReJoin(p, this, team, cacheList);
             }
 
-
-            if (status == GameState.waiting || status == GameState.starting) {
-                for (Player on : players) {
-                    on.sendMessage(
-                            getMsg(on, Messages.COMMAND_LEAVE_MSG)
-                                    .replace("{vPrefix}", getChatSupport().getPrefix(p))
-                                    .replace("{vSuffix}", getChatSupport().getSuffix(p))
-                                    .replace("{playername}", p.getName())
-                                    .replace("{player}", p.getDisplayName())
-                                    .replace("{PlayerColor}", team.getColor().chat().toString())
-                    );
-                }
-            }
-            if (status == GameState.playing) {
-                for (Player on : getPlayers()) {
-                    on.sendMessage(
-                            getMsg(on, Messages.COMMAND_LEAVE_MSG_INGAME)
-                                    .replace("{vPrefix}", getChatSupport().getPrefix(p))
-                                    .replace("{vSuffix}", getChatSupport().getSuffix(p))
-                                    .replace("{playername}", p.getName())
-                                    .replace("{player}", p.getDisplayName())
-                                    .replace("{vPrefixColor}", getChatSupport().getPrefixColor(p)));
-                }
-                for (Player on : getSpectators()) {
-                    on.sendMessage(getMsg(on, Messages.COMMAND_LEAVE_MSG).replace("{vPrefix}", getChatSupport().getPrefix(p)).replace("{playername}", p.getName()).replace("{player}", p.getDisplayName()).replace("{vPrefixColor}", getChatSupport().getPrefixColor(p)));
-                }
-            }
             // pvp log out
             if (team != null) {
                 ITeam killerTeam = getTeam(lastDamager);
@@ -1152,6 +1125,27 @@ public class Arena implements IArena {
                         cause = PlayerKillEvent.PlayerKillCause.PLAYER_DISCONNECT;
                     }
                     PlayerKillEvent event = new PlayerKillEvent(this, p, lastDamager, player -> Language.getMsg(player, message), cause);
+                    if (getStatus() == GameState.playing) {
+                        for (Player on : getPlayers()) {
+                            on.sendMessage(
+                                    getMsg(on, Messages.COMMAND_LEAVE_MSG_INGAME)
+                                            .replace("{vPrefix}", getChatSupport().getPrefix(p))
+                                            .replace("{vSuffix}", getChatSupport().getSuffix(p))
+                                            .replace("{playername}", p.getName())
+                                            .replace("{player}", p.getDisplayName())
+                                            .replace("{vPrefixColor}", getChatSupport().getPrefixColor(p)));
+                        }
+
+                        for (Player sp : getSpectators()) {
+                            sp.sendMessage(
+                                    getMsg(sp, Messages.COMMAND_LEAVE_MSG_INGAME)
+                                            .replace("{vPrefix}", getChatSupport().getPrefix(p))
+                                            .replace("{vSuffix}", getChatSupport().getSuffix(p))
+                                            .replace("{playername}", p.getName())
+                                            .replace("{player}", p.getDisplayName())
+                                            .replace("{vPrefixColor}", getChatSupport().getPrefixColor(p)));
+                        }
+                    }
                     for (Player inGame : getPlayers()) {
                         Language lang = Language.getPlayerLanguage(inGame);
                         inGame.sendMessage(event.getMessage().apply(inGame)
@@ -1173,6 +1167,19 @@ public class Arena implements IArena {
                     PlayerDrops.handlePlayerDrops(this, p, lastDamager, team, killerTeam, cause, new ArrayList<>(Arrays.asList(p.getInventory().getContents())));
                 }
             }
+        }
+        for (Player on : getPlayers()) {
+            on.sendMessage(
+                    getMsg(on, Messages.COMMAND_LEAVE_MSG)
+                            .replace("{vPrefix}", getChatSupport().getPrefix(p))
+                            .replace("{vSuffix}", getChatSupport().getSuffix(p))
+                            .replace("{playername}", p.getName())
+                            .replace("{player}", p.getDisplayName()
+                            )
+            );
+        }
+        for (Player on : getSpectators()) {
+            on.sendMessage(getMsg(on, Messages.COMMAND_LEAVE_MSG).replace("{vPrefix}", getChatSupport().getPrefix(p)).replace("{playername}", p.getName()).replace("{player}", p.getDisplayName()));
         }
 
         if (getServerType() == ServerType.SHARED) {
@@ -2440,54 +2447,58 @@ public class Arena implements IArena {
             if (!arena.isPlayer(player)) {
                 return false;
             }
+
             player.getInventory().clear();
+
             if (seconds > 1) {
-                // hide to others
+                // 隐藏其他玩家
                 for (Player playing : arena.getPlayers()) {
                     if (playing.equals(player)) continue;
                     BedWars.nms.spigotHidePlayer(player, playing);
                 }
+
                 PaperSupport.teleportC(player, getReSpawnLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
                 player.setAllowFlight(true);
                 player.setFlying(true);
-                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 2)); //隐身效果
+                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1, false)); // 隐身效果
 
-                respawnSessions.put(player, seconds);
-                arena.getRespawns().add(player);
+                // 创建并保存重生倒计时任务
+                int taskId = Bukkit.getScheduler().runTaskTimer(plugin, new BukkitRunnable() {
+                    int countdown = seconds;
 
-                //开始重生倒计时
-                new BukkitRunnable() {
-                    /* RESPAWN SESSION */
                     @Override
                     public void run() {
-                        if (!respawnSessions.isEmpty()) {
-                            Integer respawnSeconds = respawnSessions.get(player);
-                            if (respawnSeconds <= 0) {
-                                cancel();
-                                Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                                    IArena a = Arena.getArenaByPlayer(player);
-                                    if (a == null) {
-                                        respawnSessions.remove(player);
-                                    }
-                                    ITeam t = a.getTeam(player);
-                                    if (t == null) {
-                                        a.addSpectator(player, true, null);
-                                    } else {
-                                        t.respawnMember(player);
-                                        player.setAllowFlight(false);
-                                        player.setFlying(false);
-                                    }
-                                }, 1L);
-                            } else {
-                                nms.sendTitle(player, getMsg(player, Messages.PLAYER_DIE_RESPAWN_TITLE).replace("{time}",
-                                        String.valueOf(respawnSeconds)), getMsg(player, Messages.PLAYER_DIE_RESPAWN_SUBTITLE).replace("{time}",
-                                        String.valueOf(respawnSeconds)), 0, 30, 10);
-                                player.sendMessage(getMsg(player, Messages.PLAYER_DIE_RESPAWN_CHAT).replace("{time}", String.valueOf(respawnSeconds)));
-                                respawnSessions.replace(player, respawnSeconds - 1);
+                        if (countdown <= 0) {
+                            IArena a = Arena.getArenaByPlayer(player);
+                            if (a == null) {
+                                respawnSessions.remove(player);
                             }
+                            ITeam t = a.getTeam(player);
+                            if (t == null) {
+                                a.addSpectator(player, true, null);
+                            } else {
+                                t.respawnMember(player);
+                                player.setAllowFlight(false);
+                                player.setFlying(false);
+                            }
+                            Integer taskId = respawnSessions.get(player);
+                            if (taskId != null) {
+                                Bukkit.getScheduler().cancelTask(taskId);
+                                respawnSessions.remove(player);
+                            }
+                        } else {
+                            nms.sendTitle(player, getMsg(player, Messages.PLAYER_DIE_RESPAWN_TITLE).replace("{time}",
+                                    String.valueOf(countdown)), getMsg(player, Messages.PLAYER_DIE_RESPAWN_SUBTITLE).replace("{time}",
+                                    String.valueOf(countdown)), 0, 30, 10);
+                            player.sendMessage(getMsg(player, Messages.PLAYER_DIE_RESPAWN_CHAT).replace("{time}", String.valueOf(countdown)));
+                            countdown--;
                         }
                     }
-                }.runTaskTimerAsynchronously(plugin, 2L, 20L);
+                }, 0L, 20L).getTaskId();
+
+                // 将任务ID保存到玩家的属性中
+                respawnSessions.put(player, taskId);
+                arena.getRespawns().add(player);
 
                 Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> {
                     player.setAllowFlight(true);
