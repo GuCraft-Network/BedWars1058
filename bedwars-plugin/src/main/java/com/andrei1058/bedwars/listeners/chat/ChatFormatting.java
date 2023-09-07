@@ -134,6 +134,13 @@ public class ChatFormatting implements Listener {
                 return;
             }
 
+            // restarting chat
+            if (a.getStatus() == GameState.restarting) {
+                setRecipients(e, a.getPlayers(),a.getSpectators());
+                e.setFormat(parsePHolders(language.m(Messages.FORMATTING_CHAT_WAITING), p, null));
+                return;
+            }
+
             ITeam team = a.getTeam(p);
             String msg = e.getMessage();
 
