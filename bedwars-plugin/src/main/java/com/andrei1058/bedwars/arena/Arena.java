@@ -1111,6 +1111,19 @@ public class Arena implements IArena {
                 new ReJoin(p, this, team, cacheList);
             }
 
+
+            if (status == GameState.waiting || status == GameState.starting) {
+                for (Player on : players()) {
+                    on.sendMessage(
+                            getMsg(on, Messages.COMMAND_LEAVE_MSG_INGAME)
+                                    .replace("{vPrefix}", getChatSupport().getPrefix(p))
+                                    .replace("{vSuffix}", getChatSupport().getSuffix(p))
+                                    .replace("{playername}", p.getName())
+                                    .replace("{player}", p.getDisplayName())
+                                    .replace("{PlayerColor}", team.getColor().chat().toString())
+                    );
+                }
+            }
             if (status == GameState.playing) {
                 for (Player on : getPlayers()) {
                     on.sendMessage(
@@ -1123,21 +1136,6 @@ public class Arena implements IArena {
                 }
                 for (Player on : getSpectators()) {
                     on.sendMessage(getMsg(on, Messages.COMMAND_LEAVE_MSG).replace("{vPrefix}", getChatSupport().getPrefix(p)).replace("{playername}", p.getName()).replace("{player}", p.getDisplayName()).replace("{vPrefixColor}", getChatSupport().getPrefixColor(p)));
-                }
-            }
-            if (status == GameState.waiting || status == GameState.starting) {
-                for (Player on : getPlayers()) {
-                    on.sendMessage(
-                            getMsg(on, Messages.COMMAND_LEAVE_MSG_INGAME)
-                                    .replace("{vPrefix}", getChatSupport().getPrefix(p))
-                                    .replace("{vSuffix}", getChatSupport().getSuffix(p))
-                                    .replace("{playername}", p.getName())
-                                    .replace("{player}", p.getDisplayName())
-                                    .replace("{PlayerColor}", team.getColor().chat().toString())
-                    );
-                }
-                for (Player on : getSpectators()) {
-                    on.sendMessage(getMsg(on, Messages.COMMAND_LEAVE_MSG_INGAME).replace("{vPrefix}", getChatSupport().getPrefix(p)).replace("{playername}", p.getName()).replace("{player}", p.getDisplayName()).replace("{PlayerColor}", team.getColor().chat().toString()));
                 }
             }
             // pvp log out
