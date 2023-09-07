@@ -1025,7 +1025,11 @@ public class Arena implements IArena {
             leaving.add(p);
         }
         debug("Player removed: " + p.getName() + " arena: " + getArenaName());
+        if (respawnSessions.get(p) != null) {
+            Bukkit.getScheduler().cancelTask(respawnSessions.get(p));
+        }
         respawnSessions.remove(p);
+
 
         ITeam team = null;
 
@@ -2465,12 +2469,13 @@ public class Arena implements IArena {
                 // 创建并保存重生倒计时任务
                 int taskId = Bukkit.getScheduler().runTaskTimer(plugin, new BukkitRunnable() {
                     int countdown = seconds;
-
                     @Override
                     public void run() {
                         if (countdown <= 0) {
+                            Integer taskId = respawnSessions.get(player);
                             IArena a = Arena.getArenaByPlayer(player);
                             if (a == null) {
+                                Bukkit.getScheduler().cancelTask(taskId);
                                 respawnSessions.remove(player);
                             }
                             ITeam t = a.getTeam(player);
@@ -2481,7 +2486,6 @@ public class Arena implements IArena {
                                 player.setAllowFlight(false);
                                 player.setFlying(false);
                             }
-                            Integer taskId = respawnSessions.get(player);
                             if (taskId != null) {
                                 Bukkit.getScheduler().cancelTask(taskId);
                                 respawnSessions.remove(player);
