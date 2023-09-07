@@ -175,7 +175,7 @@ public class BwSidebar implements ISidebar {
 
     private String getServer(IArena a) {
         if (BedWars.getServerType() == ServerType.BUNGEE && !autoscale) {
-            return GetCurServerName.getGameName(a);
+            return TempClass.getGameName(a);
         } else {
             config.getString(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_SERVER_ID);
         }

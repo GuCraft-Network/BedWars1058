@@ -14,7 +14,7 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 
-public class GetCurServerName implements Listener, PluginMessageListener {
+public class TempClass implements Listener, PluginMessageListener {
 
     private static String gamename = "Null";
     private String servername = "Null";
