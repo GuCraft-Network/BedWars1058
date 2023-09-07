@@ -62,7 +62,7 @@ import com.andrei1058.bedwars.lobbysocket.LoadedUsersCleaner;
 import com.andrei1058.bedwars.lobbysocket.SendTask;
 import com.andrei1058.bedwars.money.internal.MoneyListeners;
 import com.andrei1058.bedwars.shop.ShopManager;
-import com.andrei1058.bedwars.sidebar.TempClass;
+import com.andrei1058.bedwars.sidebar.GetCurServerName;
 import com.andrei1058.bedwars.sidebar.ScoreboardListener;
 import com.andrei1058.bedwars.sidebar.SidebarService;
 import com.andrei1058.bedwars.sidebar.thread.RefreshLifeTask;
@@ -335,7 +335,7 @@ public class BedWars extends JavaPlugin {
 
         /* Setup plugin messaging channel */
         Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        Bukkit.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new TempClass());
+        Bukkit.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new GetCurServerName());
 
         /* Check if lobby location is set. Required for non Bungee servers */
         if (config.getLobbyWorldName().isEmpty() && serverType != ServerType.BUNGEE) {
@@ -386,7 +386,7 @@ public class BedWars extends JavaPlugin {
                 registerEvents(new AutoscaleListener(), new JoinListenerBungee());
                 Bukkit.getScheduler().runTaskTimerAsynchronously(this, new LoadedUsersCleaner(), 60L, 60L);
             } else {
-                registerEvents(new ServerPingListener(), new JoinListenerBungeeLegacy(), new TempClass());
+                registerEvents(new ServerPingListener(), new JoinListenerBungeeLegacy(), new GetCurServerName());
             }
         } else if (getServerType() == ServerType.MULTIARENA || getServerType() == ServerType.SHARED) {
             registerEvents(new ArenaSelectorListener(), new RefreshGUI());
