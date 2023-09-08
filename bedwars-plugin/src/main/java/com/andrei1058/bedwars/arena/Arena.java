@@ -1174,18 +1174,20 @@ public class Arena implements IArena {
                 }
             }
         }
-        for (Player on : getPlayers()) {
-            on.sendMessage(
-                    getMsg(on, Messages.COMMAND_LEAVE_MSG)
-                            .replace("{vPrefix}", getChatSupport().getPrefix(p))
-                            .replace("{vSuffix}", getChatSupport().getSuffix(p))
-                            .replace("{playername}", p.getName())
-                            .replace("{player}", p.getDisplayName())
-                            .replace("{vPrefixColor}", getChatSupport().getPrefixColor(p))
-            );
-        }
-        for (Player on : getSpectators()) {
-            on.sendMessage(getMsg(on, Messages.COMMAND_LEAVE_MSG).replace("{vPrefix}", getChatSupport().getPrefix(p)).replace("{playername}", p.getName()).replace("{player}", p.getDisplayName()));
+        if (status == GameState.waiting || status == GameState.starting) {
+            for (Player on : getPlayers()) {
+                on.sendMessage(
+                        getMsg(on, Messages.COMMAND_LEAVE_MSG)
+                                .replace("{vPrefix}", getChatSupport().getPrefix(p))
+                                .replace("{vSuffix}", getChatSupport().getSuffix(p))
+                                .replace("{playername}", p.getName())
+                                .replace("{player}", p.getDisplayName())
+                                .replace("{vPrefixColor}", getChatSupport().getPrefixColor(p))
+                );
+            }
+            for (Player on : getSpectators()) {
+                on.sendMessage(getMsg(on, Messages.COMMAND_LEAVE_MSG).replace("{vPrefix}", getChatSupport().getPrefix(p)).replace("{playername}", p.getName()).replace("{player}", p.getDisplayName()));
+            }
         }
 
         if (getServerType() == ServerType.SHARED) {
