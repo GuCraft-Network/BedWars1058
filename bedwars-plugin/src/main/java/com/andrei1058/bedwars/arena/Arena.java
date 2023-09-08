@@ -1135,6 +1135,7 @@ public class Arena implements IArena {
                                     getMsg(on, Messages.COMMAND_LEAVE_MSG_INGAME)
                                             .replace("{vPrefix}", getChatSupport().getPrefix(p))
                                             .replace("{vSuffix}", getChatSupport().getSuffix(p))
+                                            .replace("{PlayerColor}", team.getColor().chat().toString()).replace("{PlayerName}", p.getDisplayName())
                                             .replace("{playername}", p.getName())
                                             .replace("{player}", p.getDisplayName())
                                             .replace("{vPrefixColor}", getChatSupport().getPrefixColor(p)));
@@ -1145,6 +1146,7 @@ public class Arena implements IArena {
                                     getMsg(sp, Messages.COMMAND_LEAVE_MSG_INGAME)
                                             .replace("{vPrefix}", getChatSupport().getPrefix(p))
                                             .replace("{vSuffix}", getChatSupport().getSuffix(p))
+                                            .replace("{PlayerColor}", team.getColor().chat().toString()).replace("{PlayerName}", p.getDisplayName())
                                             .replace("{playername}", p.getName())
                                             .replace("{player}", p.getDisplayName())
                                             .replace("{vPrefixColor}", getChatSupport().getPrefixColor(p)));
@@ -1178,8 +1180,8 @@ public class Arena implements IArena {
                             .replace("{vPrefix}", getChatSupport().getPrefix(p))
                             .replace("{vSuffix}", getChatSupport().getSuffix(p))
                             .replace("{playername}", p.getName())
-                            .replace("{player}", p.getDisplayName()
-                            )
+                            .replace("{player}", p.getDisplayName())
+                            .replace("{vPrefixColor}", getChatSupport().getPrefixColor(p))
             );
         }
         for (Player on : getSpectators()) {
