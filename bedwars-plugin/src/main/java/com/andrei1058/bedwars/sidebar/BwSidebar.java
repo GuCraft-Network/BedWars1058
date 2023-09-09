@@ -395,7 +395,7 @@ public class BwSidebar implements ISidebar {
         }
 
         // unique tab list name
-        String tabListName = player.getDisplayName();
+        String tabListName = player.getName();
 
         if (tabList.containsKey(tabListName)) {
             handle.removeTab(tabListName);

@@ -1421,7 +1421,7 @@ public class Arena implements IArena {
             reJoin.getTask().destroy();
         }
 
-        PlayerReJoinEvent ev = new PlayerReJoinEvent(p, this, BedWars.config.getInt(ConfigPath.GENERAL_CONFIGURATION_RE_SPAWN_COUNTDOWN));
+        PlayerReJoinEvent ev = new PlayerReJoinEvent(p, this, config.getInt(ConfigPath.GENERAL_CONFIGURATION_RE_SPAWN_COUNTDOWN));
         Bukkit.getPluginManager().callEvent(ev);
         if (ev.isCancelled()) return false;
 
@@ -1435,11 +1435,11 @@ public class Arena implements IArena {
 
         p.closeInventory();
         players.add(p);
-        for (Player on : players) {
-            on.sendMessage(getMsg(on, Messages.COMMAND_REJOIN_PLAYER_RECONNECTED).replace("{playername}", p.getName()).replace("{player}", p.getDisplayName()).replace("{PlayerColor}", Arena.getArenaByPlayer(p).getTeam(p).getColor().chat().toString()).replace("{on}", String.valueOf(getPlayers().size())).replace("{max}", String.valueOf(getMaxPlayers())));
+        for (Player on : getPlayers()) {
+            on.sendMessage(getMsg(on, Messages.COMMAND_REJOIN_PLAYER_RECONNECTED).replace("{playername}", p.getName()).replace("{player}", p.getDisplayName()).replace("{on}", String.valueOf(getPlayers().size())).replace("{max}", String.valueOf(getMaxPlayers())));
         }
-        for (Player on : spectators) {
-            on.sendMessage(getMsg(on, Messages.COMMAND_REJOIN_PLAYER_RECONNECTED).replace("{playername}", p.getName()).replace("{player}", p.getDisplayName()).replace("{PlayerColor}", Arena.getArenaByPlayer(p).getTeam(p).getColor().chat().toString()).replace("{on}", String.valueOf(getPlayers().size())).replace("{max}", String.valueOf(getMaxPlayers())));
+        for (Player on : getSpectators()) {
+            on.sendMessage(getMsg(on, Messages.COMMAND_REJOIN_PLAYER_RECONNECTED).replace("{playername}", p.getName()).replace("{player}", p.getDisplayName()).replace("{on}", String.valueOf(getPlayers().size())).replace("{max}", String.valueOf(getMaxPlayers())));
         }
         setArenaByPlayer(p, this);
         /* save player inventory etc */
@@ -1975,28 +1975,37 @@ public class Arena implements IArena {
             }
             if (max - eliminated == 1) {
                 if (winner != null) {
-                    String firstName = "";
-                    String secondName = "";
-                    String thirdName = "";
+                    Player firstPlayer = null;
+                    Player secondPlayer = null;
+                    Player thirdPlayer = null;
                     StringBuilder winners = new StringBuilder();
                     //noinspection deprecation
-                    for (Player p : winner.getMembersCache()) {
+                    for (int i = 0; i < winner.getMembers().size(); i++) {
+                        Player p = winner.getMembers().get(i);
                         if (p.getWorld().equals(getWorld())) {
                             nms.sendTitle(p, getMsg(p, Messages.GAME_END_VICTORY_PLAYER_TITLE), null, 0, 70, 20);
                         }
                         if (!winners.toString().contains(p.getDisplayName())) {
-                            winners.append(p.getDisplayName()).append(" ");
+                            if (winner.getSize() > 1 && i + 1 != winner.getMembers().size()) {
+                                winners.append(getMsg(p, Messages.FORMATTING_EACH_WINNER)
+                                        .replace("{vPrefix}", getChatSupport().getPrefix(p))
+                                        .replace("{vSuffix}", getChatSupport().getSuffix(p))
+                                        .replace("{PlayerName}", p.getName())
+                                        .replace("{Player}", p.getDisplayName())).append("§7， ");
+                            } else {
+                                String winnerFormat = getMsg(p, Messages.FORMATTING_EACH_WINNER)
+                                        .replace("{vPrefix}", getChatSupport().getPrefix(p))
+                                        .replace("{vSuffix}", getChatSupport().getSuffix(p))
+                                        .replace("{PlayerName}", p.getName())
+                                        .replace("{Player}", p.getDisplayName());
+                                winners.append(winnerFormat);
+                            }
                         }
-                    }
-                    if (winners.toString().endsWith(" ")) {
-                        winners = new StringBuilder(winners.substring(0, winners.length() - 1));
                     }
                     int first = 0, second = 0, third = 0;
                     if (!playerKills.isEmpty()) {
 
-
                         LinkedHashMap<String, Integer> reverseSortedMap = new LinkedHashMap<>();
-
                         //Use Comparator.reverseOrder() for reverse ordering
                         playerKills.entrySet()
                                 .stream()
@@ -2006,24 +2015,21 @@ public class Arena implements IArena {
                         int entry = 0;
                         for (Map.Entry<String, Integer> e : reverseSortedMap.entrySet()) {
                             if (entry == 0) {
-                                firstName = e.getKey();
                                 Player onlinePlayer = Bukkit.getPlayerExact(e.getKey());
                                 if (onlinePlayer != null) {
-                                    firstName = onlinePlayer.getDisplayName();
+                                    firstPlayer = onlinePlayer;
                                 }
                                 first = e.getValue();
                             } else if (entry == 1) {
-                                secondName = e.getKey();
                                 Player onlinePlayer = Bukkit.getPlayerExact(e.getKey());
                                 if (onlinePlayer != null) {
-                                    secondName = onlinePlayer.getDisplayName();
+                                    secondPlayer = onlinePlayer;
                                 }
                                 second = e.getValue();
                             } else if (entry == 2) {
-                                thirdName = e.getKey();
                                 Player onlinePlayer = Bukkit.getPlayerExact(e.getKey());
                                 if (onlinePlayer != null) {
-                                    thirdName = onlinePlayer.getDisplayName();
+                                    thirdPlayer = onlinePlayer;
                                 }
                                 third = e.getValue();
                                 break;
@@ -2032,15 +2038,37 @@ public class Arena implements IArena {
                         }
                     }
                     for (Player p : world.getPlayers()) {
-                        p.sendMessage(getMsg(p, Messages.GAME_END_TEAM_WON_CHAT).replace("{TeamColor}", winner.getColor().chat().toString())
+                        p.sendMessage(getMsg(p, Messages.GAME_END_TEAM_WON_CHAT)
+                                .replace("{TeamColor}", winner.getColor().chat().toString())
                                 .replace("{TeamName}", winner.getDisplayName(Language.getPlayerLanguage(p))));
+
                         if (!winner.getMembers().contains(p)) {
                             nms.sendTitle(p, getMsg(p, Messages.GAME_END_GAME_OVER_PLAYER_TITLE), null, 0, 70, 20);
                         }
+
                         for (String s : getList(p, Messages.GAME_END_TOP_PLAYER_CHAT)) {
-                            String message = s.replace("{firstName}", firstName.isEmpty() ? getMsg(p, Messages.MEANING_NOBODY) : firstName).replace("{firstKills}", String.valueOf(first))
-                                    .replace("{secondName}", secondName.isEmpty() ? getMsg(p, Messages.MEANING_NOBODY) : secondName).replace("{secondKills}", String.valueOf(second))
-                                    .replace("{thirdName}", thirdName.isEmpty() ? getMsg(p, Messages.MEANING_NOBODY) : thirdName).replace("{thirdKills}", String.valueOf(third))
+                            String message = s
+                                    .replace("{firstFormat}", firstPlayer == null ? getMsg(p, Messages.MEANING_NOBODY) : getMsg(firstPlayer, Messages.GAME_END_FIRST_KILLER)
+                                            .replace("{vPrefix}", getChatSupport().getPrefix(firstPlayer))
+                                            .replace("{vSuffix}", getChatSupport().getSuffix(firstPlayer))
+                                            .replace("{firstName}", firstPlayer.getName())
+                                            .replace("{first}", firstPlayer.getDisplayName())
+                                            .replace("{firstKills}", String.valueOf(first)))
+
+                                    .replace("{secondFormat}", secondPlayer == null ? getMsg(p, Messages.MEANING_NOBODY) : getMsg(secondPlayer, Messages.GAME_END_SECOND_KILLER)
+                                            .replace("{vPrefix}", getChatSupport().getPrefix(secondPlayer))
+                                            .replace("{vSuffix}", getChatSupport().getSuffix(secondPlayer))
+                                            .replace("{secondName}", secondPlayer.getName())
+                                            .replace("{second}", secondPlayer.getDisplayName())
+                                            .replace("{secondKills}", String.valueOf(second)))
+
+                                    .replace("{thirdFormat}", thirdPlayer == null ? getMsg(p, Messages.MEANING_NOBODY) : getMsg(thirdPlayer, Messages.GAME_END_THIRD_KILLER)
+                                            .replace("{vPrefix}", getChatSupport().getPrefix(thirdPlayer))
+                                            .replace("{vSuffix}", getChatSupport().getSuffix(thirdPlayer))
+                                            .replace("{thirdName}", thirdPlayer.getName())
+                                            .replace("{third}", thirdPlayer.getDisplayName())
+                                            .replace("{thirdKills}", String.valueOf(third)))
+
                                     .replace("{winnerFormat}", getMaxInTeam() > 1 ? getMsg(p, Messages.FORMATTING_TEAM_WINNER_FORMAT).replace("{members}", winners.toString()) : getMsg(p, Messages.FORMATTING_SOLO_WINNER_FORMAT).replace("{members}", winners.toString()))
                                     .replace("{TeamColor}", winner.getColor().chat().toString()).replace("{TeamName}", winner.getDisplayName(Language.getPlayerLanguage(p)));
                             p.sendMessage(SupportPAPI.getSupportPAPI().replace(p, message));
@@ -2073,7 +2101,7 @@ public class Arena implements IArena {
                 //
 
             }
-            if (players.size() == 0 && status != GameState.restarting) {
+            if (players.isEmpty() && status != GameState.restarting) {
                 changeStatus(GameState.restarting);
             }
         }
@@ -2473,6 +2501,7 @@ public class Arena implements IArena {
                 // 创建并保存重生倒计时任务
                 int taskId = Bukkit.getScheduler().runTaskTimer(plugin, new BukkitRunnable() {
                     int countdown = seconds;
+
                     @Override
                     public void run() {
                         if (countdown <= 0) {

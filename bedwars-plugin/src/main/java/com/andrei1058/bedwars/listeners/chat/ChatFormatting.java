@@ -115,6 +115,13 @@ public class ChatFormatting implements Listener {
         if (Arena.getArenaByPlayer(p) != null) {
             IArena a = Arena.getArenaByPlayer(p);
 
+            // restarting chat
+            if (a.getStatus() == GameState.restarting) {
+                setRecipients(e, a.getPlayers(), a.getSpectators());
+                e.setFormat(parsePHolders(language.m(Messages.FORMATTING_CHAT_WAITING), p, null));
+                return;
+            }
+
             // spectator chat
             if (a.isSpectator(p) || a.isReSpawning(p)) {
                 if (p.hasPermission(Permissions.PERMISSION_SPECCHAT)) {
@@ -134,12 +141,6 @@ public class ChatFormatting implements Listener {
                 return;
             }
 
-            // restarting chat
-            if (a.getStatus() == GameState.restarting) {
-                setRecipients(e, a.getPlayers(),a.getSpectators());
-                e.setFormat(parsePHolders(language.m(Messages.FORMATTING_CHAT_WAITING), p, null));
-                return;
-            }
 
             ITeam team = a.getTeam(p);
             String msg = e.getMessage();

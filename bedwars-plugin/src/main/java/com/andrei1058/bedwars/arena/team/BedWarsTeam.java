@@ -176,7 +176,7 @@ public class BedWarsTeam implements ITeam {
      * Rejoin a team
      */
     public void reJoin(@NotNull Player p) {
-        reJoin(p, BedWars.config.getInt(ConfigPath.GENERAL_CONFIGURATION_RE_SPAWN_COUNTDOWN));
+        reJoin(p, config.getInt(ConfigPath.GENERAL_CONFIGURATION_RE_SPAWN_COUNTDOWN));
     }
 
     public void reJoin(@NotNull Player p, int respawnTime) {
@@ -365,7 +365,7 @@ public class BedWarsTeam implements ITeam {
         }, 8L);
 
         nms.sendTitle(p, getMsg(p, Messages.PLAYER_DIE_RESPAWNED_TITLE), "", 0, 20, 10);
-        p.sendMessage(getMsg(p,Messages.PLAYER_DIE_RESPAWNED_TEXT));
+        p.sendMessage(getMsg(p, Messages.PLAYER_DIE_RESPAWNED_TEXT));
 
         sendDefaultInventory(p, false);
         ShopCache sc = ShopCache.getShopCache(p.getUniqueId());

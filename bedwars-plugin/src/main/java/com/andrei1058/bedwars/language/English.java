@@ -314,6 +314,10 @@ public class English extends Language {
         yml.addDefault(Messages.PLAYER_HIT_BOW, "{prefix}{TeamColor}{PlayerName} &7is on &c{amount} &7HP!");
         yml.addDefault(Messages.GAME_END_GAME_OVER_PLAYER_TITLE, "&c&lGAME OVER!");
         yml.addDefault(Messages.GAME_END_VICTORY_PLAYER_TITLE, "&6&lVICTORY!");
+        yml.addDefault(Messages.FORMATTING_EACH_WINNER, "{vPrefix}{Player}{vSuffix}");
+        yml.addDefault(Messages.GAME_END_FIRST_KILLER, "{vPrefix}{Player}{vSuffix}");
+        yml.addDefault(Messages.GAME_END_SECOND_KILLER, "{vPrefix}{Player}{vSuffix}");
+        yml.addDefault(Messages.GAME_END_THIRD_KILLER, "{vPrefix}{Player}{vSuffix}");
         yml.addDefault(Messages.GAME_END_TEAM_WON_CHAT, "{prefix}{TeamColor}{TeamName} &ahas won the game!");
         yml.addDefault(Messages.GAME_END_TOP_PLAYER_CHAT, Arrays.asList("&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬",
                 "&f                                   &lBedWars", "", "{winnerFormat}", "", "",

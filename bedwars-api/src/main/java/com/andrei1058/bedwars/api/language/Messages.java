@@ -316,7 +316,7 @@ public class Messages {
     public static String PLAYER_DIE_RESPAWN_SUBTITLE = "player-respawn-subtitle";
     public static String PLAYER_DIE_RESPAWN_CHAT = "player-respawn-timer-chat";
     public static String PLAYER_DIE_RESPAWNED_TITLE = "player-respawned-title";
-    public static String PLAYER_DIE_RESPAWNED_TEXT = "player-respawned-title";
+    public static String PLAYER_DIE_RESPAWNED_TEXT = "player-respawned-text";
     public static String PLAYER_DIE_ELIMINATED_CHAT = "player-eliminated-chat";
     public static String PLAYER_DIE_VOID_FALL_REGULAR_KILL = "player-die-void-regular";
     public static String PLAYER_DIE_VOID_FALL_FINAL_KILL = "player-die-void-final";
@@ -350,6 +350,10 @@ public class Messages {
      */
     public static String GAME_END_GAME_OVER_PLAYER_TITLE = "game-end-game-over-title";
     public static String GAME_END_VICTORY_PLAYER_TITLE = "game-end-victory-title";
+    public static String GAME_END_FIRST_KILLER = "game-end-first-killer";
+    public static String GAME_END_SECOND_KILLER = "game-end-second-killer";
+    public static String GAME_END_THIRD_KILLER = "game-end-third-killer";
+    public static String FORMATTING_EACH_WINNER = "format-each-winner";
     public static String GAME_END_TOP_PLAYER_CHAT = "game-end-top-chat";
     public static String GAME_END_TEAM_WON_CHAT = "game-end-winner-team";
     public static String XP_REWARD_WIN = "xp-reward-game-win";
