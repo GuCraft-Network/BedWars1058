@@ -117,7 +117,7 @@ public class ChatFormatting implements Listener {
 
             // spectator chat
             if (a.isSpectator(p) || a.isReSpawning(p)) {
-                if (p.hasPermission(Permissions.PERMISSION_ALL)) {
+                if (p.hasPermission(Permissions.PERMISSION_SPECCHAT)) {
                     setRecipients(e, a.getPlayers(), a.getSpectators());
                     e.setFormat(parsePHolders(language.m(Messages.FORMATTING_CHAT_WAITING), p, null));
                     return;

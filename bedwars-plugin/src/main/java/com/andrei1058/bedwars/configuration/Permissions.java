@@ -40,6 +40,7 @@ public class Permissions {
     public static final String PERMISSION_CHAT_COLOR = BedWars.mainCmd + ".chatcolor";
     public static final String PERMISSION_VIP = BedWars.mainCmd + ".vip";
     public static final String PERMISSION_DEBUG = BedWars.mainCmd + ".debug";
+    public static final String PERMISSION_SPECCHAT = BedWars.mainCmd + ".specchat";
 
 
     /**
