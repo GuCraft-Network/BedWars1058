@@ -530,6 +530,9 @@ public class DamageDeathMove implements Listener {
             }
 
             if (killer != null) killersTeam = a.getTeam(killer);
+            if (victimsTeam.equals(killersTeam) || victim.equals(killer)) {
+                killer = null;
+            }
             String finalMessage = message;
             PlayerKillEvent playerKillEvent = new PlayerKillEvent(a, victim, killer, player -> Language.getMsg(player, finalMessage), cause);
             Bukkit.getPluginManager().callEvent(playerKillEvent);

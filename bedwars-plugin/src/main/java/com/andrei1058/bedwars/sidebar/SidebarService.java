@@ -170,6 +170,9 @@ public class SidebarService implements ISidebarService {
             if (null != v.getArena()) {
                 v.getHandle().playerHealthRefreshAnimation();
                 for (Player player : v.getArena().getPlayers()) {
+                    if (player == null) {
+                        continue;
+                    }
                     v.getHandle().setPlayerHealth(player, (int) Math.ceil(player.getHealth()));
                 }
             }
