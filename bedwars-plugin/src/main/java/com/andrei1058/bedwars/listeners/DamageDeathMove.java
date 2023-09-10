@@ -143,8 +143,6 @@ public class DamageDeathMove implements Listener {
         if (!(e.getEntity() instanceof Player)) return;
         Player p = (Player) e.getEntity();
         IArena a = Arena.getArenaByPlayer(p);
-        Bukkit.broadcastMessage(String.valueOf(e.getDamage()));
-        Bukkit.broadcastMessage(String.valueOf(e.getCause()));
         if (a != null) {
             if (a.getStatus() != GameState.playing) {
                 return;

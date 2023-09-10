@@ -12,12 +12,10 @@ import com.andrei1058.bedwars.arena.LastHit;
 import com.andrei1058.bedwars.arena.team.BedWarsTeam;
 import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableMap;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -192,12 +190,12 @@ public class FireballListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)//后两条件是为防止异常伤害
     public void fireballDirectHit(EntityDamageByEntityEvent e) {
         if (!(e.getDamager() instanceof Fireball) || !(e.getEntity() instanceof Player)) return;
-            Player player = (Player) e.getEntity();
-            if (!Arena.isInArena(player)) {
-                return;
-            }
+        Player player = (Player) e.getEntity();
+        if (!Arena.isInArena(player)) {
+            return;
+        }
 
-            e.setCancelled(true);
+        e.setCancelled(true);
     }
 
     @EventHandler
