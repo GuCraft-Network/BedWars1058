@@ -808,12 +808,13 @@ public class Arena implements IArena {
 
             //half full arena time shorten
             if (players.size() >= getMaxPlayers() / 2 && players.size() > minPlayers) {
-                if (startingTask != null) {
-                    if (Bukkit.getScheduler().isCurrentlyRunning(startingTask.getTask())) {
-                        if (startingTask.getCountdown() > getConfig().getInt(ConfigPath.GENERAL_CONFIGURATION_START_COUNTDOWN_HALF)) {
-                            startingTask.setCountdown(BedWars.config.getInt(ConfigPath.GENERAL_CONFIGURATION_START_COUNTDOWN_HALF));
-                        }
-                    }
+                if (startingTask != null && startingTask.getCountdown() > BedWars.config.getInt(ConfigPath.GENERAL_CONFIGURATION_START_COUNTDOWN_HALF)) {
+                    startingTask.setCountdown(BedWars.config.getInt(ConfigPath.GENERAL_CONFIGURATION_START_COUNTDOWN_HALF));
+                }
+            }
+            if (players.size() >= getMaxPlayers()) {
+                if (startingTask != null && startingTask.getCountdown() > BedWars.config.getInt(ConfigPath.GENERAL_CONFIGURATION_START_COUNTDOWN_SHORTENED)) {
+                    startingTask.setCountdown(BedWars.config.getInt(ConfigPath.GENERAL_CONFIGURATION_START_COUNTDOWN_SHORTENED));
                 }
             }
 
@@ -2008,23 +2009,27 @@ public class Arena implements IArena {
 
                         LinkedHashMap<Player, Integer> reverseSortedMap = new LinkedHashMap<>();
 
-// Add all entries from playerKills to the reverseSortedMap
-                        playerKills.forEach((player, kills) ->
-                                reverseSortedMap.merge(player, kills, Integer::sum));
+                        for (Map.Entry<Player, Integer> entry : playerKills.entrySet()) {
+                            Player player = entry.getKey();
+                            int kills = entry.getValue();
+                            reverseSortedMap.put(player, kills);
+                        }
 
-// Add all entries from finalKills to the reverseSortedMap
-                        playerFinalKills.forEach((player, finalKills) ->
-                                reverseSortedMap.merge(player, finalKills, Integer::sum));
+                        for (Map.Entry<Player, Integer> entry : playerFinalKills.entrySet()) {
+                            Player player = entry.getKey();
+                            int finalKills = entry.getValue();
+                            reverseSortedMap.merge(player, finalKills, Integer::sum);
+                        }
 
-// Sort the reverseSortedMap by values in descending order
-                        List<Map.Entry<Player, Integer>> entries =
-                                new ArrayList<>(reverseSortedMap.entrySet());
-                        entries.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+                        List<Map.Entry<Player, Integer>> sortedEntries = new ArrayList<>(reverseSortedMap.entrySet());
+                        Collections.sort(sortedEntries, (e1, e2) -> e2.getValue().compareTo(e1.getValue()));
 
-// Put the sorted entries back into the reverseSortedMap
-                        reverseSortedMap.clear();
-                        entries.forEach(entry ->
-                                reverseSortedMap.put(entry.getKey(), entry.getValue()));
+                        LinkedHashMap<Player, Integer> sortedMap = new LinkedHashMap<>();
+                        for (Map.Entry<Player, Integer> entry : sortedEntries) {
+                            sortedMap.put(entry.getKey(), entry.getValue());
+                        }
+
+                        reverseSortedMap = sortedMap;
 
                         int entry = 0;
                         for (Map.Entry<Player, Integer> e : reverseSortedMap.entrySet()) {
