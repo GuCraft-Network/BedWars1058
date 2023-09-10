@@ -436,20 +436,6 @@ public class DamageDeathMove implements Listener {
             String message = victimsTeam.isBedDestroyed() ? Messages.PLAYER_DIE_UNKNOWN_REASON_FINAL_KILL : Messages.PLAYER_DIE_UNKNOWN_REASON_REGULAR;
             PlayerKillEvent.PlayerKillCause cause = victimsTeam.isBedDestroyed() ? PlayerKillEvent.PlayerKillCause.UNKNOWN_FINAL_KILL : PlayerKillEvent.PlayerKillCause.UNKNOWN;
             if (damageEvent != null) {
-                if (cause.isFinalKill()) {
-                    AtomicBoolean isEnderChestDropped = new AtomicBoolean(false);
-                    victim.getEnderChest().forEach(item -> {
-                        if (item != null) {
-                            isEnderChestDropped.set(true);
-                        }
-                    });
-
-                    if (isEnderChestDropped.get()) {
-                        killer.sendMessage(getMsg(killer, Messages.INTERACT_ENDERCHEST_ITEM_DROP)
-                                .replace("{PlayerName}", victim.getName())
-                                .replace("{Player}", victim.getDisplayName()));
-                    }
-                }
                 if (damageEvent.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION) {
                     LastHit lh = getLastHit(victim);
                     if (lh != null) {
@@ -538,6 +524,22 @@ public class DamageDeathMove implements Listener {
             Bukkit.getPluginManager().callEvent(playerKillEvent);
             if (killer != null && playerKillEvent.playSound()) {
                 Sounds.playSound(ConfigPath.SOUNDS_KILL, killer);
+            }
+            if (cause.isFinalKill()) {
+                AtomicBoolean isEnderChestDropped = new AtomicBoolean(false);
+                victim.getEnderChest().forEach(item -> {
+                    if (item != null) {
+                        isEnderChestDropped.set(true);
+                    }
+                });
+
+                if (isEnderChestDropped.get()) {
+                    if (killer != null) {
+                        killer.sendMessage(getMsg(killer, Messages.INTERACT_ENDERCHEST_ITEM_DROP)
+                                .replace("{PlayerName}", victim.getName())
+                                .replace("{Player}", victim.getDisplayName()));
+                    }
+                }
             }
             for (Player on : a.getPlayers()) {
                 Language lang = Language.getPlayerLanguage(on);
