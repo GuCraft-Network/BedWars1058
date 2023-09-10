@@ -479,9 +479,6 @@ public class BwSidebar implements ISidebar {
         if (null == team) {
             team = arena.getExTeam(player.getUniqueId());
         }
-        if (null == team) {
-            throw new RuntimeException("Wtf dude");
-        }
 
         String tabName = this.getTabName(team);
         String tabNameInvisible = tabName = tabName.substring(0, tabName.length() >= 16 ? 15 : tabName.length());
