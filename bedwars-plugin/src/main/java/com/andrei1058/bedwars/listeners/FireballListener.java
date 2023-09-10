@@ -76,12 +76,14 @@ public class FireballListener implements Listener {
         e.setCancelled(true);
 
         long cooldown = (long) (fireballCooldown * 1000);
-        if (System.currentTimeMillis() - arena.getFireballCooldowns().getOrDefault(player.getUniqueId(), 0L) <= cooldown) {
+        long fbPlayerCD = System.currentTimeMillis() - arena.getFireballCooldowns().getOrDefault(player.getUniqueId(), 0L);
+
+        if (fbPlayerCD <= cooldown) {
             double cooldownString = 0;
-            if (fireballCooldown >= 0.5) {
+
+            if (fbPlayerCD >= 0.5) {
                 cooldownString = 1.0;
-            }
-            if (fireballCooldown <= 0.5) {
+            } else if (fbPlayerCD <= 0.5) {
                 cooldownString = 0.5;
             }
 

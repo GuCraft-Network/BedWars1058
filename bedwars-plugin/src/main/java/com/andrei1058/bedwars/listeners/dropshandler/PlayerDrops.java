@@ -77,7 +77,6 @@ public class PlayerDrops {
                         victim.getWorld().dropItemNaturally(dropsLocation, item);
                     }
                 });
-                killer.sendMessage(getMsg(killer, Messages.INTERACT_ENDERCHEST_ITEM_DROP.replace("{PlayerName}", victim.getName()).replace("{Player}", victim.getDisplayName())));
                 victim.getEnderChest().clear();
             }
             return true;
