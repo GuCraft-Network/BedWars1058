@@ -39,7 +39,7 @@ import java.util.UUID;
 
 public class CmdLeave extends SubCommand {
 
-    private static HashMap<UUID, Long> delay = new HashMap<>();
+    private static final HashMap<UUID, Long> delay = new HashMap<>();
 
     public CmdLeave(ParentCommand parent, String name) {
         super(parent, name);

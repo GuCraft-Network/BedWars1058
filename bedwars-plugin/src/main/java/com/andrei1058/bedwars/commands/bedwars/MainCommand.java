@@ -55,7 +55,7 @@ public class MainCommand extends BukkitCommand implements ParentCommand {
     @SuppressWarnings("WeakerAccess")
     public static char dot = 254;
     /* SubCommands ArenaList */
-    private static List<SubCommand> subCommandList = new ArrayList<>();
+    private static final List<SubCommand> subCommandList = new ArrayList<>();
     /* MainCommand instance*/
     private static MainCommand instance;
 

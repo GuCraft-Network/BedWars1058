@@ -45,7 +45,7 @@ import static com.andrei1058.bedwars.arena.Arena.getArenaByName;
 
 public class DelArena extends SubCommand {
 
-    private static HashMap<Player, Long> delArenaConfirm = new HashMap<>();
+    private static final HashMap<Player, Long> delArenaConfirm = new HashMap<>();
 
     public DelArena(ParentCommand parent, String name) {
         super(parent, name);

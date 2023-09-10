@@ -65,6 +65,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.andrei1058.bedwars.BedWars.*;
 import static com.andrei1058.bedwars.api.language.Language.getMsg;
@@ -544,6 +545,15 @@ public class DamageDeathMove implements Listener {
                         .replace("{KillerName}", killer == null ? "" : killer.getDisplayName())
                         .replace("{KillerNameUnformatted}", killer == null ? "" : killer.getName())
                         .replace("{KillerTeamName}", killersTeam == null ? "" : killersTeam.getDisplayName(lang)));
+            }
+            if (cause.isFinalKill()) {
+                AtomicBoolean isEnderChestDropped = new AtomicBoolean(false);
+                victim.getEnderChest().forEach(item -> {
+                    if (item != null) {
+                        isEnderChestDropped.set(true);
+                    }
+                });
+                killer.sendMessage(getMsg(killer, Messages.INTERACT_ENDERCHEST_ITEM_DROP.replace("{PlayerName}", victim.getName()).replace("{Player}", victim.getDisplayName())));
             }
 
             // increase stats to killer

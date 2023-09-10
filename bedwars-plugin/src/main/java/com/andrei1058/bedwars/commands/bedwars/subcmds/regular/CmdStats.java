@@ -40,7 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class CmdStats extends SubCommand {
 
-    private static ConcurrentHashMap<UUID, Long> statsCoolDown = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<UUID, Long> statsCoolDown = new ConcurrentHashMap<>();
 
     public CmdStats(ParentCommand parent, String name) {
         super(parent, name);

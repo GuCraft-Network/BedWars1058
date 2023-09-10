@@ -34,10 +34,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.andrei1058.bedwars.BedWars.plugin;
 import static com.andrei1058.bedwars.api.language.Language.getMsg;
 
 public class PlayerDrops {
+
 
     /**
      * if bedWars should handle drops behavior.
@@ -75,9 +75,9 @@ public class PlayerDrops {
                 victim.getEnderChest().forEach(item -> {
                     if (item != null) {
                         victim.getWorld().dropItemNaturally(dropsLocation, item);
-                        killer.sendMessage(getMsg(killer, Messages.INTERACT_ENDERCHEST_ITEM_DROP.replace("{PlayerName}", plugin.getName()).replace("{Player}", victim.getDisplayName())));
                     }
                 });
+                killer.sendMessage(getMsg(killer, Messages.INTERACT_ENDERCHEST_ITEM_DROP.replace("{PlayerName}", victim.getName()).replace("{Player}", victim.getDisplayName())));
                 victim.getEnderChest().clear();
             }
             return true;

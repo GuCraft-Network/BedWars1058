@@ -44,9 +44,9 @@ import java.util.List;
 
 public class AutoCreateTeams extends SubCommand {
 
-    private static HashMap<Player, Long> timeOut = new HashMap<>();
-    private static HashMap<Player, List<Byte>> teamsFoundOld = new HashMap<>();
-    private static HashMap<Player, List<String>> teamsFound13 = new HashMap<>();
+    private static final HashMap<Player, Long> timeOut = new HashMap<>();
+    private static final HashMap<Player, List<Byte>> teamsFoundOld = new HashMap<>();
+    private static final HashMap<Player, List<String>> teamsFound13 = new HashMap<>();
 
     public AutoCreateTeams(ParentCommand parent, String name) {
         super(parent, name);

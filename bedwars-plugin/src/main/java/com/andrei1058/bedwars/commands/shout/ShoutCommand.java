@@ -37,7 +37,7 @@ import java.util.UUID;
 
 public class ShoutCommand extends BukkitCommand {
 
-    private static HashMap<UUID, Long> shoutCooldown = new HashMap<>();
+    private static final HashMap<UUID, Long> shoutCooldown = new HashMap<>();
 
     public ShoutCommand(String name) {
         super(name);
