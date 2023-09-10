@@ -145,7 +145,7 @@ public class Arena implements IArena {
      * temp stats. some of them use player name as key to keep names of players who left. at checkWinners for example.
      * Those maps are not used for db stats but is for internal use only.
      */
-    private HashMap<String, Integer> playerKills = new HashMap<>();
+    private HashMap<Player, Integer> playerKills = new HashMap<>();
     private HashMap<Player, Integer> playerBedsDestroyed = new HashMap<>();
     private HashMap<Player, Integer> playerFinalKills = new HashMap<>();
     private HashMap<Player, Integer> playerDeaths = new HashMap<>();
@@ -1642,7 +1642,7 @@ public class Arena implements IArena {
      */
     public int getPlayerKills(Player p, boolean finalKills) {
         if (finalKills) return playerFinalKills.getOrDefault(p, 0);
-        return playerKills.getOrDefault(p.getName(), 0);
+        return playerKills.getOrDefault(p, 0);
     }
 
     /**
@@ -1809,11 +1809,6 @@ public class Arena implements IArena {
      */
     public void addPlayerKill(Player p, boolean finalKill, Player victim) {
         if (p == null) return;
-        if (playerKills.containsKey(p.getName())) {
-            playerKills.replace(p.getName(), playerKills.get(p.getName()) + 1);
-        } else {
-            playerKills.put(p.getName(), 1);
-        }
         if (finalKill) {
             if (playerFinalKills.containsKey(p)) {
                 playerFinalKills.replace(p, playerFinalKills.get(p) + 1);
@@ -1821,6 +1816,12 @@ public class Arena implements IArena {
                 playerFinalKills.put(p, 1);
             }
             playerFinalKillDeaths.put(victim, 1);
+            return;
+        }
+        if (playerKills.containsKey(p)) {
+            playerKills.replace(p, playerKills.get(p) + 1);
+        } else {
+            playerKills.put(p, 1);
         }
     }
 
@@ -2005,29 +2006,42 @@ public class Arena implements IArena {
                     int first = 0, second = 0, third = 0;
                     if (!playerKills.isEmpty()) {
 
-                        LinkedHashMap<String, Integer> reverseSortedMap = new LinkedHashMap<>();
-                        //Use Comparator.reverseOrder() for reverse ordering
-                        playerKills.entrySet()
-                                .stream()
-                                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                                .forEachOrdered(x -> reverseSortedMap.put(x.getKey(), x.getValue()));
+                        LinkedHashMap<Player, Integer> reverseSortedMap = new LinkedHashMap<>();
+
+// Add all entries from playerKills to the reverseSortedMap
+                        playerKills.forEach((player, kills) ->
+                                reverseSortedMap.merge(player, kills, Integer::sum));
+
+// Add all entries from finalKills to the reverseSortedMap
+                        playerFinalKills.forEach((player, finalKills) ->
+                                reverseSortedMap.merge(player, finalKills, Integer::sum));
+
+// Sort the reverseSortedMap by values in descending order
+                        List<Map.Entry<Player, Integer>> entries =
+                                new ArrayList<>(reverseSortedMap.entrySet());
+                        entries.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+
+// Put the sorted entries back into the reverseSortedMap
+                        reverseSortedMap.clear();
+                        entries.forEach(entry ->
+                                reverseSortedMap.put(entry.getKey(), entry.getValue()));
 
                         int entry = 0;
-                        for (Map.Entry<String, Integer> e : reverseSortedMap.entrySet()) {
+                        for (Map.Entry<Player, Integer> e : reverseSortedMap.entrySet()) {
                             if (entry == 0) {
-                                Player onlinePlayer = Bukkit.getPlayerExact(e.getKey());
+                                Player onlinePlayer = e.getKey();
                                 if (onlinePlayer != null) {
                                     firstPlayer = onlinePlayer;
                                 }
                                 first = e.getValue();
                             } else if (entry == 1) {
-                                Player onlinePlayer = Bukkit.getPlayerExact(e.getKey());
+                                Player onlinePlayer = e.getKey();
                                 if (onlinePlayer != null) {
                                     secondPlayer = onlinePlayer;
                                 }
                                 second = e.getValue();
                             } else if (entry == 2) {
-                                Player onlinePlayer = Bukkit.getPlayerExact(e.getKey());
+                                Player onlinePlayer = e.getKey();
                                 if (onlinePlayer != null) {
                                     thirdPlayer = onlinePlayer;
                                 }

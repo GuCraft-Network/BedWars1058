@@ -143,6 +143,8 @@ public class DamageDeathMove implements Listener {
         if (!(e.getEntity() instanceof Player)) return;
         Player p = (Player) e.getEntity();
         IArena a = Arena.getArenaByPlayer(p);
+        Bukkit.broadcastMessage(String.valueOf(e.getDamage()));
+        Bukkit.broadcastMessage(String.valueOf(e.getCause()));
         if (a != null) {
             if (a.getStatus() != GameState.playing) {
                 return;
@@ -154,6 +156,9 @@ public class DamageDeathMove implements Listener {
                 return;
             }
             if (e.getFinalDamage() < p.getHealth() && !e.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
+                return;
+            }
+            if (e.getDamage() >= p.getHealthScale() && e.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)) {
                 return;
             }
             e.setCancelled(true);
@@ -211,7 +216,8 @@ public class DamageDeathMove implements Listener {
         IArena a = Arena.getArenaByPlayer(p);
         if (a == null) return;
         if (a.getStatus() != GameState.playing) return;
-        if (e.getEntityType() == EntityType.ENDER_PEARL) return; // 如果是末影珍珠造成的伤害则返回
+        if (e.getDamager().getType() == EntityType.ENDER_PEARL || e.getDamager().getType() == EntityType.FIREBALL)
+            return; // 如果是末影珍珠或火球造成的伤害则返回
 
         // projectile hit message #696, #711
         ITeam team = a.getTeam(p);
@@ -553,7 +559,7 @@ public class DamageDeathMove implements Listener {
             }
 
             // send respawn packet
-            //Bukkit.getScheduler().runTaskLater(plugin, () -> victim.spigot().respawn(), 3L);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> victim.spigot().respawn(), 3L);
 
             //隐身
             if (a.getShowTime().containsKey(victim)) {
