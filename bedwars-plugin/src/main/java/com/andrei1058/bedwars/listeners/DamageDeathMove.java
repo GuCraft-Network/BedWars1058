@@ -532,7 +532,6 @@ public class DamageDeathMove implements Listener {
                         isEnderChestDropped.set(true);
                     }
                 });
-
                 if (isEnderChestDropped.get()) {
                     if (killer != null) {
                         killer.sendMessage(getMsg(killer, Messages.INTERACT_ENDERCHEST_ITEM_DROP)
@@ -567,7 +566,7 @@ public class DamageDeathMove implements Listener {
             }
 
             // increase stats to killer
-            if ((killer != null && !victimsTeam.equals(killersTeam)) && !victim.equals(killer)) {
+            if (killer != null) {
                 a.addPlayerKill(killer, cause.isFinalKill(), victim);
             }
 
