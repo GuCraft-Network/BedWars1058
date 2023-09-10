@@ -445,7 +445,9 @@ public class DamageDeathMove implements Listener {
                     });
 
                     if (isEnderChestDropped.get()) {
-                        killer.sendMessage(getMsg(killer, Messages.INTERACT_ENDERCHEST_ITEM_DROP.replace("{PlayerName}", victim.getName()).replace("{Player}", victim.getDisplayName())));
+                        killer.sendMessage(getMsg(killer, Messages.INTERACT_ENDERCHEST_ITEM_DROP)
+                                .replace("{PlayerName}", victim.getName())
+                                .replace("{Player}", victim.getDisplayName()));
                     }
                 }
                 if (damageEvent.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION) {
