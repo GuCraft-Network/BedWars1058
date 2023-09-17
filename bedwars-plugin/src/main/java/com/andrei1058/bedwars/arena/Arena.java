@@ -145,9 +145,9 @@ public class Arena implements IArena {
      * temp stats. some of them use player name as key to keep names of players who left. at checkWinners for example.
      * Those maps are not used for db stats but is for internal use only.
      */
-    private HashMap<Player, Integer> playerKills = new HashMap<>();
+    private HashMap<String, Integer> playerKills = new HashMap<>();
     private HashMap<Player, Integer> playerBedsDestroyed = new HashMap<>();
-    private HashMap<Player, Integer> playerFinalKills = new HashMap<>();
+    private HashMap<String, Integer> playerFinalKills = new HashMap<>();
     private HashMap<Player, Integer> playerDeaths = new HashMap<>();
     private HashMap<Player, Integer> playerFinalKillDeaths = new HashMap<>();
     /* ARENA TASKS */
@@ -1642,8 +1642,8 @@ public class Arena implements IArena {
      * @param finalKills True if you want to get the Final Kills. False for regular kills.
      */
     public int getPlayerKills(Player p, boolean finalKills) {
-        if (finalKills) return playerFinalKills.getOrDefault(p, 0);
-        return playerKills.getOrDefault(p, 0);
+        if (finalKills) return playerFinalKills.getOrDefault(p.getDisplayName(), 0);
+        return playerKills.getOrDefault(p.getDisplayName(), 0);
     }
 
     /**
@@ -1810,19 +1810,20 @@ public class Arena implements IArena {
      */
     public void addPlayerKill(Player p, boolean finalKill, Player victim) {
         if (p == null) return;
+        String pName = p.getDisplayName();
         if (finalKill) {
-            if (playerFinalKills.containsKey(p)) {
-                playerFinalKills.replace(p, playerFinalKills.get(p) + 1);
+            if (playerFinalKills.containsKey(pName)) {
+                playerFinalKills.replace(pName, playerFinalKills.get(pName) + 1);
             } else {
-                playerFinalKills.put(p, 1);
+                playerFinalKills.put(pName, 1);
             }
             playerFinalKillDeaths.put(victim, 1);
             return;
         }
-        if (playerKills.containsKey(p)) {
-            playerKills.replace(p, playerKills.get(p) + 1);
+        if (playerKills.containsKey(pName)) {
+            playerKills.replace(pName, playerKills.get(pName) + 1);
         } else {
-            playerKills.put(p, 1);
+            playerKills.put(pName, 1);
         }
     }
 
@@ -1980,6 +1981,9 @@ public class Arena implements IArena {
                     Player firstPlayer = null;
                     Player secondPlayer = null;
                     Player thirdPlayer = null;
+                    String firstName = null;
+                    String secondName = null;
+                    String thirdName = null;
                     StringBuilder winners = new StringBuilder();
                     //noinspection deprecation
                     for (int i = 0; i < winner.getMembers().size(); i++) {
@@ -2007,46 +2011,49 @@ public class Arena implements IArena {
                     int first = 0, second = 0, third = 0;
                     if (!playerKills.isEmpty()) {
 
-                        LinkedHashMap<Player, Integer> reverseSortedMap = new LinkedHashMap<>();
+                        LinkedHashMap<String, Integer> reverseSortedMap = new LinkedHashMap<>();
 
-                        for (Map.Entry<Player, Integer> entry : playerKills.entrySet()) {
-                            Player player = entry.getKey();
+                        for (Map.Entry<String, Integer> entry : playerKills.entrySet()) {
+                            String player = entry.getKey();
                             int kills = entry.getValue();
                             reverseSortedMap.put(player, kills);
                         }
 
-                        for (Map.Entry<Player, Integer> entry : playerFinalKills.entrySet()) {
-                            Player player = entry.getKey();
+                        for (Map.Entry<String, Integer> entry : playerFinalKills.entrySet()) {
+                            String player = entry.getKey();
                             int finalKills = entry.getValue();
                             reverseSortedMap.merge(player, finalKills, Integer::sum);
                         }
 
-                        List<Map.Entry<Player, Integer>> sortedEntries = new ArrayList<>(reverseSortedMap.entrySet());
+                        List<Map.Entry<String, Integer>> sortedEntries = new ArrayList<>(reverseSortedMap.entrySet());
                         Collections.sort(sortedEntries, (e1, e2) -> e2.getValue().compareTo(e1.getValue()));
 
-                        LinkedHashMap<Player, Integer> sortedMap = new LinkedHashMap<>();
-                        for (Map.Entry<Player, Integer> entry : sortedEntries) {
+                        LinkedHashMap<String, Integer> sortedMap = new LinkedHashMap<>();
+                        for (Map.Entry<String, Integer> entry : sortedEntries) {
                             sortedMap.put(entry.getKey(), entry.getValue());
                         }
 
                         reverseSortedMap = sortedMap;
 
                         int entry = 0;
-                        for (Map.Entry<Player, Integer> e : reverseSortedMap.entrySet()) {
+                        for (Map.Entry<String, Integer> e : reverseSortedMap.entrySet()) {
                             if (entry == 0) {
-                                Player onlinePlayer = e.getKey();
+                                firstName = e.getKey();
+                                Player onlinePlayer = Bukkit.getPlayerExact(firstName);
                                 if (onlinePlayer != null) {
                                     firstPlayer = onlinePlayer;
                                 }
                                 first = e.getValue();
                             } else if (entry == 1) {
-                                Player onlinePlayer = e.getKey();
+                                secondName = e.getKey();
+                                Player onlinePlayer = Bukkit.getPlayerExact(secondName);
                                 if (onlinePlayer != null) {
                                     secondPlayer = onlinePlayer;
                                 }
                                 second = e.getValue();
                             } else if (entry == 2) {
-                                Player onlinePlayer = e.getKey();
+                                thirdName = e.getKey();
+                                Player onlinePlayer = Bukkit.getPlayerExact(thirdName);
                                 if (onlinePlayer != null) {
                                     thirdPlayer = onlinePlayer;
                                 }
@@ -2067,25 +2074,22 @@ public class Arena implements IArena {
 
                         for (String s : getList(p, Messages.GAME_END_TOP_PLAYER_CHAT)) {
                             String message = s
-                                    .replace("{firstFormat}", firstPlayer == null ? getMsg(p, Messages.MEANING_NOBODY) : getMsg(firstPlayer, Messages.GAME_END_FIRST_KILLER)
-                                            .replace("{vPrefix}", getChatSupport().getPrefix(firstPlayer))
-                                            .replace("{vSuffix}", getChatSupport().getSuffix(firstPlayer))
-                                            .replace("{firstName}", firstPlayer.getName())
-                                            .replace("{first}", firstPlayer.getDisplayName())
+                                    .replace("{firstFormat}", firstName == null ? getMsg(p, Messages.MEANING_NOBODY) : getMsg(p, Messages.GAME_END_FIRST_KILLER)
+                                            .replace("{vPrefix}", (firstPlayer == null) ? "§7" : getChatSupport().getPrefix(firstPlayer))
+                                            .replace("{vSuffix}", (firstPlayer == null) ? "§7" : getChatSupport().getSuffix(firstPlayer))
+                                            .replace("{first}", firstName)
                                             .replace("{firstKills}", String.valueOf(first)))
 
-                                    .replace("{secondFormat}", secondPlayer == null ? getMsg(p, Messages.MEANING_NOBODY) : getMsg(secondPlayer, Messages.GAME_END_SECOND_KILLER)
-                                            .replace("{vPrefix}", getChatSupport().getPrefix(secondPlayer))
-                                            .replace("{vSuffix}", getChatSupport().getSuffix(secondPlayer))
-                                            .replace("{secondName}", secondPlayer.getName())
-                                            .replace("{second}", secondPlayer.getDisplayName())
+                                    .replace("{secondFormat}", secondName == null ? getMsg(p, Messages.MEANING_NOBODY) : getMsg(p, Messages.GAME_END_SECOND_KILLER)
+                                            .replace("{vPrefix}", (secondPlayer == null) ? "§7" : getChatSupport().getPrefix(secondPlayer))
+                                            .replace("{vSuffix}", (secondPlayer == null) ? "§7" : getChatSupport().getSuffix(secondPlayer))
+                                            .replace("{second}", secondName)
                                             .replace("{secondKills}", String.valueOf(second)))
 
-                                    .replace("{thirdFormat}", thirdPlayer == null ? getMsg(p, Messages.MEANING_NOBODY) : getMsg(thirdPlayer, Messages.GAME_END_THIRD_KILLER)
-                                            .replace("{vPrefix}", getChatSupport().getPrefix(thirdPlayer))
-                                            .replace("{vSuffix}", getChatSupport().getSuffix(thirdPlayer))
-                                            .replace("{thirdName}", thirdPlayer.getName())
-                                            .replace("{third}", thirdPlayer.getDisplayName())
+                                    .replace("{thirdFormat}", thirdName == null ? getMsg(p, Messages.MEANING_NOBODY) : getMsg(p, Messages.GAME_END_THIRD_KILLER)
+                                            .replace("{vPrefix}", (thirdPlayer == null) ? "§7" : getChatSupport().getPrefix(thirdPlayer))
+                                            .replace("{vSuffix}", (thirdPlayer == null) ? "§7" : getChatSupport().getSuffix(thirdPlayer))
+                                            .replace("{third}", thirdName)
                                             .replace("{thirdKills}", String.valueOf(third)))
 
                                     .replace("{winnerFormat}", getMaxInTeam() > 1 ? getMsg(p, Messages.FORMATTING_TEAM_WINNER_FORMAT).replace("{members}", winners.toString()) : getMsg(p, Messages.FORMATTING_SOLO_WINNER_FORMAT).replace("{members}", winners.toString()))
@@ -2609,7 +2613,7 @@ public class Arena implements IArena {
 
         //this.playerKills.remove(player.getName());
         this.playerBedsDestroyed.remove(player);
-        this.playerFinalKills.remove(player);
+        this.playerFinalKills.remove(player.getDisplayName());
         this.playerDeaths.remove(player);
         this.playerFinalKillDeaths.remove(player);
 
