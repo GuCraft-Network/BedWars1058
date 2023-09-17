@@ -68,7 +68,6 @@ public class PlayerDrops {
             dropItems(victim, inventory);
         }
         if (cause.isFinalKill()) {
-            dropItems(victim, inventory);//如果是最终击杀，先给击杀者掉落物
             // if is final kill drop items at generator
             if (victimsTeam != null) {
                 Location dropsLocation = new Location(victim.getWorld(), victimsTeam.getKillDropsLocation().getBlockX(), victimsTeam.getKillDropsLocation().getY(), victimsTeam.getKillDropsLocation().getZ());
@@ -79,7 +78,6 @@ public class PlayerDrops {
                 });
                 victim.getEnderChest().clear();
             }
-            return true;
         }
 
         // victim's inventory
