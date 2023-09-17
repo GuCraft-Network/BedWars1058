@@ -1,4 +1,4 @@
-package com.andrei1058.bedwars.popuptower;
+package com.andrei1058.bedwars.shop.listeners.popuptower;
 
 import com.andrei1058.bedwars.BedWars;
 import com.andrei1058.bedwars.api.arena.IArena;
