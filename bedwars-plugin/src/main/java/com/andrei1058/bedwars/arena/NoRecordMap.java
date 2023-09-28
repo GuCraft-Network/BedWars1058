@@ -1,5 +1,6 @@
 package com.andrei1058.bedwars.arena;
 
+import com.andrei1058.bedwars.api.arena.GameState;
 import com.andrei1058.bedwars.api.arena.IArena;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,6 +23,7 @@ public class NoRecordMap implements Listener {
         if (cmd.startsWith("/tp ") || cmd.startsWith("/gamemode ") || cmd.startsWith("/give ")) {
             if (player.hasPermission("minecraft.teleport.command")) {
                 if (a.getWorldName().contains(a.getWorldName())) return;
+                if (a.getStatus() != GameState.playing) return;
                 if (a.getPlayers().isEmpty()) {
                     return;
                 }
