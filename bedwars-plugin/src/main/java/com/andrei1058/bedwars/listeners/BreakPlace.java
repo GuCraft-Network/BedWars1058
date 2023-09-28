@@ -111,13 +111,6 @@ public class BreakPlace implements Listener {
         }
     }
 
-    @EventHandler
-    public void onInteractFire(PlayerInteractEvent e) {
-        if (e.getClickedBlock() != null && e.getClickedBlock().getType() == Material.FIRE) {
-            if (Arena.getArenaByIdentifier(e.getClickedBlock().getWorld().getName()) != null) e.setCancelled(true);
-        }
-    }
-
     @EventHandler(ignoreCancelled = true)
     public void onBurn(@NotNull BlockBurnEvent event) {
         IArena arena = Arena.getArenaByIdentifier(event.getBlock().getWorld().getName());
