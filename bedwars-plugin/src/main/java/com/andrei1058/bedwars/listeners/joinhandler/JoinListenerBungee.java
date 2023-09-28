@@ -27,7 +27,7 @@ import com.andrei1058.bedwars.api.language.Language;
 import com.andrei1058.bedwars.api.language.Messages;
 import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.arena.ReJoin;
-import com.andrei1058.bedwars.arena.tasks.RefreshAvailableArena;
+import com.andrei1058.bedwars.arena.tasks.RefreshAvailableArenaTask;
 import com.andrei1058.bedwars.configuration.Permissions;
 import com.andrei1058.bedwars.configuration.Sounds;
 import com.andrei1058.bedwars.lobbysocket.LoadedUser;
@@ -57,7 +57,7 @@ public class JoinListenerBungee implements Listener {
 
         // If is NOT logging in trough BedWarsProxy
         if (proxyUser == null) {
-            if (!p.hasPermission("bw.setup") && !p.hasPermission("group.zhiyuanzhe") && Arena.getArenas().isEmpty() && !RefreshAvailableArena.isArenaAvailable() && Arena.getArenas().get(RefreshAvailableArena.getAvailableArena()).getStatus() != GameState.playing && Arena.getArenas().get(RefreshAvailableArena.getAvailableArena()).getStatus() != GameState.restarting) {
+            if (!p.hasPermission("bw.setup") && !p.hasPermission("group.zhiyuanzhe") && Arena.getArenas().isEmpty() && !RefreshAvailableArenaTask.isArenaAvailable() && Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena()).getStatus() != GameState.playing && Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena()).getStatus() != GameState.restarting) {
                 e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Language.getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL));
             }
         } else {
@@ -159,7 +159,7 @@ public class JoinListenerBungee implements Listener {
                 p.setGameMode(GameMode.SPECTATOR);
             } else {
                 // The player is not an admin and he joined using /server or equivalent
-                IArena arena = Arena.getArenas().get(RefreshAvailableArena.getAvailableArena());
+                IArena arena = Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena());
                 // Add player if the game is in waiting
                 if (arena.getStatus() == GameState.waiting || arena.getStatus() == GameState.starting) {
                     if (arena.addPlayer(p, false)) {

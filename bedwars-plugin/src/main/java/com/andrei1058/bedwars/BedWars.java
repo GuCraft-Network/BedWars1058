@@ -40,7 +40,7 @@ import com.andrei1058.bedwars.arena.feature.SpoilPlayerTNTFeature;
 import com.andrei1058.bedwars.arena.spectator.SpectatorListeners;
 import com.andrei1058.bedwars.arena.tasks.OneTick;
 import com.andrei1058.bedwars.arena.tasks.Refresh;
-import com.andrei1058.bedwars.arena.tasks.RefreshAvailableArena;
+import com.andrei1058.bedwars.arena.tasks.RefreshAvailableArenaTask;
 import com.andrei1058.bedwars.arena.upgrades.BaseListener;
 import com.andrei1058.bedwars.arena.upgrades.HealPoolListener;
 import com.andrei1058.bedwars.commands.bedwars.MainCommand;
@@ -82,10 +82,6 @@ import com.andrei1058.bedwars.support.party.PAF;
 import com.andrei1058.bedwars.support.party.PAFBungeecordRedisApi;
 import com.andrei1058.bedwars.support.party.PartiesAdapter;
 import com.andrei1058.bedwars.support.vault.*;
-import com.andrei1058.bedwars.support.vipfeatures.VipFeatures;
-import com.andrei1058.bedwars.support.vipfeatures.VipListeners;
-import com.andrei1058.vipfeatures.api.IVipFeatures;
-import com.andrei1058.vipfeatures.api.MiniGameAlreadyRegistered;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Monster;
@@ -390,7 +386,7 @@ public class BedWars extends JavaPlugin {
                 new SendTask();
                 registerEvents(new AutoscaleListener(), new JoinListenerBungee(), new StaffListener(), new BungeePingListener());
                 Bukkit.getScheduler().runTaskTimerAsynchronously(this, new LoadedUsersCleaner(), 60L, 60L);
-                Bukkit.getScheduler().runTaskTimerAsynchronously(this, new RefreshAvailableArena(), 60L, 60L);
+                Bukkit.getScheduler().runTaskTimerAsynchronously(this, new RefreshAvailableArenaTask(), 60L, 60L);
             } else {
                 registerEvents(new ServerPingListener(), new JoinListenerBungeeLegacy(), new GetCurServerName());
             }

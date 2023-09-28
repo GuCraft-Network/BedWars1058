@@ -5,7 +5,7 @@ import com.andrei1058.bedwars.api.arena.IArena;
 import com.andrei1058.bedwars.api.command.ParentCommand;
 import com.andrei1058.bedwars.api.command.SubCommand;
 import com.andrei1058.bedwars.arena.Arena;
-import com.andrei1058.bedwars.arena.tasks.RefreshAvailableArena;
+import com.andrei1058.bedwars.arena.tasks.RefreshAvailableArenaTask;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -32,7 +32,7 @@ public class CmdPlayAgain extends SubCommand {
         IArena a = Arena.getArenaByPlayer(p);
         if (a == null) return true;
 
-        if (!RefreshAvailableArena.isArenaAvailable()) {
+        if (!RefreshAvailableArenaTask.isArenaAvailable()) {
             switch (a.getGroup()) {
                 case "solo":
                     Group = "hyp1v";
@@ -57,7 +57,7 @@ public class CmdPlayAgain extends SubCommand {
             }
             Bukkit.dispatchCommand(p, "sj fastjoin " + Group);
         } else {
-            IArena targetArena = Arena.getArenas().get(RefreshAvailableArena.getAvailableArena());
+            IArena targetArena = Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena());
             if (getParty().hasParty(p)) {
                 for (Player partyPlayers : getParty().getMembers(p)) {
                     if (partyPlayers == null) continue;
