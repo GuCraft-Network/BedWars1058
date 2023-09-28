@@ -233,7 +233,7 @@ public class SlimeAdapter extends RestoreAdapter {
         Location loc1 = a.getConfig().getArenaLoc(ConfigPath.ARENA_WAITING_POS1),
                 loc2 = a.getConfig().getArenaLoc(ConfigPath.ARENA_WAITING_POS2);
         if (loc1 == null || loc2 == null) return;
-        Bukkit.getScheduler().runTaskAsynchronously(getOwner(), () -> {
+        Bukkit.getScheduler().runTask(getOwner(), () -> {
             int minX, minY, minZ;
             int maxX, maxY, maxZ;
             minX = Math.min(loc1.getBlockX(), loc2.getBlockX());
@@ -251,7 +251,7 @@ public class SlimeAdapter extends RestoreAdapter {
                 }
             }
 
-            Bukkit.getScheduler().runTaskLaterAsynchronously(getOwner(), () ->
+            Bukkit.getScheduler().runTaskLater(getOwner(), () ->
                     loc1.getWorld().getEntities().forEach(e -> {
                         if (e instanceof Item) e.remove();
                     }), 15L);
