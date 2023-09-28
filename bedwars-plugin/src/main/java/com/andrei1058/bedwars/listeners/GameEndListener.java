@@ -45,7 +45,7 @@ public class GameEndListener implements Listener {
 
         Bukkit.getScheduler().runTaskLaterAsynchronously(BedWars.plugin, () -> {
             TextComponent tc = new TextComponent("§b要再来一局吗？ " + "§6§l点击这里");
-            tc.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/playagain"));
+            tc.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/bw playagain"));
             for (Player p : a.getPlayers()) {
                 p.spigot().sendMessage(tc);
             }
