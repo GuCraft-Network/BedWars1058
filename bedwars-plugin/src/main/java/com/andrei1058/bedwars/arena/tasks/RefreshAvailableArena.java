@@ -47,11 +47,9 @@ public class RefreshAvailableArena implements Runnable {
                 // 当前竞技场人数更多，更新最大人数和最小索引
                 maxPlayers = numPlayers;
                 smallestIndex = i;
-                BedWars.debug("task " + i);
             } else if (numPlayers == maxPlayers && i < smallestIndex) {
                 // 当前竞技场人数与最大人数相等，比较索引，取较小者
                 smallestIndex = i;
-                BedWars.debug("task " + i);
             }
         }
 
