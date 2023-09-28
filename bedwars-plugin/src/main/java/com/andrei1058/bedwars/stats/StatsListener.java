@@ -29,6 +29,7 @@ import com.andrei1058.bedwars.api.events.player.PlayerBedBreakEvent;
 import com.andrei1058.bedwars.api.events.player.PlayerKillEvent;
 import com.andrei1058.bedwars.api.events.player.PlayerLeaveArenaEvent;
 import com.andrei1058.bedwars.arena.Arena;
+import com.andrei1058.bedwars.arena.NoRecordMap;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -49,9 +50,11 @@ public class StatsListener implements Listener {
             // Do nothing if login fails
             return;
         }
-        PlayerStats stats = BedWars.getRemoteDatabase().fetchStats(event.getUniqueId());
-        stats.setName(event.getName());
-        BedWars.getStatsManager().put(event.getUniqueId(), stats);
+        Bukkit.getScheduler().runTaskAsynchronously(BedWars.plugin, () -> {
+            PlayerStats stats = BedWars.getRemoteDatabase().fetchStats(event.getUniqueId());
+            stats.setName(event.getName());
+            BedWars.getStatsManager().put(event.getUniqueId(), stats);
+        });
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -64,6 +67,7 @@ public class StatsListener implements Listener {
 
     @EventHandler
     public void onBedBreak(PlayerBedBreakEvent event) {
+        if (NoRecordMap.NoRecordMap.contains(event.getArena().getWorldName())) return;
         PlayerStats stats = BedWars.getStatsManager().get(event.getPlayer().getUniqueId());
         //store beds destroyed
         stats.setBedsDestroyed(stats.getBedsDestroyed() + 1);
@@ -71,6 +75,7 @@ public class StatsListener implements Listener {
 
     @EventHandler
     public void onPlayerKill(PlayerKillEvent event) {
+        if (NoRecordMap.NoRecordMap.contains(event.getArena().getWorldName())) return;
         PlayerStats victimStats = BedWars.getStatsManager().get(event.getVictim().getUniqueId());
         // If killer is not null and not equal to victim
         PlayerStats killerStats = !event.getVictim().equals(event.getKiller()) ?
@@ -95,6 +100,7 @@ public class StatsListener implements Listener {
 
     @EventHandler
     public void onGameEnd(GameEndEvent event) {
+        if (NoRecordMap.NoRecordMap.contains(event.getArena().getWorldName())) return;
         for (UUID uuid : event.getWinners()) {
             Player player = Bukkit.getPlayer(uuid);
             if (player == null) continue;
@@ -118,6 +124,7 @@ public class StatsListener implements Listener {
 
     @EventHandler
     public void onArenaLeave(PlayerLeaveArenaEvent event) {
+        if (NoRecordMap.NoRecordMap.contains(event.getArena().getWorldName())) return;
         final Player player = event.getPlayer();
 
         ITeam team = event.getArena().getExTeam(player.getUniqueId());
@@ -131,7 +138,6 @@ public class StatsListener implements Listener {
 
         PlayerStats playerStats = BedWars.getStatsManager().get(player.getUniqueId());
         // sometimes can be null due to scheduling delays
-        if (playerStats == null) return;
 
         // Update last play and first play (if required)
         Instant now = Instant.now();
@@ -190,6 +196,8 @@ public class StatsListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onQuit(PlayerQuitEvent event) {
-        BedWars.getStatsManager().remove(event.getPlayer().getUniqueId());
+        Bukkit.getScheduler().runTaskAsynchronously(BedWars.plugin, () -> {
+            BedWars.getStatsManager().remove(event.getPlayer().getUniqueId());
+        });
     }
 }

@@ -32,6 +32,7 @@ import com.andrei1058.bedwars.api.language.Language;
 import com.andrei1058.bedwars.api.language.Messages;
 import com.andrei1058.bedwars.api.tasks.StartingTask;
 import com.andrei1058.bedwars.arena.Arena;
+import com.andrei1058.bedwars.arena.NoRecordMap;
 import com.andrei1058.bedwars.arena.team.BedWarsTeam;
 import com.andrei1058.bedwars.arena.team.LegacyTeamAssigner;
 import com.andrei1058.bedwars.configuration.Sounds;
@@ -203,6 +204,10 @@ public class GameStartingTask implements Runnable, StartingTask {
         }
         for (String tut : getList(p, Messages.ARENA_STATUS_START_PLAYER_TUTORIAL)) {
             p.sendMessage(SupportPAPI.getSupportPAPI().replace(p, tut));
+        }
+        if (arena.getGroup().contains("Private")) {
+            p.sendMessage("§c§l本场游戏不记录战绩！");
+            NoRecordMap.NoRecordMap.add(getArena().getWorldName());
         }
     }
 } 
