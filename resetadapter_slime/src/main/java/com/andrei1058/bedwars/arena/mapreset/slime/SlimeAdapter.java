@@ -78,7 +78,7 @@ public class SlimeAdapter extends RestoreAdapter {
         }
         Bukkit.getScheduler().runTaskAsynchronously(getOwner(), () -> {
             if (Bukkit.getWorld(a.getWorldName()) != null) {
-                Bukkit.getScheduler().runTask(getOwner(), () -> {
+                Bukkit.getScheduler().runTaskAsynchronously(getOwner(), () -> {
                     World w = Bukkit.getWorld(a.getWorldName());
                     a.init(w);
                 });
@@ -107,7 +107,7 @@ public class SlimeAdapter extends RestoreAdapter {
 
                 // This method must be called synchronously
                 SlimeWorld finalWorld = world;
-                Bukkit.getScheduler().runTask(getOwner(), () -> slime.generateWorld(finalWorld));
+                Bukkit.getScheduler().runTaskAsynchronously(getOwner(), () -> slime.generateWorld(finalWorld));
             } catch (UnknownWorldException | IOException | CorruptedWorldException | NewerFormatException |
                      WorldInUseException ex) {
                 api.getArenaUtil().removeFromEnableQueue(a);
@@ -141,19 +141,19 @@ public class SlimeAdapter extends RestoreAdapter {
                         api.getArenaUtil().setGamesBeforeRestart(api.getArenaUtil().getGamesBeforeRestart() - 1);
                     }
                 }
-                Bukkit.getScheduler().runTask(getOwner(), () -> {
+                Bukkit.getScheduler().runTaskAsynchronously(getOwner(), () -> {
                     Bukkit.unloadWorld(a.getWorldName(), false);
                     Bukkit.getScheduler().runTaskLaterAsynchronously(getOwner(), () -> api.getArenaUtil().loadArena(a.getArenaName(), null), 80L);
                     /*
                     if (api.getArenaUtil().canAutoScale(a.getArenaName())) {
-                    Bukkit.getScheduler().runTaskLater(getOwner(), () -> api.getArenaUtil().loadArena(a.getArenaName(), null), 80L);
+                    Bukkit.getScheduler().runTaskLaterAsynchronously(getOwner(), () -> api.getArenaUtil().loadArena(a.getArenaName(), null), 80L);
                     }*/
                 });
             }
         } else {
-            Bukkit.getScheduler().runTask(getOwner(), () -> {
+            Bukkit.getScheduler().runTaskAsynchronously(getOwner(), () -> {
                 Bukkit.unloadWorld(a.getWorldName(), false);
-                Bukkit.getScheduler().runTaskLater(getOwner(), () -> api.getArenaUtil().loadArena(a.getArenaName(), null), 80L);
+                Bukkit.getScheduler().runTaskLaterAsynchronously(getOwner(), () -> api.getArenaUtil().loadArena(a.getArenaName(), null), 80L);
             });
         }
     }
@@ -164,7 +164,7 @@ public class SlimeAdapter extends RestoreAdapter {
             Bukkit.unloadWorld(a.getWorldName(), false);
             return;
         }
-        Bukkit.getScheduler().runTask(getOwner(), () -> Bukkit.unloadWorld(a.getWorldName(), false));
+        Bukkit.getScheduler().runTaskAsynchronously(getOwner(), () -> Bukkit.unloadWorld(a.getWorldName(), false));
     }
 
     @Override
@@ -188,27 +188,27 @@ public class SlimeAdapter extends RestoreAdapter {
             try {
 
                 if (Bukkit.getWorld(s.getWorldName()) != null) {
-                    Bukkit.getScheduler().runTask(getOwner(), () -> Bukkit.unloadWorld(s.getWorldName(), false));
+                    Bukkit.getScheduler().runTaskAsynchronously(getOwner(), () -> Bukkit.unloadWorld(s.getWorldName(), false));
                 }
 
                 SlimeWorld world;
                 if (sLoader.worldExists(s.getWorldName())) {
                     world = slime.loadWorld(sLoader, s.getWorldName(), false, spm);
-                    Bukkit.getScheduler().runTask(getOwner(), () -> s.getPlayer().sendMessage(ChatColor.GREEN + "Loading world from SlimeWorldManager container."));
+                    Bukkit.getScheduler().runTaskAsynchronously(getOwner(), () -> s.getPlayer().sendMessage(ChatColor.GREEN + "Loading world from SlimeWorldManager container."));
                 } else {
                     if (new File(Bukkit.getWorldContainer(), s.getWorldName() + "/level.dat").exists()) {
-                        Bukkit.getScheduler().runTask(getOwner(), () -> s.getPlayer().sendMessage(ChatColor.GREEN + "Importing world to the SlimeWorldManager container."));
+                        Bukkit.getScheduler().runTaskAsynchronously(getOwner(), () -> s.getPlayer().sendMessage(ChatColor.GREEN + "Importing world to the SlimeWorldManager container."));
                         slime.importWorld(new File(Bukkit.getWorldContainer(), s.getWorldName()), s.getWorldName().toLowerCase(), sLoader);
                         world = slime.loadWorld(sLoader, s.getWorldName(), false, spm);
                     } else {
-                        Bukkit.getScheduler().runTask(getOwner(), () -> s.getPlayer().sendMessage(ChatColor.GREEN + "Creating anew void map."));
+                        Bukkit.getScheduler().runTaskAsynchronously(getOwner(), () -> s.getPlayer().sendMessage(ChatColor.GREEN + "Creating anew void map."));
                         world = slime.createEmptyWorld(sLoader, s.getWorldName(), false, spm);
                     }
                 }
 
                 SlimeWorld sw = world;
                 // This method must be called synchronously
-                Bukkit.getScheduler().runTask(getOwner(), () -> {
+                Bukkit.getScheduler().runTaskAsynchronously(getOwner(), () -> {
                     slime.generateWorld(sw);
                     s.teleportPlayer();
                 });
@@ -225,7 +225,7 @@ public class SlimeAdapter extends RestoreAdapter {
     @Override
     public void onSetupSessionClose(ISetupSession s) {
         Bukkit.getWorld(s.getWorldName()).save();
-        Bukkit.getScheduler().runTask(getOwner(), () -> Bukkit.unloadWorld(s.getWorldName(), true));
+        Bukkit.getScheduler().runTaskAsynchronously(getOwner(), () -> Bukkit.unloadWorld(s.getWorldName(), true));
     }
 
     @Override
@@ -233,7 +233,7 @@ public class SlimeAdapter extends RestoreAdapter {
         Location loc1 = a.getConfig().getArenaLoc(ConfigPath.ARENA_WAITING_POS1),
                 loc2 = a.getConfig().getArenaLoc(ConfigPath.ARENA_WAITING_POS2);
         if (loc1 == null || loc2 == null) return;
-        Bukkit.getScheduler().runTask(getOwner(), () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(getOwner(), () -> {
             int minX, minY, minZ;
             int maxX, maxY, maxZ;
             minX = Math.min(loc1.getBlockX(), loc2.getBlockX());
@@ -251,7 +251,7 @@ public class SlimeAdapter extends RestoreAdapter {
                 }
             }
 
-            Bukkit.getScheduler().runTaskLater(getOwner(), () ->
+            Bukkit.getScheduler().runTaskLaterAsynchronously(getOwner(), () ->
                     loc1.getWorld().getEntities().forEach(e -> {
                         if (e instanceof Item) e.remove();
                     }), 15L);
