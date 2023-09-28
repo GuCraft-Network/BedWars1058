@@ -1,9 +1,16 @@
 package com.andrei1058.bedwars.listeners;
 
+import com.andrei1058.bedwars.BedWars;
+import com.andrei1058.bedwars.api.arena.IArena;
 import com.andrei1058.bedwars.api.events.gameplay.GameEndEvent;
+import com.andrei1058.bedwars.arena.NoRecordMap;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -12,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 public class GameEndListener implements Listener {
 
     @EventHandler
-    public void cleanInventoriesAndDroppedItems(@NotNull GameEndEvent event) {
+    public void cleanDroppedItemsAndRespawns(@NotNull GameEndEvent event) {
         if (event.getArena().getPlayers().isEmpty()) {
             return;
         }
@@ -26,5 +33,38 @@ public class GameEndListener implements Listener {
         }
 
         event.getArena().getRespawns().clear();
+        NoRecordMap.NoRecordMap.remove(event.getArena().getWorldName());
     }
+
+    @EventHandler
+    public void sendPlayerAgainMessage(@NotNull GameEndEvent event) {
+        IArena a = event.getArena();
+        if (a.getPlayers().isEmpty()) {
+            return;
+        }
+
+        Bukkit.getScheduler().runTaskLaterAsynchronously(BedWars.plugin, () -> {
+            TextComponent tc = new TextComponent("§b要再来一局吗？ " + "§6§l点击这里");
+            tc.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/playagain"));
+            for (Player p : a.getPlayers()) {
+                p.spigot().sendMessage(tc);
+            }
+            for (Player p : a.getSpectators()) {
+                p.spigot().sendMessage(tc);
+            }
+        }, 40L);
+    }
+
+    @EventHandler
+    public void setAllPlayersAllowFlight(@NotNull GameEndEvent event) {
+        IArena a = event.getArena();
+        if (a.getPlayers().isEmpty()) {
+            return;
+        }
+
+        for (Player p : a.getPlayers()) {
+            p.setAllowFlight(true);
+        }
+    }
+
 }
