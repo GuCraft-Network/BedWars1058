@@ -43,7 +43,7 @@ public class PerMinuteTask {
         if (xp < 1) {
             return;
         }
-        task = Bukkit.getScheduler().runTaskTimer(BedWars.plugin, () -> {
+        task = Bukkit.getScheduler().runTaskTimerAsynchronously(BedWars.plugin, () -> {
             for (Player p : arena.getPlayers()) {
                 PlayerLevel.getLevelByPlayer(p.getUniqueId()).addXp(xp, PlayerXpGainEvent.XpSource.PER_MINUTE);
                 p.sendMessage(Language.getMsg(p, Messages.XP_REWARD_PER_MINUTE).replace("{xp}", String.valueOf(xp)));

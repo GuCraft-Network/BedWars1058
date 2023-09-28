@@ -35,7 +35,7 @@ public class SendTask {
      * This is used to send data to new lobby servers to improve data sync
      */
     public SendTask() {
-        Bukkit.getScheduler().runTaskTimer(BedWars.plugin, () -> {
+        Bukkit.getScheduler().runTaskTimerAsynchronously(BedWars.plugin, () -> {
             List<IArena> arenas = new ArrayList<>(Arena.getArenas());
             new BukkitRunnable() {
                 @Override

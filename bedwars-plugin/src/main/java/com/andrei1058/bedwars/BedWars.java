@@ -531,12 +531,10 @@ public class BedWars extends JavaPlugin {
 
 
         /* Protect glass walls from tnt explosion */
-        /*
         nms.registerTntWhitelist(
                 (float) config.getDouble(ConfigPath.GENERAL_TNT_PROTECTION_END_STONE_BLAST),
                 (float) config.getDouble(ConfigPath.GENERAL_TNT_PROTECTION_GLASS_BLAST)
         );
-        */
 
         /* Prevent issues on reload */
         for (Player p : Bukkit.getOnlinePlayers()) {
@@ -560,6 +558,7 @@ public class BedWars extends JavaPlugin {
         /* Load Money Configuration */
         MoneyConfig.init();
 
+        /*
         if (Bukkit.getPluginManager().getPlugin("VipFeatures") != null) {
             try {
                 IVipFeatures vf = Bukkit.getServicesManager().getRegistration(IVipFeatures.class).getProvider();
@@ -571,7 +570,7 @@ public class BedWars extends JavaPlugin {
             } catch (MiniGameAlreadyRegistered miniGameAlreadyRegistered) {
                 miniGameAlreadyRegistered.printStackTrace();
             }
-        }
+        }*/
 
         Bukkit.getScheduler().runTaskLater(this, () -> getLogger().info("This server is running in " + getServerType().toString() + " with auto-scale " + autoscale), 100L);
 
