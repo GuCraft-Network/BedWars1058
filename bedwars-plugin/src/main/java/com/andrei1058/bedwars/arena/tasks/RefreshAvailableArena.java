@@ -8,7 +8,7 @@ import com.andrei1058.bedwars.arena.Arena;
 import java.util.LinkedList;
 
 public class RefreshAvailableArena implements Runnable {
-    private static int availableArena = -1;
+    public static int availableArena = -1;
 
     public static boolean isArenaAvailable() {
         return availableArena != -1;

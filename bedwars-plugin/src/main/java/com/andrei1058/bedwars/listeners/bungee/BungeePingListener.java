@@ -8,16 +8,20 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
 
+import static com.andrei1058.bedwars.arena.tasks.RefreshAvailableArena.availableArena;
+
 public class BungeePingListener implements Listener {
 
     @EventHandler
     public void onPing(ServerListPingEvent e) {
         if (!Arena.getArenas().isEmpty()) {
             if (RefreshAvailableArena.isArenaAvailable()) {
-                IArena a = Arena.getArenas().get(RefreshAvailableArena.getAvailableArena());
-                if (a != null) {
-                    e.setMaxPlayers(a.getMaxPlayers());
-                    e.setMotd(a.getDisplayStatus(Language.getDefaultLanguage()));
+                if (availableArena > 0 && availableArena < Arena.getArenas().size()) {
+                    IArena a = Arena.getArenas().get(RefreshAvailableArena.getAvailableArena());
+                    if (a != null) {
+                        e.setMaxPlayers(a.getMaxPlayers());
+                        e.setMotd(a.getDisplayStatus(Language.getDefaultLanguage()));
+                    }
                 }
             }
         }
