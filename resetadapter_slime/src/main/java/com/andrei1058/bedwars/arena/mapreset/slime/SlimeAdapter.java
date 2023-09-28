@@ -55,6 +55,7 @@ import java.util.logging.Level;
 
 public class SlimeAdapter extends RestoreAdapter {
 
+    public static Map<String, Integer> restartCounts = new HashMap<>();
     private final SlimePlugin slime;
     private final BedWars api;
 
@@ -135,14 +136,18 @@ public class SlimeAdapter extends RestoreAdapter {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), api.getConfigs().getMainConfig().getString(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_RESTART_CMD));
                 }
             } else {
-                if (api.getArenaUtil().getGamesBeforeRestart() != -1) {
-                    api.getArenaUtil().setGamesBeforeRestart(api.getArenaUtil().getGamesBeforeRestart() - 1);
+                if (!api.getArenaUtil().canAutoScale(a.getArenaName())) {
+                    if (api.getArenaUtil().getGamesBeforeRestart() != -1) {
+                        api.getArenaUtil().setGamesBeforeRestart(api.getArenaUtil().getGamesBeforeRestart() - 1);
+                    }
                 }
                 Bukkit.getScheduler().runTask(getOwner(), () -> {
                     Bukkit.unloadWorld(a.getWorldName(), false);
+                    Bukkit.getScheduler().runTaskLaterAsynchronously(getOwner(), () -> api.getArenaUtil().loadArena(a.getArenaName(), null), 80L);
+                    /*
                     if (api.getArenaUtil().canAutoScale(a.getArenaName())) {
-                        Bukkit.getScheduler().runTaskLater(getOwner(), () -> api.getArenaUtil().loadArena(a.getArenaName(), null), 80L);
-                    }
+                    Bukkit.getScheduler().runTaskLater(getOwner(), () -> api.getArenaUtil().loadArena(a.getArenaName(), null), 80L);
+                    }*/
                 });
             }
         } else {

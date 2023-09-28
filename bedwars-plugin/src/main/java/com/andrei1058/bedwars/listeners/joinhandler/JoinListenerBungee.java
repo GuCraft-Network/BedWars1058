@@ -27,12 +27,14 @@ import com.andrei1058.bedwars.api.language.Language;
 import com.andrei1058.bedwars.api.language.Messages;
 import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.arena.ReJoin;
+import com.andrei1058.bedwars.arena.tasks.RefreshAvailableArena;
 import com.andrei1058.bedwars.configuration.Permissions;
 import com.andrei1058.bedwars.configuration.Sounds;
 import com.andrei1058.bedwars.lobbysocket.LoadedUser;
 import com.andrei1058.bedwars.support.paper.PaperSupport;
 import com.andrei1058.bedwars.support.preloadedparty.PreLoadedParty;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -46,6 +48,7 @@ import static com.andrei1058.bedwars.api.language.Language.getMsg;
 
 public class JoinListenerBungee implements Listener {
 
+
     @EventHandler
     public void onLogin(PlayerLoginEvent e) {
         final Player p = e.getPlayer();
@@ -54,8 +57,8 @@ public class JoinListenerBungee implements Listener {
 
         // If is NOT logging in trough BedWarsProxy
         if (proxyUser == null) {
-            if (!e.getPlayer().hasPermission("bw.setup")) {
-                e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Language.getMsg(p, Messages.ARENA_JOIN_DENIED_NO_PROXY));
+            if (!p.hasPermission("bw.setup") && !p.hasPermission("group.zhiyuanzhe") && Arena.getArenas().isEmpty() && !RefreshAvailableArena.isArenaAvailable() && Arena.getArenas().get(RefreshAvailableArena.getAvailableArena()).getStatus() != GameState.playing && Arena.getArenas().get(RefreshAvailableArena.getAvailableArena()).getStatus() != GameState.restarting) {
+                e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Language.getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL));
             }
         } else {
             // If is logging in trough BedWarsProxy
@@ -66,7 +69,6 @@ public class JoinListenerBungee implements Listener {
             if (reJoin != null) {
                 // If is not allowed to rejoin
                 if (!(p.hasPermission(Permissions.PERMISSION_REJOIN) || reJoin.canReJoin())) {
-                    e.disallow(PlayerLoginEvent.Result.KICK_OTHER, playerLang.m(Messages.REJOIN_DENIED));
                     reJoin.destroy(true);
                 }
                 // Stop here, rejoin handled. More will be handled at PlayerJoinEvent
@@ -140,9 +142,51 @@ public class JoinListenerBungee implements Listener {
                         BedWars.nms.spigotHidePlayer(inGame, p);
                     }
                 }
+            }
+            if (p.hasPermission("group.zhiyuanzhe")) {
+                World mainWorld = Bukkit.getWorlds().get(0);
+                if (mainWorld != null) {
+                    PaperSupport.teleportC(p, mainWorld.getSpawnLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
+                }
+                // hide admin to in game users
+                for (Player inGame : Bukkit.getOnlinePlayers()) {
+                    if (inGame.equals(p)) continue;
+                    if (Arena.isInArena(inGame)) {
+                        BedWars.nms.spigotHidePlayer(p, inGame);
+                        BedWars.nms.spigotHidePlayer(inGame, p);
+                    }
+                }
+                p.setGameMode(GameMode.SPECTATOR);
             } else {
                 // The player is not an admin and he joined using /server or equivalent
-                p.kickPlayer(Language.getMsg(p, Messages.ARENA_JOIN_DENIED_NO_PROXY));
+                IArena arena = Arena.getArenas().get(RefreshAvailableArena.getAvailableArena());
+                // Add player if the game is in waiting
+                if (arena.getStatus() == GameState.waiting || arena.getStatus() == GameState.starting) {
+                    if (arena.addPlayer(p, false)) {
+                        Sounds.playSound("join-allowed", p);
+                    } else {
+                        p.kickPlayer(getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL));
+                    }
+                } else {
+                    // Check ReJoin
+                    ReJoin reJoin = ReJoin.getPlayer(p);
+                    if (reJoin != null) {
+                        if (reJoin.canReJoin()) {
+                            reJoin.reJoin(p);
+                            reJoin.destroy(false);
+                            return;
+                        } else {
+                            reJoin.destroy(true);
+                        }
+                    }
+
+                    // Add spectator
+                    if (arena.addSpectator(p, false, null)) {
+                        Sounds.playSound("spectate-allowed", p);
+                    } else {
+                        p.kickPlayer(getMsg(p, Messages.COMMAND_JOIN_SPECTATOR_DENIED_MSG));
+                    }
+                }
             }
         } else {
             // The player joined using BedWarsProxy
@@ -156,8 +200,6 @@ public class JoinListenerBungee implements Listener {
                     reJoin.reJoin(p);
                     // Cache player language
                     Language.setPlayerLanguage(p.getUniqueId(), playerLang.getIso());
-                } else {
-                    p.kickPlayer(playerLang.m(Messages.REJOIN_DENIED));
                 }
                 // ReJoin handled, stop here
                 proxyUser.destroy("Rejoin handled. PreLoaded user no longer needed.");

@@ -51,11 +51,11 @@ import static com.andrei1058.bedwars.api.language.Language.getMsg;
 
 public class MainCommand extends BukkitCommand implements ParentCommand {
 
+    /* SubCommands ArenaList */
+    private static final List<SubCommand> subCommandList = new ArrayList<>();
     /* Dot char */
     @SuppressWarnings("WeakerAccess")
     public static char dot = 254;
-    /* SubCommands ArenaList */
-    private static final List<SubCommand> subCommandList = new ArrayList<>();
     /* MainCommand instance*/
     private static MainCommand instance;
 
@@ -73,6 +73,7 @@ public class MainCommand extends BukkitCommand implements ParentCommand {
         new CmdStats(this, "stats");
         new CmdStart(this, "forceStart");
         new CmdStart(this, "start");
+        new CmdPlayAgain(this, "playagain");
         if (BedWars.getServerType() != ServerType.BUNGEE) {
             new com.andrei1058.bedwars.commands.bedwars.subcmds.sensitive.SetLobby(this, "setLobby"); //priority 1
         }

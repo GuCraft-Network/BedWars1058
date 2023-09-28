@@ -29,6 +29,7 @@ import com.andrei1058.bedwars.api.server.ServerType;
 import com.andrei1058.bedwars.api.tasks.RestartingTask;
 import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.arena.Misc;
+import com.andrei1058.bedwars.arena.mapreset.slime.SlimeAdapter;
 import com.andrei1058.bedwars.configuration.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
@@ -105,7 +106,25 @@ public class GameRestartingTask implements Runnable, RestartingTask {
                 }
             }
         } else if (restarting == 0) {
-            getArena().restart();
+            String arenaName = getArena().getArenaName();
+            if (BedWars.getAPI().getServerType() == ServerType.BUNGEE && BedWars.getAPI().getArenaUtil().canAutoScale(arenaName)) {
+                Integer count = SlimeAdapter.restartCounts.get(arenaName);
+                if (count == null) {
+                    count = 1;
+                    SlimeAdapter.restartCounts.put(arenaName, count);
+                    getArena().restart();
+                } else {
+                    count++;
+                    SlimeAdapter.restartCounts.put(arenaName, count);
+                    if (count > BedWars.getAPI().getArenaUtil().getGamesBeforeRestart()) {
+                        getArena().disable();
+                    } else {
+                        getArena().restart();
+                    }
+                }
+            } else {
+                getArena().restart();
+            }
             task.cancel();
             arena = null;
         }

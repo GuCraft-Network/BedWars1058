@@ -38,6 +38,64 @@ public class TeamAssigner implements ITeamAssigner {
     private final LinkedList<Player> skip = new LinkedList<>();
 
     /**
+     * Finds the target team to add a player based on the following criteria:
+     * - If there is a team with fewer players than the maximum allowed per team, and fewer than maxPlayersPerTeam - 1 players,
+     * it returns that team.
+     * - If player amount > 2, it will check for teams with player count of 1 to return as target
+     * - If no such team is found, it returns the first team with available space (i.e., fewer players than maxPlayersPerTeam).
+     * - If no team with available space is found, it returns null (arena = full).
+     *
+     * @param teams             The list of teams to search for the target team.
+     * @param maxPlayersPerTeam The maximum number of players allowed per team.
+     * @param playerAmount      The amount of players in an arena.
+     * @return The target team to add a player, or null if no suitable team is found.
+     */
+    private static ITeam findTargetTeam(List<ITeam> teams, int maxPlayersPerTeam, int playerAmount) {
+        ITeam targetTeam = null;
+        int minPlayers = Integer.MAX_VALUE;
+
+        // Find a team with fewer players than maxPlayersPerTeam - 1
+        for (ITeam team : teams) {
+            int numPlayers = team.getSize();
+            if (numPlayers < minPlayers && numPlayers < maxPlayersPerTeam - 1) {
+                targetTeam = team;
+                minPlayers = numPlayers;
+            }
+
+            if (numPlayers == 1 && (playerAmount > 2)) {
+                BedWars.debug("found team with 1 player (" + team.getName() + ")");
+                return team;
+            }
+        }
+
+        // If no suitable team is found, find the first team with available space and no more than 1 player
+        if (targetTeam == null) {
+            for (ITeam team : teams) {
+                if (team.getSize() == 1 && playerAmount <= maxPlayersPerTeam) {
+                    // Skip teams with 1 player when playerAmount is set to 2
+                    continue;
+                }
+                if (team.getSize() < maxPlayersPerTeam - 1) {
+                    targetTeam = team;
+                    break;
+                }
+            }
+        }
+
+        // If ALL other team assigners fail. Fall back to first open spot
+        if (targetTeam == null) {
+            for (ITeam team : teams) {
+                if (team.getSize() < maxPlayersPerTeam) {
+                    targetTeam = team;
+                    break;
+                }
+            }
+        }
+
+        return targetTeam;
+    }
+
+    /**
      * Assigns teams to players in the given arena.
      *
      * @param arena The arena to assign teams in.
@@ -104,67 +162,9 @@ public class TeamAssigner implements ITeamAssigner {
         if (remainingPlayers.isEmpty()) return;
 
         BedWars.debug("Assigning teams for arena: " + arena.getArenaName() + " with; max in team: " + arena.getMaxInTeam() + " size: " + arena.getPlayers().size() + " teams: " + arena.getTeams().size());
-        for (Player player: remainingPlayers) {
+        for (Player player : remainingPlayers) {
             player.closeInventory();
-            findTargetTeam(arena.getTeams(),arena.getMaxInTeam(), arena.getPlayers().size()).addPlayers(player);
+            findTargetTeam(arena.getTeams(), arena.getMaxInTeam(), arena.getPlayers().size()).addPlayers(player);
         }
-    }
-
-    /**
-     * Finds the target team to add a player based on the following criteria:
-     * - If there is a team with fewer players than the maximum allowed per team, and fewer than maxPlayersPerTeam - 1 players,
-     *   it returns that team.
-     * - If player amount > 2, it will check for teams with player count of 1 to return as target
-     * - If no such team is found, it returns the first team with available space (i.e., fewer players than maxPlayersPerTeam).
-     * - If no team with available space is found, it returns null (arena = full).
-     *
-     * @param teams             The list of teams to search for the target team.
-     * @param maxPlayersPerTeam The maximum number of players allowed per team.
-     * @param playerAmount      The amount of players in an arena.
-     * @return The target team to add a player, or null if no suitable team is found.
-     */
-    private static ITeam findTargetTeam(List<ITeam> teams, int maxPlayersPerTeam, int playerAmount) {
-        ITeam targetTeam = null;
-        int minPlayers = Integer.MAX_VALUE;
-
-        // Find a team with fewer players than maxPlayersPerTeam - 1
-        for (ITeam team : teams) {
-            int numPlayers = team.getSize();
-            if (numPlayers < minPlayers && numPlayers < maxPlayersPerTeam - 1) {
-                targetTeam = team;
-                minPlayers = numPlayers;
-            }
-
-            if (numPlayers == 1 && (playerAmount > 2)) {
-                BedWars.debug("found team with 1 player (" + team.getName() + ")");
-                return team;
-            }
-        }
-
-        // If no suitable team is found, find the first team with available space and no more than 1 player
-        if (targetTeam == null) {
-            for (ITeam team : teams) {
-                if (team.getSize() == 1 && playerAmount <= maxPlayersPerTeam) {
-                    // Skip teams with 1 player when playerAmount is set to 2
-                    continue;
-                }
-                if (team.getSize() < maxPlayersPerTeam - 1) {
-                    targetTeam = team;
-                    break;
-                }
-            }
-        }
-
-        // If ALL other team assigners fail. Fall back to first open spot
-        if (targetTeam == null) {
-            for (ITeam team : teams) {
-                if (team.getSize() < maxPlayersPerTeam) {
-                    targetTeam = team;
-                    break;
-                }
-            }
-        }
-
-        return targetTeam;
     }
 }

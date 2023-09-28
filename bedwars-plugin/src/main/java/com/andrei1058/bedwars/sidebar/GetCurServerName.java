@@ -44,21 +44,18 @@ public class GetCurServerName implements Listener, PluginMessageListener {
         }, 2L);
     }
 
-    private void GetGameName() {
-        if (servername.startsWith("bwhyp2")) {
-            gamename = servername.replace("bwhyp2v", "N");
-        } else if (servername.startsWith("bwhyp4")) {
-            gamename = servername.replace("bwhyp4v", "N");
-        } else if (servername.startsWith("bwrhyp4")) {
-            gamename = servername.replace("bwrhyp4v", "R");
-        } else if (servername.startsWith("bwuhyp4")) {
-            gamename = servername.replace("bwuhyp4v", "U");
-        } else if (servername.startsWith("bwshyp4")) {
-            gamename = servername.replace("bwshyp4v", "S");
-        } else {
-            gamename = "Null";
+    private void getGame() {
+        String[] keywords = {"hyp", "v", "bw"};
+        for (String keyword : keywords) {
+            if (servername.contains(keyword)) {
+                gamename = gamename.replace(keyword, "");
+            }
+        }
+        if (!gamename.equals("Null")) {
+            gamename = gamename.toUpperCase();
         }
     }
+
 
     @Override
     public void onPluginMessageReceived(String channel, Player player, byte[] message) {
@@ -67,7 +64,7 @@ public class GetCurServerName implements Listener, PluginMessageListener {
                 DataInputStream input = new DataInputStream(new ByteArrayInputStream(message));
                 if ("GetServer".equals(input.readUTF())) {
                     servername = input.readUTF();
-                    GetGameName();
+                    getGame();
                 }
             } catch (Exception e) {
                 e.printStackTrace();

@@ -49,6 +49,7 @@ import com.andrei1058.bedwars.api.server.ServerType;
 import com.andrei1058.bedwars.api.tasks.PlayingTask;
 import com.andrei1058.bedwars.api.tasks.RestartingTask;
 import com.andrei1058.bedwars.api.tasks.StartingTask;
+import com.andrei1058.bedwars.arena.mapreset.slime.SlimeAdapter;
 import com.andrei1058.bedwars.arena.tasks.GamePlayingTask;
 import com.andrei1058.bedwars.arena.tasks.GameRestartingTask;
 import com.andrei1058.bedwars.arena.tasks.GameStartingTask;
@@ -743,7 +744,7 @@ public class Arena implements IArena {
                 for (Player on : new ArrayList<>(players)) {
                     if (!isVip(on)) {
                         canJoin = true;
-                        removePlayer(on, false);
+                        removePlayer(on, true);
                         TextComponent vipKick = new TextComponent(getMsg(p, Messages.ARENA_JOIN_VIP_KICK));
                         vipKick.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, config.getYml().getString("storeLink")));
                         p.spigot().sendMessage(vipKick);
@@ -1195,7 +1196,7 @@ public class Arena implements IArena {
             SidebarService.getInstance().remove(p);
             this.sendToMainLobby(p);
 
-        } else if (getServerType() == ServerType.BUNGEE) {
+        } else if (getServerType() == ServerType.BUNGEE && disconnect) {
             Misc.moveToLobbyOrKick(p, this, true);
             return;
         } else {
@@ -1351,7 +1352,7 @@ public class Arena implements IArena {
         } else {
             pg.restore();
         }
-        if (getServerType() == ServerType.BUNGEE) {
+        if (getServerType() == ServerType.BUNGEE && disconnect) {
             Misc.moveToLobbyOrKick(p, this, true);
             return;
         }
@@ -1473,10 +1474,10 @@ public class Arena implements IArena {
      */
     public void disable() {
         for (Player p : new ArrayList<>(players)) {
-            removePlayer(p, false);
+            removePlayer(p, true);
         }
         for (Player p : new ArrayList<>(spectators)) {
-            removeSpectator(p, false);
+            removeSpectator(p, true);
         }
         if (getRestartingTask() != null) getRestartingTask().cancel();
         if (getStartingTask() != null) getStartingTask().cancel();
@@ -1488,6 +1489,19 @@ public class Arena implements IArena {
         BedWars.getAPI().getRestoreAdapter().onDisable(this);
         Bukkit.getPluginManager().callEvent(new ArenaDisableEvent(getArenaName(), getWorldName()));
         destroyData();
+        if (Arena.getArenas().isEmpty() && Arena.getEnableQueue().isEmpty()) {
+            boolean allReachedTarget = true;
+            for (int value : SlimeAdapter.restartCounts.values()) {
+                if (value < BedWars.getAPI().getArenaUtil().getGamesBeforeRestart()) {
+                    allReachedTarget = false;
+                    break;
+                }
+            }
+            if (allReachedTarget) {
+                plugin.getLogger().info("Dispatching command: " + BedWars.getAPI().getConfigs().getMainConfig().getString(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_RESTART_CMD));
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), BedWars.getAPI().getConfigs().getMainConfig().getString(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_RESTART_CMD));
+            }
+        }
     }
 
     /**
@@ -2678,6 +2692,19 @@ public class Arena implements IArena {
                 plugin.getLogger().log(Level.SEVERE, player.getName() + " was teleported to the main world because lobby location is not set!");
             } else {
                 PaperSupport.teleportC(player, config.getConfigLoc("lobbyLoc"), PlayerTeleportEvent.TeleportCause.PLUGIN);
+            }
+        } else if (BedWars.getServerType() == ServerType.BUNGEE) {
+            World mainWorld = Bukkit.getWorlds().get(0);
+            if (mainWorld != null) {
+                PaperSupport.teleportC(player, mainWorld.getSpawnLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
+            }
+            // hide admin to in game users
+            for (Player inGame : Bukkit.getOnlinePlayers()) {
+                if (inGame.equals(player)) continue;
+                if (Arena.isInArena(inGame)) {
+                    BedWars.nms.spigotHidePlayer(player, inGame);
+                    BedWars.nms.spigotHidePlayer(inGame, player);
+                }
             }
         }
     }

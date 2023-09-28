@@ -30,7 +30,7 @@ import java.io.IOException;
 public class WorldZipper {
 
     private final String worldName;
-    private boolean replace;
+    private final boolean replace;
 
     public WorldZipper(String worldName, boolean replace) {
         this.worldName = worldName;

@@ -31,6 +31,7 @@ import com.andrei1058.bedwars.api.server.ServerType;
 import com.andrei1058.bedwars.api.server.VersionSupport;
 import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.arena.ArenaManager;
+import com.andrei1058.bedwars.arena.NoRecordMap;
 import com.andrei1058.bedwars.arena.VoidChunkGenerator;
 import com.andrei1058.bedwars.arena.despawnables.TargetListener;
 import com.andrei1058.bedwars.arena.feature.AntiDropFeature;
@@ -39,6 +40,7 @@ import com.andrei1058.bedwars.arena.feature.SpoilPlayerTNTFeature;
 import com.andrei1058.bedwars.arena.spectator.SpectatorListeners;
 import com.andrei1058.bedwars.arena.tasks.OneTick;
 import com.andrei1058.bedwars.arena.tasks.Refresh;
+import com.andrei1058.bedwars.arena.tasks.RefreshAvailableArena;
 import com.andrei1058.bedwars.arena.upgrades.BaseListener;
 import com.andrei1058.bedwars.arena.upgrades.HealPoolListener;
 import com.andrei1058.bedwars.commands.bedwars.MainCommand;
@@ -54,6 +56,9 @@ import com.andrei1058.bedwars.levels.internal.InternalLevel;
 import com.andrei1058.bedwars.levels.internal.LevelListeners;
 import com.andrei1058.bedwars.listeners.*;
 import com.andrei1058.bedwars.listeners.arenaselector.ArenaSelectorListener;
+import com.andrei1058.bedwars.listeners.bungee.BungeePingListener;
+import com.andrei1058.bedwars.listeners.bungee.ServerPingListener;
+import com.andrei1058.bedwars.listeners.bungee.StaffListener;
 import com.andrei1058.bedwars.listeners.chat.ChatAFK;
 import com.andrei1058.bedwars.listeners.chat.ChatFormatting;
 import com.andrei1058.bedwars.listeners.joinhandler.*;
@@ -105,7 +110,7 @@ public class BedWars extends JavaPlugin {
     private static final String version = Bukkit.getServer().getClass().getName().split("\\.")[3];
     public static boolean debug = true, autoscale = false;
     public static String mainCmd = "bw", link = "https://www.ac66.net";
-    public static ConfigManager signs, generators;
+    public static ConfigManager generators;
     public static MainConfig config;
     public static ShopManager shop;
     public static StatsManager statsManager;
@@ -371,7 +376,7 @@ public class BedWars extends JavaPlugin {
 
         // Register events
         registerEvents(new EnderPearlLanded(), new QuitAndTeleportListener(), new BreakPlace(), new DamageDeathMove(), new Inventory(), new Interact(), new HungerWeatherSpawn(),
-                new FireballListener(), new EggBridge(), new SpectatorListeners(), new BaseListener(), new TargetListener(), new LangListener(), new ChatAFK(), new GameEndListener());
+                new FireballListener(), new EggBridge(), new SpectatorListeners(), new BaseListener(), new TargetListener(), new LangListener(), new ChatAFK(), new GameEndListener(), new NoRecordMap());
         warnings();
 
         if (config.getBoolean(ConfigPath.GENERAL_CONFIGURATION_HEAL_POOL_ENABLE)) {
@@ -383,8 +388,9 @@ public class BedWars extends JavaPlugin {
                 //registerEvents(new ArenaListeners());
                 ArenaSocket.lobbies.addAll(config.getList(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_LOBBY_SERVERS));
                 new SendTask();
-                registerEvents(new AutoscaleListener(), new JoinListenerBungee());
+                registerEvents(new AutoscaleListener(), new JoinListenerBungee(), new StaffListener(), new BungeePingListener());
                 Bukkit.getScheduler().runTaskTimerAsynchronously(this, new LoadedUsersCleaner(), 60L, 60L);
+                Bukkit.getScheduler().runTaskTimerAsynchronously(this, new RefreshAvailableArena(), 60L, 60L);
             } else {
                 registerEvents(new ServerPingListener(), new JoinListenerBungeeLegacy(), new GetCurServerName());
             }
@@ -523,11 +529,14 @@ public class BedWars extends JavaPlugin {
             registerEvents(new ChatFormatting());
         }
 
+
         /* Protect glass walls from tnt explosion */
+        /*
         nms.registerTntWhitelist(
                 (float) config.getDouble(ConfigPath.GENERAL_TNT_PROTECTION_END_STONE_BLAST),
                 (float) config.getDouble(ConfigPath.GENERAL_TNT_PROTECTION_GLASS_BLAST)
         );
+        */
 
         /* Prevent issues on reload */
         for (Player p : Bukkit.getOnlinePlayers()) {

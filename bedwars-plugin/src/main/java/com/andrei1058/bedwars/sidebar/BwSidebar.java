@@ -151,11 +151,13 @@ public class BwSidebar implements ISidebar {
                 }
             }
 
+            String serverName = (BedWars.getServerType() == ServerType.BUNGEE && !autoscale) ? GetCurServerName.getGameName(arena) : config.getString(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_SERVER_ID).replaceAll("(hyp|v|bw)", "").toUpperCase();
+
             // General static placeholders
             line = line
                     .replace("{serverIp}", BedWars.config.getString(ConfigPath.GENERAL_CONFIG_PLACEHOLDERS_REPLACEMENTS_SERVER_IP))
                     .replace("{version}", plugin.getDescription().getVersion())
-                    .replace("{server}", getServer(arena))
+                    .replace("{server}", serverName)
                     .replace("{playername}", player.getName())
                     .replace("{player}", player.getDisplayName())
                     .replace("{money}", String.valueOf(getEconomy().getMoney(player)));
@@ -173,14 +175,6 @@ public class BwSidebar implements ISidebar {
         return lines;
     }
 
-    private String getServer(IArena a) {
-        if (BedWars.getServerType() == ServerType.BUNGEE && !autoscale) {
-            return GetCurServerName.getGameName(a);
-        } else {
-            config.getString(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_SERVER_ID);
-        }
-        return null;
-    }
 
     @Contract(pure = true)
     private @NotNull List<PlaceholderProvider> getPlaceholders() {

@@ -136,7 +136,6 @@ public class JoinListenerBungeeLegacy implements Listener {
                         reJoin.destroy(false);
                         return;
                     } else {
-                        p.sendMessage(getMsg(p, Messages.REJOIN_DENIED));
                         reJoin.destroy(true);
                     }
                 }
