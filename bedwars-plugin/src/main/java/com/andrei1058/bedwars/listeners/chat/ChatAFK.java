@@ -36,7 +36,7 @@ public class ChatAFK implements Listener {
         Arena.afkCheck.remove(event.getPlayer().getUniqueId());
         if (BedWars.getAPI().getAFKUtil().isPlayerAFK(event.getPlayer())) {
             // go sync
-            Bukkit.getScheduler().runTask(plugin, () ->
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
                     BedWars.getAPI().getAFKUtil().setPlayerAFK(event.getPlayer(), false)
             );
         }

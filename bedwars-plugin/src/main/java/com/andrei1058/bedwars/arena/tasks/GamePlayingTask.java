@@ -31,6 +31,7 @@ import com.andrei1058.bedwars.api.language.Messages;
 import com.andrei1058.bedwars.api.tasks.PlayingTask;
 import com.andrei1058.bedwars.arena.Arena;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
@@ -183,6 +184,20 @@ public class GamePlayingTask implements Runnable, PlayingTask {
                 Arena.afkCheck.replace(p.getUniqueId(), current);
                 if (current == 45) {
                     BedWars.getAPI().getAFKUtil().setPlayerAFK(p, true);
+                }
+                if (current == 120) {
+                    for (int i = 0; i < 10; i++) {
+                        final int seconds = i * 2;
+                        Bukkit.getScheduler().runTaskLater(BedWars.plugin,
+                                () -> p.playSound(p.getLocation(), Sound.NOTE_PLING, 1.0F, 1.0F), seconds * 2L);
+                    }
+                    p.sendMessage("§c你将因挂机而被移出游戏。");
+                }
+                if (current == 130) {
+                    for (Player arenaPlayers : getArena().getPlayers()) {
+                        p.sendMessage(Arena.getArenaByPlayer(p).getTeam(p).getColor().chat() + p.getDisplayName() + "§7因挂机离开了游戏。");
+                    }
+                    p.kickPlayer("§c§l你因挂机超过130秒而被移出。");
                 }
             }
         }
