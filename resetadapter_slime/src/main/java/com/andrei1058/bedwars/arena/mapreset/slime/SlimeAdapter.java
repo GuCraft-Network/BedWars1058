@@ -130,26 +130,28 @@ public class SlimeAdapter extends RestoreAdapter {
     @Override
     public void onRestart(IArena a) {
         if (api.getServerType() == ServerType.BUNGEE) {
-            if (api.getArenaUtil().getGamesBeforeRestart() == 0) {
-                if (api.getArenaUtil().getArenas().size() == 1 && api.getArenaUtil().getArenas().get(0).getStatus() == GameState.restarting) {
-                    getOwner().getLogger().info("Dispatching command: " + api.getConfigs().getMainConfig().getString(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_RESTART_CMD));
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), api.getConfigs().getMainConfig().getString(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_RESTART_CMD));
-                }
-            } else {
-                if (!api.getArenaUtil().canAutoScale(a.getArenaName())) {
-                    if (api.getArenaUtil().getGamesBeforeRestart() != -1) {
-                        api.getArenaUtil().setGamesBeforeRestart(api.getArenaUtil().getGamesBeforeRestart() - 1);
+            if (!api.isAutoScale()) {
+                if (api.getArenaUtil().getGamesBeforeRestart() == 0) {
+                    if (api.getArenaUtil().getArenas().size() == 1 && api.getArenaUtil().getArenas().get(0).getStatus() == GameState.restarting) {
+                        getOwner().getLogger().info("Dispatching command: " + api.getConfigs().getMainConfig().getString(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_RESTART_CMD));
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), api.getConfigs().getMainConfig().getString(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_RESTART_CMD));
+                    }
+                } else {
+                    if (!api.getArenaUtil().canAutoScale(a.getArenaName())) {
+                        if (api.getArenaUtil().getGamesBeforeRestart() != -1) {
+                            api.getArenaUtil().setGamesBeforeRestart(api.getArenaUtil().getGamesBeforeRestart() - 1);
+                        }
                     }
                 }
-                Bukkit.getScheduler().runTaskAsynchronously(getOwner(), () -> {
-                    Bukkit.unloadWorld(a.getWorldName(), false);
-                    Bukkit.getScheduler().runTaskLaterAsynchronously(getOwner(), () -> api.getArenaUtil().loadArena(a.getArenaName(), null), 80L);
+            }
+            Bukkit.getScheduler().runTaskAsynchronously(getOwner(), () -> {
+                Bukkit.unloadWorld(a.getWorldName(), false);
+                Bukkit.getScheduler().runTaskLaterAsynchronously(getOwner(), () -> api.getArenaUtil().loadArena(a.getArenaName(), null), 80L);
                     /*
                     if (api.getArenaUtil().canAutoScale(a.getArenaName())) {
                     Bukkit.getScheduler().runTaskLaterAsynchronously(getOwner(), () -> api.getArenaUtil().loadArena(a.getArenaName(), null), 80L);
                     }*/
-                });
-            }
+            });
         } else {
             Bukkit.getScheduler().runTaskAsynchronously(getOwner(), () -> {
                 Bukkit.unloadWorld(a.getWorldName(), false);
