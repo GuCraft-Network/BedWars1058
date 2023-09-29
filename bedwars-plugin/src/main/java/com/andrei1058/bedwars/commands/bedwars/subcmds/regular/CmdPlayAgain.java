@@ -40,7 +40,6 @@ public class CmdPlayAgain extends SubCommand {
         IArena a = Arena.getArenaByPlayer(p);
         if (a == null) return true;
 
-        Bukkit.getScheduler().runTaskLaterAsynchronously(BedWars.plugin, () -> Misc.moveToLobbyOrKick(p, a, a.isSpectator(p.getUniqueId())), 20L);
         if (!RefreshAvailableArenaTask.isArenaAvailable() || getServerType() != ServerType.BUNGEE && !BedWars.getAPI().getArenaUtil().canAutoScale(a.getArenaName())) {
             switch (a.getGroup()) {
                 case "solo":

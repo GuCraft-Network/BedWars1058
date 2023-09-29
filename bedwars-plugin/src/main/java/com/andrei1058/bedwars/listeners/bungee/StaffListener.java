@@ -4,23 +4,25 @@ import com.andrei1058.bedwars.BedWars;
 import com.andrei1058.bedwars.api.arena.GameState;
 import com.andrei1058.bedwars.api.arena.IArena;
 import com.andrei1058.bedwars.arena.Arena;
+import com.andrei1058.bedwars.support.paper.PaperSupport;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class StaffListener implements Listener {
 
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent e) {
         String cmd = e.getMessage();
-        if (!cmd.startsWith("/tp ") || !cmd.startsWith("/teleport ")) return;
+        if (!cmd.startsWith("/tp ") && !cmd.startsWith("/teleport ")) return;
 
         Player player = e.getPlayer();
         if (!player.hasPermission("minecraft.teleport.command")) return;
 
-        String[] args = cmd.split(" ", 3);
+        String[] args = cmd.split(" ");
         if (args.length >= 2) return;
         e.setCancelled(true);
         IArena arena = Arena.getArenaByPlayer(player);
@@ -44,9 +46,11 @@ public class StaffListener implements Listener {
         if (arena != null) {
             arena.removeSpectator(player, false);
             Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> targetArena.addSpectator(player, false, null), 10L);
+            PaperSupport.teleportC(player, targetPlayer.getLocation(), PlayerTeleportEvent.TeleportCause.COMMAND);
             return;
         }
         targetArena.addSpectator(player, false, null);
+        PaperSupport.teleportC(player, targetPlayer.getLocation(), PlayerTeleportEvent.TeleportCause.COMMAND);
     }
 
 }
