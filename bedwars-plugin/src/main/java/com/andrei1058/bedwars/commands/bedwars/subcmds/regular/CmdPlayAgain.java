@@ -7,9 +7,9 @@ import com.andrei1058.bedwars.api.command.SubCommand;
 import com.andrei1058.bedwars.api.language.Messages;
 import com.andrei1058.bedwars.api.server.ServerType;
 import com.andrei1058.bedwars.arena.Arena;
+import com.andrei1058.bedwars.arena.Misc;
 import com.andrei1058.bedwars.arena.tasks.RefreshAvailableArenaTask;
 import com.andrei1058.bedwars.commands.bedwars.MainCommand;
-import com.andrei1058.bedwars.configuration.Permissions;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -40,6 +40,7 @@ public class CmdPlayAgain extends SubCommand {
         IArena a = Arena.getArenaByPlayer(p);
         if (a == null) return true;
 
+        Bukkit.getScheduler().runTaskLaterAsynchronously(BedWars.plugin, () -> Misc.moveToLobbyOrKick(p, a, a.isSpectator(p.getUniqueId())), 20L);
         if (!RefreshAvailableArenaTask.isArenaAvailable() || getServerType() != ServerType.BUNGEE && !BedWars.getAPI().getArenaUtil().canAutoScale(a.getArenaName())) {
             switch (a.getGroup()) {
                 case "solo":
@@ -77,10 +78,8 @@ public class CmdPlayAgain extends SubCommand {
                         }
                         Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> targetArena.addPlayer(partyPlayers, true), 10L);
                     }
-                    return true;
                 } else {
                     p.sendMessage(getMsg(p, Messages.COMMAND_JOIN_DENIED_NOT_PARTY_LEADER));
-                    return true;
                 }
             } else {
                 if (a.isPlayer(p)) {
@@ -89,7 +88,6 @@ public class CmdPlayAgain extends SubCommand {
                     a.removeSpectator(p, false);
                 }
                 Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> targetArena.addPlayer(p, true), 10L);
-                return true;
             }
         }
         return true;
