@@ -187,11 +187,18 @@ public class GamePlayingTask implements Runnable, PlayingTask {
                 }
                 if (current == 120) {
                     for (int i = 0; i < 10; i++) {
-                        final int seconds = i * 2;
-                        Bukkit.getScheduler().runTaskLater(BedWars.plugin,
-                                () -> p.playSound(p.getLocation(), Sound.NOTE_PLING, 1.0F, 1.0F), seconds * 2L);
+                        final int ticks = i * 2;
+                        Bukkit.getScheduler().runTaskLaterAsynchronously(BedWars.plugin,
+                                () -> p.playSound(p.getLocation(), Sound.NOTE_PLING, 1.0F, 1.0F), ticks);
                     }
                     p.sendMessage("§c你将因挂机而被移出游戏。");
+                }
+                if (current >= 121) {
+                    for (int i = 0; i < 10; i++) {
+                        final int ticks = i * 2;
+                        Bukkit.getScheduler().runTaskLaterAsynchronously(BedWars.plugin,
+                                () -> p.playSound(p.getLocation(), Sound.NOTE_PLING, 1.0F, 1.0F), ticks);
+                    }
                 }
                 if (current == 130) {
                     for (Player arenaPlayers : getArena().getPlayers()) {

@@ -174,12 +174,6 @@
             <version>2.11.2</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.andrei1058.vipfeatures</groupId>
-            <artifactId>vipfeatures-api</artifactId>
-            <version>[1.0,)</version>
-            <optional>true</optional>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
         <dependency>
             <groupId>commons-io</groupId>

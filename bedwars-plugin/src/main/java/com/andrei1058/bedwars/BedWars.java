@@ -554,20 +554,6 @@ public class BedWars extends JavaPlugin {
         /* Load Money Configuration */
         MoneyConfig.init();
 
-        /*
-        if (Bukkit.getPluginManager().getPlugin("VipFeatures") != null) {
-            try {
-                IVipFeatures vf = Bukkit.getServicesManager().getRegistration(IVipFeatures.class).getProvider();
-                vf.registerMiniGame(new VipFeatures(this));
-                registerEvents(new VipListeners(vf));
-                getLogger().log(java.util.logging.Level.INFO, "Hook into VipFeatures support.");
-            } catch (Exception e) {
-                getLogger().warning("Could not load support for VipFeatures.");
-            } catch (MiniGameAlreadyRegistered miniGameAlreadyRegistered) {
-                miniGameAlreadyRegistered.printStackTrace();
-            }
-        }*/
-
         Bukkit.getScheduler().runTaskLater(this, () -> getLogger().info("This server is running in " + getServerType().toString() + " with auto-scale " + autoscale), 100L);
 
         // Initialize team upgrades

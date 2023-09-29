@@ -697,147 +697,148 @@ public class Arena implements IArena {
         if (getArenaByPlayer(p) != null) {
             return false;
         }
-        if (getParty().hasParty(p)) {
-            if (!skipOwnerCheck) {/*
-                if (!getParty().isOwner(p)) {
-                    p.sendMessage(getMsg(p, Messages.COMMAND_JOIN_DENIED_NOT_PARTY_LEADER));
-                    return false;
-                }*/
-                int partySize = (int) getParty().getMembers(p).stream().filter(member -> {
-                    IArena arena = Arena.getArenaByPlayer(member);
-                    if (arena == null) {
-                        return true;
+        if (getServerType() != ServerType.BUNGEE) {
+            if (getParty().hasParty(p)) {
+                if (!skipOwnerCheck) {
+                    if (!getParty().isOwner(p)) {
+                        p.sendMessage(getMsg(p, Messages.COMMAND_JOIN_DENIED_NOT_PARTY_LEADER));
+                        return false;
                     }
-                    return arena.isSpectator(member);
-                }).count();
+                    int partySize = (int) getParty().getMembers(p).stream().filter(member -> {
+                        IArena arena = Arena.getArenaByPlayer(member);
+                        if (arena == null) {
+                            return true;
+                        }
+                        return arena.isSpectator(member);
+                    }).count();
 
-                if (partySize > maxInTeam * getTeams().size() - getPlayers().size()) {
-                    p.sendMessage(getMsg(p, Messages.COMMAND_JOIN_DENIED_PARTY_TOO_BIG));
-                    return false;
-                }
-                for (Player mem : getParty().getMembers(p)) {
-                    if (mem == p) continue;
-                    IArena a = Arena.getArenaByPlayer(mem);
-                    if (a != null) {
+                    if (partySize > maxInTeam * getTeams().size() - getPlayers().size()) {
+                        p.sendMessage(getMsg(p, Messages.COMMAND_JOIN_DENIED_PARTY_TOO_BIG));
+                        return false;
+                    }
+                    for (Player mem : getParty().getMembers(p)) {
+                        if (mem == p) continue;
+                        IArena a = Arena.getArenaByPlayer(mem);
+                        if (a != null) {
                         /*if (a.isPlayer(mem)) {
                             a.removePlayer(mem, false);
                         } else */
-                        if (a.isSpectator(mem)) {
-                            a.removeSpectator(mem, false);
+                            if (a.isSpectator(mem)) {
+                                a.removeSpectator(mem, false);
+                            }
+                        }
+                        addPlayer(mem, true);
+                    }
+                }
+            }
+            if (status == GameState.waiting || (status == GameState.starting && (startingTask != null && startingTask.getCountdown() > 1))) {
+                if (players.size() >= maxPlayers && !isVip(p)) {
+                    TextComponent text = new TextComponent(getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL));
+                    text.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, config.getYml().getString("storeLink")));
+                    p.spigot().sendMessage(text);
+                    return false;
+                } else if (players.size() >= maxPlayers && isVip(p)) {
+                    boolean canJoin = false;
+                    for (Player on : new ArrayList<>(players)) {
+                        if (!isVip(on)) {
+                            canJoin = true;
+                            removePlayer(on, true);
+                            TextComponent vipKick = new TextComponent(getMsg(p, Messages.ARENA_JOIN_VIP_KICK));
+                            vipKick.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, config.getYml().getString("storeLink")));
+                            p.spigot().sendMessage(vipKick);
+                            break;
                         }
                     }
-                    addPlayer(mem, true);
+                    if (!canJoin) {
+                        p.sendMessage(getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL_OF_VIPS));
+                        return false;
+                    }
                 }
+            } else if (status == GameState.playing || status == GameState.starting && (startingTask != null && startingTask.getCountdown() <= 1)) {
+                addSpectator(p, false, null);
+                p.sendMessage(getMsg(p, Messages.ARENA_JOIN_DENIED_NO_TIME));
+                /* stop code if status playing*/
+                return false;
             }
         }
 
         leaving.remove(p);
 
-        if (status == GameState.waiting || (status == GameState.starting && (startingTask != null && startingTask.getCountdown() > 1))) {
-            if (players.size() >= maxPlayers && !isVip(p)) {
-                TextComponent text = new TextComponent(getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL));
-                text.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, config.getYml().getString("storeLink")));
-                p.spigot().sendMessage(text);
-                return false;
-            } else if (players.size() >= maxPlayers && isVip(p)) {
-                boolean canJoin = false;
-                for (Player on : new ArrayList<>(players)) {
-                    if (!isVip(on)) {
-                        canJoin = true;
-                        removePlayer(on, true);
-                        TextComponent vipKick = new TextComponent(getMsg(p, Messages.ARENA_JOIN_VIP_KICK));
-                        vipKick.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, config.getYml().getString("storeLink")));
-                        p.spigot().sendMessage(vipKick);
-                        break;
-                    }
+        PlayerJoinArenaEvent ev = new PlayerJoinArenaEvent(this, p, false);
+        Bukkit.getPluginManager().callEvent(ev);
+        if (ev.isCancelled()) return false;
+
+        //Remove from ReJoin
+        ReJoin rejoin = ReJoin.getPlayer(p);
+        if (rejoin != null) {
+            rejoin.destroy(true);
+        }
+
+        p.closeInventory();
+        players.add(p);
+        p.setFlying(false);
+        p.setAllowFlight(false);
+        p.setHealth(20);
+        for (Player on : players) {
+            on.sendMessage(
+                    getMsg(on, Messages.COMMAND_JOIN_PLAYER_JOIN_MSG)
+                            .replace("{vPrefix}", getChatSupport().getPrefix(p))
+                            .replace("{vPrefixColor}", getChatSupport().getPrefixColor(p))
+                            .replace("{vSuffix}", getChatSupport().getSuffix(p))
+                            .replace("{playername}", p.getName())
+                            .replace("{player}", p.getDisplayName())
+                            .replace("{on}", String.valueOf(getPlayers().size()))
+                            .replace("{max}", String.valueOf(getMaxPlayers()))
+            );
+        }
+        setArenaByPlayer(p, this);
+
+        /* check if you can start the arena */
+        boolean isStatusChange = false;
+        if (status == GameState.waiting) {
+            int teams = 0, teammates = 0;
+            for (Player on : getPlayers()) {
+                if (getParty().isOwner(on)) {
+                    teams++;
                 }
-                if (!canJoin) {
-                    p.sendMessage(getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL_OF_VIPS));
-                    return false;
-                }
-            }
-
-            PlayerJoinArenaEvent ev = new PlayerJoinArenaEvent(this, p, false);
-            Bukkit.getPluginManager().callEvent(ev);
-            if (ev.isCancelled()) return false;
-
-            //Remove from ReJoin
-            ReJoin rejoin = ReJoin.getPlayer(p);
-            if (rejoin != null) {
-                rejoin.destroy(true);
-            }
-
-            p.closeInventory();
-            players.add(p);
-            p.setFlying(false);
-            p.setAllowFlight(false);
-            p.setHealth(20);
-            for (Player on : players) {
-                on.sendMessage(
-                        getMsg(on, Messages.COMMAND_JOIN_PLAYER_JOIN_MSG)
-                                .replace("{vPrefix}", getChatSupport().getPrefix(p))
-                                .replace("{vPrefixColor}", getChatSupport().getPrefixColor(p))
-                                .replace("{vSuffix}", getChatSupport().getSuffix(p))
-                                .replace("{playername}", p.getName())
-                                .replace("{player}", p.getDisplayName())
-                                .replace("{on}", String.valueOf(getPlayers().size()))
-                                .replace("{max}", String.valueOf(getMaxPlayers()))
-                );
-            }
-            setArenaByPlayer(p, this);
-
-            /* check if you can start the arena */
-            boolean isStatusChange = false;
-            if (status == GameState.waiting) {
-                int teams = 0, teammates = 0;
-                for (Player on : getPlayers()) {
-                    if (getParty().isOwner(on)) {
-                        teams++;
-                    }
-                    if (getParty().hasParty(on)) {
-                        teammates++;
-                    }
-                }
-                if (minPlayers <= players.size() && teams > 0 && players.size() != teammates / teams) {
-                    changeStatus(GameState.starting);
-                    isStatusChange = true;
-                } else if (players.size() >= minPlayers && teams == 0) {
-                    changeStatus(GameState.starting);
-                    isStatusChange = true;
+                if (getParty().hasParty(on)) {
+                    teammates++;
                 }
             }
+            if (minPlayers <= players.size() && teams > 0 && players.size() != teammates / teams) {
+                changeStatus(GameState.starting);
+                isStatusChange = true;
+            } else if (players.size() >= minPlayers && teams == 0) {
+                changeStatus(GameState.starting);
+                isStatusChange = true;
+            }
+        }
 
-            //half full arena time shorten
-            if (players.size() >= getMaxPlayers() / 2 && players.size() > minPlayers) {
-                if (startingTask != null && startingTask.getCountdown() > BedWars.config.getInt(ConfigPath.GENERAL_CONFIGURATION_START_COUNTDOWN_HALF)) {
-                    startingTask.setCountdown(BedWars.config.getInt(ConfigPath.GENERAL_CONFIGURATION_START_COUNTDOWN_HALF));
-                }
+        //half full arena time shorten
+        if (players.size() >= getMaxPlayers() / 2 && players.size() > minPlayers) {
+            if (startingTask != null && startingTask.getCountdown() > BedWars.config.getInt(ConfigPath.GENERAL_CONFIGURATION_START_COUNTDOWN_HALF)) {
+                startingTask.setCountdown(BedWars.config.getInt(ConfigPath.GENERAL_CONFIGURATION_START_COUNTDOWN_HALF));
             }
-            if (players.size() >= getMaxPlayers()) {
-                if (startingTask != null && startingTask.getCountdown() > BedWars.config.getInt(ConfigPath.GENERAL_CONFIGURATION_START_COUNTDOWN_SHORTENED)) {
-                    startingTask.setCountdown(BedWars.config.getInt(ConfigPath.GENERAL_CONFIGURATION_START_COUNTDOWN_SHORTENED));
-                }
+        }
+        if (players.size() >= getMaxPlayers()) {
+            if (startingTask != null && startingTask.getCountdown() > BedWars.config.getInt(ConfigPath.GENERAL_CONFIGURATION_START_COUNTDOWN_SHORTENED)) {
+                startingTask.setCountdown(BedWars.config.getInt(ConfigPath.GENERAL_CONFIGURATION_START_COUNTDOWN_SHORTENED));
             }
+        }
 
-            /* save player inventory etc */
-            if (getServerType() != ServerType.BUNGEE) {
-                new PlayerGoods(p, true);
-                playerLocation.put(p, p.getLocation());
-            }
-            PaperSupport.teleportC(p, getWaitingLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
+        /* save player inventory etc */
+        if (getServerType() != ServerType.BUNGEE) {
+            new PlayerGoods(p, true);
+            playerLocation.put(p, p.getLocation());
+        }
+        PaperSupport.teleportC(p, getWaitingLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
 
-            if (!isStatusChange) {
-                SidebarService.getInstance().giveSidebar(p, this, false);
-            }
-            sendPreGameCommandItems(p);
-            for (PotionEffect pf : p.getActivePotionEffects()) {
-                p.removePotionEffect(pf.getType());
-            }
-        } else if (status == GameState.playing || status == GameState.starting && (startingTask != null && startingTask.getCountdown() <= 1)) {
-            addSpectator(p, false, null);
-            p.sendMessage(getMsg(p, Messages.ARENA_JOIN_DENIED_NO_TIME));
-            /* stop code if status playing*/
-            return false;
+        if (!isStatusChange) {
+            SidebarService.getInstance().giveSidebar(p, this, false);
+        }
+        sendPreGameCommandItems(p);
+        for (PotionEffect pf : p.getActivePotionEffects()) {
+            p.removePotionEffect(pf.getType());
         }
 
         p.getInventory().setArmorContents(null);

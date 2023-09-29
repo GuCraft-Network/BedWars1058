@@ -60,6 +60,12 @@ public class JoinListenerBungee implements Listener {
             if (!p.hasPermission("bw.setup") && !p.hasPermission("group.zhiyuanzhe") && Arena.getArenas().isEmpty() && !RefreshAvailableArenaTask.isArenaAvailable() && Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena()).getStatus() != GameState.playing && Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena()).getStatus() != GameState.restarting) {
                 e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Language.getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL));
             }
+            if (BedWars.getParty().hasParty(p) && !BedWars.getParty().isOwner(p)) {
+                e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Language.getMsg(p, Messages.COMMAND_JOIN_DENIED_NOT_PARTY_LEADER));
+            }
+            if (BedWars.getParty().partySize(p) > Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena()).getMaxInTeam()) {
+                e.disallow(PlayerLoginEvent.Result.KICK_FULL, Language.getMsg(p, Messages.COMMAND_JOIN_DENIED_PARTY_TOO_BIG));
+            }
         } else {
             // If is logging in trough BedWarsProxy
             Language playerLang = proxyUser.getLanguage() == null ? Language.getDefaultLanguage() : proxyUser.getLanguage();
@@ -89,6 +95,9 @@ public class JoinListenerBungee implements Listener {
             switch (status) {
                 case starting:
                 case waiting:
+                    if (arena.getStartingTask().getCountdown() > 1) {
+                        e.disallow(PlayerLoginEvent.Result.KICK_FULL, Language.getDefaultLanguage().m(Messages.ARENA_JOIN_DENIED_NO_TIME));
+                    }
                     // Vip join/ kick feature
                     if (arena.getPlayers().size() >= arena.getMaxPlayers() && Arena.isVip(p)) {
                         boolean canJoin = false;
@@ -227,12 +236,7 @@ public class JoinListenerBungee implements Listener {
                     Sounds.playSound("join-allowed", p);
 
                     // If has no party
-                    if (proxyUser.getPartyOwnerOrSpectateTarget() == null) {
-                        // Add to arena
-                        if (!arena.addPlayer(p, true)) {
-                            p.kickPlayer(Language.getMsg(p, Messages.ARENA_JOIN_DENIED_NO_PROXY));
-                        }
-                    } else {
+                    if (proxyUser.getPartyOwnerOrSpectateTarget() != null) {
                         // If is member or owner of a remote party
 
                         Player partyOwner = Bukkit.getPlayer(proxyUser.getPartyOwnerOrSpectateTarget());
@@ -260,9 +264,9 @@ public class JoinListenerBungee implements Listener {
                             }
                             preLoadedParty.addMember(p);
                         }
-                        if (!arena.addPlayer(p, true)) {
-                            p.kickPlayer(Language.getMsg(p, Messages.ARENA_JOIN_DENIED_NO_PROXY));
-                        }
+                    }
+                    if (!arena.addPlayer(p, true)) {
+                        p.kickPlayer(Language.getMsg(p, Messages.ARENA_JOIN_DENIED_NO_PROXY));
                     }
                     break;
                 case playing:

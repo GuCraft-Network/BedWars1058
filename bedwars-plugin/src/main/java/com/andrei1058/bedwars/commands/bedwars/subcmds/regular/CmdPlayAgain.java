@@ -4,6 +4,7 @@ import com.andrei1058.bedwars.BedWars;
 import com.andrei1058.bedwars.api.arena.IArena;
 import com.andrei1058.bedwars.api.command.ParentCommand;
 import com.andrei1058.bedwars.api.command.SubCommand;
+import com.andrei1058.bedwars.api.server.ServerType;
 import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.arena.tasks.RefreshAvailableArenaTask;
 import org.bukkit.Bukkit;
@@ -13,6 +14,7 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 import static com.andrei1058.bedwars.BedWars.getParty;
+import static com.andrei1058.bedwars.BedWars.getServerType;
 
 public class CmdPlayAgain extends SubCommand {
 
@@ -32,7 +34,7 @@ public class CmdPlayAgain extends SubCommand {
         IArena a = Arena.getArenaByPlayer(p);
         if (a == null) return true;
 
-        if (!RefreshAvailableArenaTask.isArenaAvailable()) {
+        if (!RefreshAvailableArenaTask.isArenaAvailable() || getServerType() != ServerType.BUNGEE && !BedWars.getAPI().getArenaUtil().canAutoScale(a.getArenaName())) {
             switch (a.getGroup()) {
                 case "solo":
                     Group = "hyp1v";
