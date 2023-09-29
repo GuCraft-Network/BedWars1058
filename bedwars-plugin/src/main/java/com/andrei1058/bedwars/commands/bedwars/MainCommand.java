@@ -61,7 +61,7 @@ public class MainCommand extends BukkitCommand implements ParentCommand {
 
     public MainCommand(String name) {
         super(name);
-        setAliases(Arrays.asList("bedwars", "bedwars1058"));
+        setAliases(Arrays.asList("bedwars"));
         instance = this;
         new CmdJoin(this, "join");
         new CmdLeave(this, "leave");
@@ -74,6 +74,7 @@ public class MainCommand extends BukkitCommand implements ParentCommand {
         new CmdStart(this, "forceStart");
         new CmdStart(this, "start");
         new CmdPlayAgain(this, "playagain");
+        new CmdNoRecord(this, "norecord");
         if (BedWars.getServerType() != ServerType.BUNGEE) {
             new com.andrei1058.bedwars.commands.bedwars.subcmds.sensitive.SetLobby(this, "setLobby"); //priority 1
         }
