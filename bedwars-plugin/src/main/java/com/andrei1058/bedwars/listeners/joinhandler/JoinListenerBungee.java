@@ -59,9 +59,11 @@ public class JoinListenerBungee implements Listener {
         if (proxyUser == null) {
             if (!p.hasPermission("bw.setup") && !p.hasPermission("group.zhiyuanzhe") && Arena.getArenas().isEmpty() && !RefreshAvailableArenaTask.isArenaAvailable() && Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena()).getStatus() != GameState.playing && Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena()).getStatus() != GameState.restarting) {
                 e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Language.getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL));
+                return;
             }
             if (BedWars.getParty().hasParty(p) && !BedWars.getParty().getOwner(p).equals(p)) {
                 e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Language.getMsg(p, Messages.COMMAND_JOIN_DENIED_NOT_PARTY_LEADER));
+                return;
             }
             if (BedWars.getParty().hasParty(p) && BedWars.getParty().partySize(p) > Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena()).getMaxInTeam()) {
                 e.disallow(PlayerLoginEvent.Result.KICK_FULL, Language.getMsg(p, Messages.COMMAND_JOIN_DENIED_PARTY_TOO_BIG));
@@ -97,6 +99,7 @@ public class JoinListenerBungee implements Listener {
                 case waiting:
                     if (arena.getStatus() == GameState.starting && arena.getStartingTask().getCountdown() > 1) {
                         e.disallow(PlayerLoginEvent.Result.KICK_FULL, Language.getDefaultLanguage().m(Messages.ARENA_JOIN_DENIED_NO_TIME));
+                        return;
                     }
                     // Vip join/ kick feature
                     if (arena.getPlayers().size() >= arena.getMaxPlayers() && Arena.isVip(p)) {
