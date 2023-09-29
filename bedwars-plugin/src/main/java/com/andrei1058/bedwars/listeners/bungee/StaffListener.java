@@ -15,7 +15,7 @@ public class StaffListener implements Listener {
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent e) {
         String cmd = e.getMessage();
-        if (!cmd.startsWith("/tp ")) return;
+        if (!cmd.startsWith("/tp ") || !cmd.startsWith("/teleport ")) return;
 
         Player player = e.getPlayer();
         if (!player.hasPermission("minecraft.teleport.command")) return;
