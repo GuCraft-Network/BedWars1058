@@ -8,6 +8,8 @@ import com.andrei1058.bedwars.api.language.Messages;
 import com.andrei1058.bedwars.api.server.ServerType;
 import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.arena.tasks.RefreshAvailableArenaTask;
+import com.andrei1058.bedwars.commands.bedwars.MainCommand;
+import com.andrei1058.bedwars.configuration.Permissions;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -24,7 +26,9 @@ public class CmdPlayAgain extends SubCommand {
 
     public CmdPlayAgain(ParentCommand parent, String name) {
         super(parent, name);
-        showInList(false);
+        showInList(true);
+        setDisplayInfo(com.andrei1058.bedwars.commands.bedwars.MainCommand.createTC("§6 ▪ §7/" + MainCommand.getInstance().getName() + " " + getSubCommandName() + " §8 - §e再来一局。",
+                "/" + getParent().getName() + " " + getSubCommandName(), "§f再来一局。"));
     }
 
     @Override
