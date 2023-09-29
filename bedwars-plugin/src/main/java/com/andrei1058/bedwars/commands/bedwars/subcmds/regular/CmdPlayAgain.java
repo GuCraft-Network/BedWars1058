@@ -73,8 +73,10 @@ public class CmdPlayAgain extends SubCommand {
                         }
                         Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> targetArena.addPlayer(partyPlayers, true), 10L);
                     }
+                    return true;
                 } else {
                     p.sendMessage(getMsg(p, Messages.COMMAND_JOIN_DENIED_NOT_PARTY_LEADER));
+                    return true;
                 }
             } else {
                 if (a.isPlayer(p)) {
@@ -83,6 +85,7 @@ public class CmdPlayAgain extends SubCommand {
                     a.removeSpectator(p, false);
                 }
                 Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> targetArena.addPlayer(p, true), 10L);
+                return true;
             }
         }
         return true;
