@@ -60,7 +60,7 @@ public class JoinListenerBungee implements Listener {
             if (!p.hasPermission("bw.setup") && !p.hasPermission("group.zhiyuanzhe") && Arena.getArenas().isEmpty() && !RefreshAvailableArenaTask.isArenaAvailable() && Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena()).getStatus() != GameState.playing && Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena()).getStatus() != GameState.restarting) {
                 e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Language.getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL));
             }
-            if (BedWars.getParty().hasParty(p) && !BedWars.getParty().isOwner(p)) {
+            if (BedWars.getParty().hasParty(p) && !BedWars.getParty().getOwner(p).equals(p)) {
                 e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Language.getMsg(p, Messages.COMMAND_JOIN_DENIED_NOT_PARTY_LEADER));
             }
             if (BedWars.getParty().hasParty(p) && BedWars.getParty().partySize(p) > Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena()).getMaxInTeam()) {

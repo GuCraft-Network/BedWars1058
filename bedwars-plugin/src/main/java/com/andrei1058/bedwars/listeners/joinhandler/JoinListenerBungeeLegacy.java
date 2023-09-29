@@ -69,7 +69,7 @@ public class JoinListenerBungeeLegacy implements Listener {
 
             // Player logic
             if (arena.getStatus() == GameState.waiting || (arena.getStatus() == GameState.starting && arena.getStartingTask().getCountdown() > 1)) {
-                if (BedWars.getParty().hasParty(p) && !BedWars.getParty().isOwner(p)) {
+                if (BedWars.getParty().hasParty(p) && !BedWars.getParty().getOwner(p).equals(p)) {
                     e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Language.getMsg(p, Messages.COMMAND_JOIN_DENIED_NOT_PARTY_LEADER));
                 }
                 if (BedWars.getParty().hasParty(p) && BedWars.getParty().partySize(p) > Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena()).getMaxInTeam()) {

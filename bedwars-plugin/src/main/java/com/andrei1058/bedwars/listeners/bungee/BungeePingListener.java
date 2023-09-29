@@ -16,7 +16,7 @@ public class BungeePingListener implements Listener {
     public void onPing(ServerListPingEvent e) {
         if (!Arena.getArenas().isEmpty()) {
             if (RefreshAvailableArenaTask.isArenaAvailable()) {
-                if (availableArena > 0 && availableArena < Arena.getArenas().size()) {
+                if (availableArena >= 0 && availableArena < Arena.getArenas().size()) {
                     IArena a = Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena());
                     if (a != null) {
                         e.setMaxPlayers(a.getMaxPlayers());

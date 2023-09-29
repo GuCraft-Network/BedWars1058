@@ -63,7 +63,7 @@ public class CmdPlayAgain extends SubCommand {
         } else {
             IArena targetArena = Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena());
             if (getParty().hasParty(p)) {
-                if (getParty().isOwner(p)) {
+                if (getParty().getOwner(p).equals(p)) {
                     for (Player partyPlayers : getParty().getMembers(p)) {
                         if (partyPlayers == null) continue;
                         if (a.isPlayer(p)) {
