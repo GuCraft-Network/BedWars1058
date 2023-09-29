@@ -23,7 +23,7 @@ public class StaffListener implements Listener {
         if (!player.hasPermission("minecraft.teleport.command")) return;
 
         String[] args = cmd.split(" ");
-        if (args.length >= 2) return;
+        if (args.length > 2) return;
         e.setCancelled(true);
         IArena arena = Arena.getArenaByPlayer(player);
         if (arena != null && arena.getStatus() == GameState.playing && !arena.isSpectator(player)) {
