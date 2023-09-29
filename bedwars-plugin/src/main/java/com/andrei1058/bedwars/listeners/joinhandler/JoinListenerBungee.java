@@ -95,7 +95,7 @@ public class JoinListenerBungee implements Listener {
             switch (status) {
                 case starting:
                 case waiting:
-                    if (arena.getStartingTask().getCountdown() > 1) {
+                    if (arena.getStatus() == GameState.starting && arena.getStartingTask().getCountdown() > 1) {
                         e.disallow(PlayerLoginEvent.Result.KICK_FULL, Language.getDefaultLanguage().m(Messages.ARENA_JOIN_DENIED_NO_TIME));
                     }
                     // Vip join/ kick feature
