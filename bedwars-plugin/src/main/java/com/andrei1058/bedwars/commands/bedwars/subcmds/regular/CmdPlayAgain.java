@@ -40,7 +40,7 @@ public class CmdPlayAgain extends SubCommand {
         IArena a = Arena.getArenaByPlayer(p);
         if (a == null) return true;
 
-        if (!RefreshAvailableArenaTask.isArenaAvailable() || getServerType() != ServerType.BUNGEE && !BedWars.getAPI().getArenaUtil().canAutoScale(a.getArenaName())) {
+        if (!RefreshAvailableArenaTask.isArenaAvailable() || getServerType() != ServerType.BUNGEE && !BedWars.getAPI().getArenaUtil().canAutoScale(a.getArenaName()) && Bukkit.getPluginManager().getPlugin("ServerJoiner") != null) {
             switch (a.getGroup()) {
                 case "solo":
                     Group = "hyp1v";
@@ -89,6 +89,11 @@ public class CmdPlayAgain extends SubCommand {
                 Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> targetArena.addPlayer(p, true), 10L);
             }
         }
+        Bukkit.getScheduler().runTaskLaterAsynchronously(BedWars.plugin, () -> {
+            if (Arena.getArenaByPlayer(p) == null) {
+                Misc.moveToLobbyOrKick(p, a, a.isSpectator(p));
+            }
+        }, 20L);
         return true;
     }
 
