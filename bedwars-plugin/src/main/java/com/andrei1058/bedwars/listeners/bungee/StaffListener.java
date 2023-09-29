@@ -21,7 +21,7 @@ public class StaffListener implements Listener {
         if (!player.hasPermission("minecraft.teleport.command")) return;
 
         String[] args = cmd.split(" ", 3);
-        if (args.length < 2) return;
+        if (args.length >= 2) return;
         e.setCancelled(true);
         IArena arena = Arena.getArenaByPlayer(player);
         if (arena != null && arena.getStatus() == GameState.playing && !arena.isSpectator(player)) {
@@ -44,6 +44,7 @@ public class StaffListener implements Listener {
         if (arena != null) {
             arena.removeSpectator(player, false);
             Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> targetArena.addSpectator(player, false, null), 10L);
+            return;
         }
         targetArena.addSpectator(player, false, null);
     }

@@ -68,7 +68,7 @@ public class JoinListenerBungeeLegacy implements Listener {
         if (arena != null) {
 
             // Player logic
-            if (arena.getStatus() == GameState.waiting || (arena.getStatus() == GameState.starting && arena.getStartingTask().getCountdown() > 1)) {
+            if (arena.getStatus() == GameState.waiting || arena.getStatus() == GameState.starting && arena.getStartingTask().getCountdown() > 1) {
                 if (BedWars.getParty().hasParty(p) && !BedWars.getParty().getOwner(p).equals(p)) {
                     e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Language.getMsg(p, Messages.COMMAND_JOIN_DENIED_NOT_PARTY_LEADER));
                     return;
