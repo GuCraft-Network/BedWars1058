@@ -40,8 +40,15 @@ public class StaffListener implements Listener {
         }
 
         IArena targetArena = Arena.getArenaByPlayer(targetPlayer);
-        if (targetArena == null || targetArena.getStatus() != GameState.playing) {
-            player.sendMessage("§c该玩家还没开始游戏！");
+        if (targetArena == null) {
+            player.sendMessage("§c该玩家还没进入游戏！");
+            return;
+        }
+        if (targetArena.getStatus() == GameState.waiting || targetArena.getStatus() == GameState.starting && !(targetArena.getStartingTask().getCountdown() < 1)) {
+            if (arena != null) {
+                arena.removeSpectator(player,false);
+            }
+            Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> targetArena.addPlayer(player, false), 10L);
             return;
         }
 

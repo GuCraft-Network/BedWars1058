@@ -1,6 +1,7 @@
 package com.andrei1058.bedwars.commands.bedwars.subcmds.regular;
 
 import com.andrei1058.bedwars.BedWars;
+import com.andrei1058.bedwars.api.arena.GameState;
 import com.andrei1058.bedwars.api.arena.IArena;
 import com.andrei1058.bedwars.api.command.ParentCommand;
 import com.andrei1058.bedwars.api.command.SubCommand;
@@ -40,7 +41,7 @@ public class CmdPlayAgain extends SubCommand {
         IArena a = Arena.getArenaByPlayer(p);
         if (a == null) return true;
 
-        if (!RefreshAvailableArenaTask.isArenaAvailable() || getServerType() != ServerType.BUNGEE && !BedWars.getAPI().getArenaUtil().canAutoScale(a.getArenaName()) && Bukkit.getPluginManager().getPlugin("ServerJoiner") != null) {
+        if (getServerType() != ServerType.BUNGEE && Bukkit.getPluginManager().getPlugin("ServerJoiner") != null && !RefreshAvailableArenaTask.isArenaAvailable() || Arena.getArenas().get(RefreshAvailableArenaTask.availableArena).getStatus() != GameState.playing) {
             switch (a.getGroup()) {
                 case "solo":
                     Group = "hyp1v";
