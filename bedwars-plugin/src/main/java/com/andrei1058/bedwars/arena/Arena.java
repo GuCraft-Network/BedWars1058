@@ -697,38 +697,36 @@ public class Arena implements IArena {
         if (getArenaByPlayer(p) != null) {
             return false;
         }
-        if (getServerType() != ServerType.BUNGEE) {
-            if (getParty().hasParty(p)) {
-                if (!skipOwnerCheck) {
-                    if (!getParty().isOwner(p)) {
-                        p.sendMessage(getMsg(p, Messages.COMMAND_JOIN_DENIED_NOT_PARTY_LEADER));
-                        return false;
+        if (getParty().hasParty(p)) {
+            if (!skipOwnerCheck) {
+                if (!getParty().getOwner(p).equals(p)) {
+                    p.sendMessage(getMsg(p, Messages.COMMAND_JOIN_DENIED_NOT_PARTY_LEADER));
+                    return false;
+                }
+                int partySize = (int) getParty().getMembers(p).stream().filter(member -> {
+                    IArena arena = Arena.getArenaByPlayer(member);
+                    if (arena == null) {
+                        return true;
                     }
-                    int partySize = (int) getParty().getMembers(p).stream().filter(member -> {
-                        IArena arena = Arena.getArenaByPlayer(member);
-                        if (arena == null) {
-                            return true;
-                        }
-                        return arena.isSpectator(member);
-                    }).count();
+                    return arena.isSpectator(member);
+                }).count();
 
-                    if (partySize > maxInTeam * getTeams().size() - getPlayers().size()) {
-                        p.sendMessage(getMsg(p, Messages.COMMAND_JOIN_DENIED_PARTY_TOO_BIG));
-                        return false;
-                    }
-                    for (Player mem : getParty().getMembers(p)) {
-                        if (mem == p) continue;
-                        IArena a = Arena.getArenaByPlayer(mem);
-                        if (a != null) {
+                if (partySize > maxInTeam * getTeams().size() - getPlayers().size()) {
+                    p.sendMessage(getMsg(p, Messages.COMMAND_JOIN_DENIED_PARTY_TOO_BIG));
+                    return false;
+                }
+                for (Player mem : getParty().getMembers(p)) {
+                    if (mem == p) continue;
+                    IArena a = Arena.getArenaByPlayer(mem);
+                    if (a != null) {
                         /*if (a.isPlayer(mem)) {
                             a.removePlayer(mem, false);
                         } else */
-                            if (a.isSpectator(mem)) {
-                                a.removeSpectator(mem, false);
-                            }
+                        if (a.isSpectator(mem)) {
+                            a.removeSpectator(mem, false);
                         }
-                        addPlayer(mem, true);
                     }
+                    addPlayer(mem, true);
                 }
             }
         }

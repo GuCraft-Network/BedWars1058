@@ -66,7 +66,8 @@ public class JoinListenerBungee implements Listener {
                 e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Language.getMsg(p, Messages.COMMAND_JOIN_DENIED_NOT_PARTY_LEADER));
                 return;
             }
-            if (BedWars.getParty().hasParty(p) && BedWars.getParty().partySize(p) > Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena()).getMaxInTeam()) {
+            IArena currentArena = Arena.getArenas().get(availableArena);
+            if (BedWars.getParty().hasParty(p) && BedWars.getParty().partySize(p) > currentArena.getMaxInTeam() || BedWars.getParty().partySize(p) > currentArena.getMaxPlayers() - currentArena.getPlayers().size()) {
                 e.disallow(PlayerLoginEvent.Result.KICK_FULL, Language.getMsg(p, Messages.COMMAND_JOIN_DENIED_PARTY_TOO_BIG));
             }
         } else {

@@ -4,7 +4,6 @@ import com.andrei1058.bedwars.BedWars;
 import com.andrei1058.bedwars.api.arena.IArena;
 import com.andrei1058.bedwars.api.command.ParentCommand;
 import com.andrei1058.bedwars.api.command.SubCommand;
-import com.andrei1058.bedwars.api.language.Messages;
 import com.andrei1058.bedwars.api.server.ServerType;
 import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.arena.Misc;
@@ -16,9 +15,7 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-import static com.andrei1058.bedwars.BedWars.getParty;
 import static com.andrei1058.bedwars.BedWars.getServerType;
-import static com.andrei1058.bedwars.api.language.Language.getMsg;
 
 public class CmdPlayAgain extends SubCommand {
 
@@ -66,28 +63,12 @@ public class CmdPlayAgain extends SubCommand {
             Bukkit.dispatchCommand(p, "sj fastjoin " + Group);
         } else {
             IArena targetArena = Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena());
-            if (getParty().hasParty(p)) {
-                if (getParty().getOwner(p).equals(p)) {
-                    for (Player partyPlayers : getParty().getMembers(p)) {
-                        if (partyPlayers == null) continue;
-                        if (a.isPlayer(p)) {
-                            a.removePlayer(partyPlayers, false);
-                        } else {
-                            a.removeSpectator(partyPlayers, false);
-                        }
-                        Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> targetArena.addPlayer(partyPlayers, true), 10L);
-                    }
-                } else {
-                    p.sendMessage(getMsg(p, Messages.COMMAND_JOIN_DENIED_NOT_PARTY_LEADER));
-                }
+            if (a.isPlayer(p)) {
+                a.removePlayer(p, false);
             } else {
-                if (a.isPlayer(p)) {
-                    a.removePlayer(p, false);
-                } else {
-                    a.removeSpectator(p, false);
-                }
-                Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> targetArena.addPlayer(p, true), 10L);
+                a.removeSpectator(p, false);
             }
+            Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> targetArena.addPlayer(p, true), 10L);
         }
         Bukkit.getScheduler().runTaskLaterAsynchronously(BedWars.plugin, () -> {
             if (Arena.getArenaByPlayer(p) == null) {

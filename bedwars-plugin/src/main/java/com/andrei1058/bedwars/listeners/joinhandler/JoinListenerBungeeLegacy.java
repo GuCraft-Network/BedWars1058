@@ -27,7 +27,6 @@ import com.andrei1058.bedwars.api.language.Language;
 import com.andrei1058.bedwars.api.language.Messages;
 import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.arena.ReJoin;
-import com.andrei1058.bedwars.arena.tasks.RefreshAvailableArenaTask;
 import com.andrei1058.bedwars.configuration.Permissions;
 import com.andrei1058.bedwars.configuration.Sounds;
 import org.bukkit.entity.Player;
@@ -73,9 +72,8 @@ public class JoinListenerBungeeLegacy implements Listener {
                     e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Language.getMsg(p, Messages.COMMAND_JOIN_DENIED_NOT_PARTY_LEADER));
                     return;
                 }
-                if (BedWars.getParty().hasParty(p) && BedWars.getParty().partySize(p) > Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena()).getMaxInTeam()) {
+                if (BedWars.getParty().hasParty(p) && BedWars.getParty().partySize(p) > arena.getMaxInTeam() || BedWars.getParty().partySize(p) > arena.getMaxPlayers() - arena.getPlayers().size()) {
                     e.disallow(PlayerLoginEvent.Result.KICK_FULL, Language.getMsg(p, Messages.COMMAND_JOIN_DENIED_PARTY_TOO_BIG));
-                    return;
                 }
                 // If arena is full
                 if (arena.getPlayers().size() >= arena.getMaxPlayers()) {
