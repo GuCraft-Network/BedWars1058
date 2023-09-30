@@ -10,8 +10,11 @@ import com.andrei1058.bedwars.arena.Misc;
 import com.andrei1058.bedwars.arena.tasks.RefreshAvailableArenaTask;
 import com.andrei1058.bedwars.commands.bedwars.MainCommand;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
 
@@ -62,6 +65,8 @@ public class CmdPlayAgain extends SubCommand {
             }
             Bukkit.dispatchCommand(p, "sj fastjoin " + Group);
         } else {
+            p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1, false));
+            p.setGameMode(GameMode.SPECTATOR);
             IArena targetArena = Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena());
             if (a.isPlayer(p)) {
                 a.removePlayer(p, false);

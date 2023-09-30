@@ -157,7 +157,7 @@ public class JoinListenerBungee implements Listener {
                     }
                 }
             }
-            if (p.hasPermission("group.zhiyuanzhe")) {
+            if (p.hasPermission(Permissions.PERMISSION_SPECCHAT)) {
                 World mainWorld = Bukkit.getWorlds().get(0);
                 if (mainWorld != null) {
                     PaperSupport.teleportC(p, mainWorld.getSpawnLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);

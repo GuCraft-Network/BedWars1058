@@ -4,6 +4,7 @@ import com.andrei1058.bedwars.BedWars;
 import com.andrei1058.bedwars.api.arena.GameState;
 import com.andrei1058.bedwars.api.arena.IArena;
 import com.andrei1058.bedwars.arena.Arena;
+import com.andrei1058.bedwars.configuration.Permissions;
 import com.andrei1058.bedwars.support.paper.PaperSupport;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -16,11 +17,12 @@ public class StaffListener implements Listener {
 
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent e) {
+        if (e.isCancelled()) return;
         String cmd = e.getMessage();
         if (!cmd.startsWith("/tp ") && !cmd.startsWith("/teleport ")) return;
 
         Player player = e.getPlayer();
-        if (!player.hasPermission("minecraft.command.teleport")) return;
+        if (!player.hasPermission(Permissions.PERMISSION_SPECCHAT)) return;
 
         String[] args = cmd.split(" ");
         if (args.length > 3) return;
