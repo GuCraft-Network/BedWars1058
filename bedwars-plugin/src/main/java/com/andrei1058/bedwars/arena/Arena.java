@@ -731,38 +731,42 @@ public class Arena implements IArena {
                     }
                 }
             }
-            if (status == GameState.waiting || (status == GameState.starting && (startingTask != null && startingTask.getCountdown() > 1))) {
-                if (players.size() >= maxPlayers && !isVip(p)) {
-                    TextComponent text = new TextComponent(getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL));
-                    text.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, config.getYml().getString("storeLink")));
-                    p.spigot().sendMessage(text);
-                    return false;
-                } else if (players.size() >= maxPlayers && isVip(p)) {
-                    boolean canJoin = false;
-                    for (Player on : new ArrayList<>(players)) {
-                        if (!isVip(on)) {
-                            canJoin = true;
-                            removePlayer(on, true);
-                            TextComponent vipKick = new TextComponent(getMsg(p, Messages.ARENA_JOIN_VIP_KICK));
-                            vipKick.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, config.getYml().getString("storeLink")));
-                            p.spigot().sendMessage(vipKick);
-                            break;
-                        }
-                    }
-                    if (!canJoin) {
-                        p.sendMessage(getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL_OF_VIPS));
-                        return false;
-                    }
-                }
-            } else if (status == GameState.playing || status == GameState.starting && (startingTask != null && startingTask.getCountdown() <= 1)) {
-                addSpectator(p, false, null);
-                p.sendMessage(getMsg(p, Messages.ARENA_JOIN_DENIED_NO_TIME));
-                /* stop code if status playing*/
-                return false;
-            }
         }
 
         leaving.remove(p);
+
+        if (status == GameState.waiting || (status == GameState.starting && (startingTask != null && startingTask.getCountdown() > 1))) {
+            if (players.size() >= maxPlayers && !isVip(p)) {
+                TextComponent text = new TextComponent(getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL));
+                text.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, config.getYml().getString("storeLink")));
+                p.spigot().sendMessage(text);
+                p.performCommand("/bw playagain");
+                return false;
+            } else if (players.size() >= maxPlayers && isVip(p)) {
+                boolean canJoin = false;
+                for (Player on : new ArrayList<>(players)) {
+                    if (!isVip(on)) {
+                        canJoin = true;
+                        removePlayer(on, true);
+                        TextComponent vipKick = new TextComponent(getMsg(p, Messages.ARENA_JOIN_VIP_KICK));
+                        vipKick.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, config.getYml().getString("storeLink")));
+                        p.spigot().sendMessage(vipKick);
+                        p.performCommand("/bw playagain");
+                        break;
+                    }
+                }
+                if (!canJoin) {
+                    p.sendMessage(getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL_OF_VIPS));
+                    p.performCommand("/bw playagain");
+                    return false;
+                }
+            }
+        } else if (status == GameState.playing || status == GameState.starting && (startingTask != null && startingTask.getCountdown() <= 1)) {
+            addSpectator(p, false, null);
+            p.sendMessage(getMsg(p, Messages.ARENA_JOIN_DENIED_NO_TIME));
+            /* stop code if status playing*/
+            return false;
+        }
 
         PlayerJoinArenaEvent ev = new PlayerJoinArenaEvent(this, p, false);
         Bukkit.getPluginManager().callEvent(ev);
