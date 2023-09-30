@@ -20,10 +20,10 @@ public class StaffListener implements Listener {
         if (!cmd.startsWith("/tp ") && !cmd.startsWith("/teleport ")) return;
 
         Player player = e.getPlayer();
-        if (!player.hasPermission("minecraft.teleport.command")) return;
+        if (!player.hasPermission("minecraft.command.teleport")) return;
 
         String[] args = cmd.split(" ");
-        if (args.length > 2) return;
+        if (args.length > 3) return;
         e.setCancelled(true);
         IArena arena = Arena.getArenaByPlayer(player);
         if (arena != null && arena.getStatus() == GameState.playing && !arena.isSpectator(player)) {
@@ -46,11 +46,11 @@ public class StaffListener implements Listener {
         if (arena != null) {
             arena.removeSpectator(player, false);
             Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> targetArena.addSpectator(player, false, null), 10L);
-            PaperSupport.teleportC(player, targetPlayer.getLocation(), PlayerTeleportEvent.TeleportCause.COMMAND);
+            Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> PaperSupport.teleportC(player, targetPlayer.getLocation(), PlayerTeleportEvent.TeleportCause.COMMAND), 15L);
             return;
         }
         targetArena.addSpectator(player, false, null);
-        PaperSupport.teleportC(player, targetPlayer.getLocation(), PlayerTeleportEvent.TeleportCause.COMMAND);
+        Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> PaperSupport.teleportC(player, targetPlayer.getLocation(), PlayerTeleportEvent.TeleportCause.COMMAND), 15L);
     }
 
 }

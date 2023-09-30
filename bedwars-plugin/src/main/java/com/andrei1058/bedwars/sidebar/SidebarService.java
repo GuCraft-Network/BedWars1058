@@ -167,7 +167,7 @@ public class SidebarService implements ISidebarService {
 
     public void refreshHealth() {
         this.sidebars.forEach((k, v) -> {
-            if (null != v.getArena()) {
+            if (v != null && v.getArena() != null) {
                 v.getHandle().playerHealthRefreshAnimation();
                 for (Player player : v.getArena().getPlayers()) {
                     if (player == null) {

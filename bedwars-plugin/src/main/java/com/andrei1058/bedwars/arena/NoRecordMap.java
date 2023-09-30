@@ -21,7 +21,7 @@ public class NoRecordMap implements Listener {
         IArena a = Arena.getArenaByPlayer(player);
         if (a == null) return;
         if (cmd.startsWith("/tp ") || cmd.startsWith("/gamemode ") || cmd.startsWith("/give ")) {
-            if (player.hasPermission("minecraft.teleport.command")) {
+            if (player.hasPermission("minecraft.command.teleport")) {
                 if (a.getWorldName().contains(a.getWorldName())) return;
                 if (a.getStatus() != GameState.playing) return;
                 if (a.getPlayers().isEmpty()) {
