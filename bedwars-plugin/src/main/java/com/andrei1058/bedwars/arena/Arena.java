@@ -1493,11 +1493,11 @@ public class Arena implements IArena {
         BedWars.getAPI().getRestoreAdapter().onDisable(this);
         Bukkit.getPluginManager().callEvent(new ArenaDisableEvent(getArenaName(), getWorldName()));
         destroyData();
-        if (Arena.getArenas().isEmpty() && Arena.getEnableQueue().isEmpty()) {
-            boolean allReachedTarget = true;
+        if (Arena.getEnableQueue().isEmpty()) {
+            boolean allReachedTarget = false;
             for (int value : SlimeAdapter.restartCounts.values()) {
-                if (value < BedWars.getAPI().getArenaUtil().getGamesBeforeRestart()) {
-                    allReachedTarget = false;
+                if (value > BedWars.getAPI().getArenaUtil().getGamesBeforeRestart()) {
+                    allReachedTarget = true;
                     break;
                 }
             }

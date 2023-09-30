@@ -137,10 +137,22 @@ public class SlimeAdapter extends RestoreAdapter {
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), api.getConfigs().getMainConfig().getString(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_RESTART_CMD));
                     }
                 } else {
-                    if (!api.getArenaUtil().canAutoScale(a.getArenaName())) {
-                        if (api.getArenaUtil().getGamesBeforeRestart() != -1) {
-                            api.getArenaUtil().setGamesBeforeRestart(api.getArenaUtil().getGamesBeforeRestart() - 1);
-                        }
+                    if (api.getArenaUtil().getGamesBeforeRestart() != -1) {
+                        api.getArenaUtil().setGamesBeforeRestart(api.getArenaUtil().getGamesBeforeRestart() - 1);
+                    }
+                }
+            } else {
+                String arenaName = a.getArenaName();
+                Integer count = restartCounts.get(arenaName);
+                if (count == null) {
+                    count = 1;
+                    restartCounts.put(arenaName,count);
+                } else {
+                    count++;
+                    SlimeAdapter.restartCounts.replace(arenaName, count);
+                    if (count > api.getArenaUtil().getGamesBeforeRestart()) {
+                        a.disable();
+                        return;
                     }
                 }
             }
