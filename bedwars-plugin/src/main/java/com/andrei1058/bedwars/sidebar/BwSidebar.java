@@ -78,9 +78,7 @@ public class BwSidebar implements ISidebar {
             handle = SidebarService.getInstance().getSidebarHandler().createSidebar(title, lines, placeholders);
             handle.add(player);
         } else {
-            while (handle.lineCount() > 0) {
-                handle.removeLine(0);
-            }
+            handle.clearLines();
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 new ArrayList<>(handle.getPlaceholders()).forEach(p -> handle.removePlaceholder(p.getPlaceholder()));
                 placeholders.forEach(p -> handle.addPlaceholder(p));
@@ -120,13 +118,14 @@ public class BwSidebar implements ISidebar {
             line = line.replace("{server_ip}", "{serverIp}");
 
             // generic team placeholder {team}
-            if (arena != null) {
+            if (null != arena) {
                 if (line.trim().equals("{team}")) {
                     if (arena.getTeams().size() > teamCount) {
                         ITeam team = arena.getTeams().get(teamCount++);
                         String teamName = team.getDisplayName(language);
+                        String teamLetter = String.valueOf(!teamName.isEmpty() ? teamName.charAt(0) : "");
                         line = genericTeamFormat
-                                .replace("{TeamLetter}", String.valueOf(teamName.length() != 0 ? teamName.charAt(0) : ""))
+                                .replace("{TeamLetter}", teamLetter)
                                 .replace("{TeamColor}", team.getColor().chat().toString())
                                 .replace("{TeamName}", teamName)
                                 .replace("{TeamStatus}", "{Team" + team.getName() + "Status}");
@@ -143,10 +142,20 @@ public class BwSidebar implements ISidebar {
 
                 for (ITeam currentTeam : arena.getTeams()) {
                     final ChatColor color = currentTeam.getColor().chat();
+                    final String teamName = currentTeam.getDisplayName(language);
+                    final String teamLetter = String.valueOf(!teamName.isEmpty() ? teamName.charAt(0) : "");
                     // Static team placeholders
                     line = line
                             .replace("{Team" + currentTeam.getName() + "Color}", color.toString())
-                            .replace("{Team" + currentTeam.getName() + "Name}", currentTeam.getDisplayName(language));
+                            .replace("{Team" + currentTeam.getName() + "Name}", teamName)
+                            .replace("{Team" + currentTeam.getName() + "Letter}", teamLetter);
+
+                    boolean isMember = currentTeam.isMember(getPlayer()) || currentTeam.wasMember(getPlayer().getUniqueId());
+                    if (isMember) {
+                        line = line.replace("{PlayerTeamName}", teamName)
+                                .replace("{PlayerTeamColor}", currentTeam.getColor().chat().toString())
+                                .replace("{PlayerTeamLetter}", teamLetter);
+                    }
 
                 }
             }
