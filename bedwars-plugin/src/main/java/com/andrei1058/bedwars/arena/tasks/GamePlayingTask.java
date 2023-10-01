@@ -150,12 +150,13 @@ public class GamePlayingTask implements Runnable, PlayingTask {
                 }
                 break;
         }
+        /*
         int distance = 0;
         for (ITeam t : getArena().getTeams()) {
             if (t.getSize() > 1) {
                 for (Player p : t.getMembers()) {
                     for (Player p2 : t.getMembers()) {
-                        if (p2 == p) continue;
+                        if (p2 == p || p2.getLocation() == null) continue;
                         if (distance == 0) {
                             distance = (int) p.getLocation().distance(p2.getLocation());
                         } else if ((int) p.getLocation().distance(p2.getLocation()) < distance) {
@@ -166,7 +167,8 @@ public class GamePlayingTask implements Runnable, PlayingTask {
                             .replace("{distance}", t.getColor().chat().toString() + distance).replace("&", "§"));
                 }
             }
-
+*/
+        for (ITeam t : getArena().getTeams()) {
             // spawn items
             for (IGenerator o : t.getGenerators()) {
                 o.spawn();
@@ -202,7 +204,7 @@ public class GamePlayingTask implements Runnable, PlayingTask {
                 }
                 if (current == 130) {
                     for (Player arenaPlayers : getArena().getPlayers()) {
-                        p.sendMessage(Arena.getArenaByPlayer(p).getTeam(p).getColor().chat() + p.getDisplayName() + "§7因挂机离开了游戏。");
+                        arenaPlayers.sendMessage(Arena.getArenaByPlayer(p).getTeam(p).getColor().chat() + p.getDisplayName() + "§7因挂机离开了游戏。");
                     }
                     p.kickPlayer("§c§l你因挂机超过130秒而被移出。");
                 }
