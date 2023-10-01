@@ -49,7 +49,7 @@ public class StaffListener implements Listener {
                 if (arena.isPlayer(player)) {
                     arena.removePlayer(player, false);
                 } else {
-                    arena.removeSpectator(player,false);
+                    arena.removeSpectator(player, false);
                 }
             }
             Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> targetArena.addPlayer(player, false), 10L);
@@ -60,7 +60,7 @@ public class StaffListener implements Listener {
             if (arena.isPlayer(player)) {
                 arena.removePlayer(player, false);
             } else {
-                arena.removeSpectator(player,false);
+                arena.removeSpectator(player, false);
             }
             Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> targetArena.addSpectator(player, false, null), 10L);
             Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> PaperSupport.teleportC(player, targetPlayer.getLocation(), PlayerTeleportEvent.TeleportCause.COMMAND), 15L);

@@ -1,8 +1,9 @@
 name: BedWars1058
 api-version: '1.13'
-version: 1.1N
+version: 1.11B
 author: andrei1058, YukiEnd
 description: BedWars minigame Modified @ YukiEnd
 main: com.andrei1058.bedwars.BedWars
-softdepend: [ Vault,PlaceholderAPI,Parties,SlimeWorldManager,VipFeatures,Enhanced-SlimeWorldManager,PartyAndFriends,Spigot-Party-API-PAF ]
+depend: [ LuckPerms ]
+softdepend: [ Vault,ProtocolLib,PlaceholderAPI,Parties,SlimeWorldManager,Enhanced-SlimeWorldManager,PartyAndFriends,Spigot-Party-API-PAF ]
 load: STARTUP
