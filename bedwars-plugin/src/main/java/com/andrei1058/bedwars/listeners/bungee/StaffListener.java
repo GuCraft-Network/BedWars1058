@@ -46,14 +46,22 @@ public class StaffListener implements Listener {
         }
         if (targetArena.getStatus() == GameState.waiting || targetArena.getStatus() == GameState.starting && !(targetArena.getStartingTask().getCountdown() < 1)) {
             if (arena != null) {
-                arena.removeSpectator(player,false);
+                if (arena.isPlayer(player)) {
+                    arena.removePlayer(player, false);
+                } else {
+                    arena.removeSpectator(player,false);
+                }
             }
             Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> targetArena.addPlayer(player, false), 10L);
             return;
         }
 
         if (arena != null) {
-            arena.removeSpectator(player, false);
+            if (arena.isPlayer(player)) {
+                arena.removePlayer(player, false);
+            } else {
+                arena.removeSpectator(player,false);
+            }
             Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> targetArena.addSpectator(player, false, null), 10L);
             Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> PaperSupport.teleportC(player, targetPlayer.getLocation(), PlayerTeleportEvent.TeleportCause.COMMAND), 15L);
             return;

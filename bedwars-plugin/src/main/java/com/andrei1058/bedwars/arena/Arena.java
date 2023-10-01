@@ -730,7 +730,7 @@ public class Arena implements IArena {
                 }
             }
         }
-
+        respawns.remove(p);
         leaving.remove(p);
 
         if (status == GameState.waiting || (status == GameState.starting && (startingTask != null && startingTask.getCountdown() > 1))) {
@@ -917,6 +917,7 @@ public class Arena implements IArena {
             p.closeInventory();
             spectators.add(p);
             players.remove(p);
+            respawns.remove(p);
 
             updateSpectatorCollideRule(p, false);
 
@@ -1035,6 +1036,7 @@ public class Arena implements IArena {
             Bukkit.getScheduler().cancelTask(respawnSessions.get(p));
         }
         respawnSessions.remove(p);
+        respawns.remove(p);
 
 
         ITeam team = null;
