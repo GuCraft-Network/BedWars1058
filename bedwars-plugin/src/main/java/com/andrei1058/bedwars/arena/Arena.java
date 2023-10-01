@@ -877,16 +877,6 @@ public class Arena implements IArena {
             p.getEnderChest().clear();
         }
 
-        if (getPlayers().size() >= getMaxPlayers()) {
-            if (startingTask != null) {
-                if (Bukkit.getScheduler().isCurrentlyRunning(startingTask.getTask())) {
-                    if (startingTask.getCountdown() > BedWars.config.getInt(ConfigPath.GENERAL_CONFIGURATION_START_COUNTDOWN_SHORTENED)) {
-                        startingTask.setCountdown(BedWars.config.getInt(ConfigPath.GENERAL_CONFIGURATION_START_COUNTDOWN_SHORTENED));
-                    }
-                }
-            }
-        }
-
         return true;
     }
 
