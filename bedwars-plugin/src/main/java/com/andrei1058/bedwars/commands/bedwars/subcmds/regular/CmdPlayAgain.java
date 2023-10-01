@@ -65,7 +65,7 @@ public class CmdPlayAgain extends SubCommand {
                 case "swap_4v4v4v4":
                     Group = "shyp4v";
             }
-            Bukkit.dispatchCommand(p, "sj fastjoin " + Group);
+            p.performCommand("sj fastjoin" + Group);
         } else {
             p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1, false));
             p.setGameMode(GameMode.SPECTATOR);
