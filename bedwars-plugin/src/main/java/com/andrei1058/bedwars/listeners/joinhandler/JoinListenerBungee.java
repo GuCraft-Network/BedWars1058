@@ -171,6 +171,7 @@ public class JoinListenerBungee implements Listener {
                     }
                 }
                 p.setGameMode(GameMode.SPECTATOR);
+                p.sendMessage("§c§l由于架构变动，需要手动传送。§e使用/tp <玩家>即可加入玩家所在的地图。");
             } else {
                 // The player is not an admin and he joined using /server or equivalent
                 IArena arena = Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena());

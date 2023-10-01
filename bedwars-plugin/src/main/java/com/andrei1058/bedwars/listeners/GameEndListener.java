@@ -75,10 +75,9 @@ public class GameEndListener implements Listener {
     public void onPlayerToggleFlight(PlayerToggleFlightEvent event) {
         Player player = event.getPlayer();
 
-        if (player.getGameMode() == GameMode.CREATIVE) return;
+        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
 
-        IArena a = Arena.getArenaByPlayer(player);
-        if (a.getStatus() != GameState.restarting) return;
+        if (Arena.getArenaByPlayer(player).getStatus() != GameState.restarting) return;
 
         if (player.getAllowFlight()) {
             event.setCancelled(true);

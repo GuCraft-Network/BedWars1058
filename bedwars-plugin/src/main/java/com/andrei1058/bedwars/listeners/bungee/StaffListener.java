@@ -25,7 +25,7 @@ public class StaffListener implements Listener {
         if (!player.hasPermission(Permissions.PERMISSION_SPECCHAT)) return;
 
         String[] args = cmd.split(" ");
-        if (args.length > 3) return;
+        if (args.length >= 3) return;
         e.setCancelled(true);
         IArena arena = Arena.getArenaByPlayer(player);
         if (arena != null && arena.getStatus() == GameState.playing && !arena.isSpectator(player)) {
