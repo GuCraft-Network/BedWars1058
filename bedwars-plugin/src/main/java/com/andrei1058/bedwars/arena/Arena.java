@@ -740,6 +740,7 @@ public class Arena implements IArena {
                 TextComponent text = new TextComponent(getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL));
                 text.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, config.getYml().getString("storeLink")));
                 p.spigot().sendMessage(text);
+                Misc.moveToLobbyOrKick(p, this, true);
                 return false;
             } else if (players.size() >= maxPlayers && isVip(p)) {
                 boolean canJoin = false;
@@ -750,11 +751,13 @@ public class Arena implements IArena {
                         TextComponent vipKick = new TextComponent(getMsg(p, Messages.ARENA_JOIN_VIP_KICK));
                         vipKick.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, config.getYml().getString("storeLink")));
                         p.spigot().sendMessage(vipKick);
+                        Misc.moveToLobbyOrKick(p, this, true);
                         break;
                     }
                 }
                 if (!canJoin) {
                     p.sendMessage(getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL_OF_VIPS));
+                    Misc.moveToLobbyOrKick(p, this, true);
                     return false;
                 }
             }

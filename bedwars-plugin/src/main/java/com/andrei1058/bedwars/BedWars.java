@@ -82,7 +82,6 @@ import com.andrei1058.bedwars.support.party.PAF;
 import com.andrei1058.bedwars.support.party.PAFBungeecordRedisApi;
 import com.andrei1058.bedwars.support.party.PartiesAdapter;
 import com.andrei1058.bedwars.support.vault.*;
-import com.comphenix.protocol.ProtocolLibrary;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Monster;
@@ -385,10 +384,7 @@ public class BedWars extends JavaPlugin {
                 //registerEvents(new ArenaListeners());
                 ArenaSocket.lobbies.addAll(config.getList(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_LOBBY_SERVERS));
                 new SendTask();
-                registerEvents(new AutoscaleListener(), new JoinListenerBungee(), new StaffListener());
-                if (Bukkit.getPluginManager().getPlugin("ProtocolLib") != null) {
-                    ProtocolLibrary.getProtocolManager().addPacketListener(new BungeePingListener(this));
-                }
+                registerEvents(new AutoscaleListener(), new JoinListenerBungee(), new StaffListener(), new BungeePingListener());
                 Bukkit.getScheduler().runTaskTimerAsynchronously(this, new LoadedUsersCleaner(), 60L, 60L);
                 Bukkit.getScheduler().runTaskTimerAsynchronously(this, new RefreshAvailableArenaTask(), 60L, 60L);
             } else {
