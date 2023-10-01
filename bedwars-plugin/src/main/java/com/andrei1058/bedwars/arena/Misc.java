@@ -114,7 +114,7 @@ public class Misc {
         }
 
         if (getServerType() == ServerType.BUNGEE) {
-            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
                 // if lobby server is unreachable
                 if (p.isOnline()) {
                     p.kickPlayer(getMsg(p, Messages.ARENA_RESTART_PLAYER_KICK));
