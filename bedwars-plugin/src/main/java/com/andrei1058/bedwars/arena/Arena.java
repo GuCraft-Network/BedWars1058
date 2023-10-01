@@ -701,6 +701,7 @@ public class Arena implements IArena {
             if (!skipOwnerCheck) {
                 if (!getParty().getOwner(p).equals(p)) {
                     p.sendMessage(getMsg(p, Messages.COMMAND_JOIN_DENIED_NOT_PARTY_LEADER));
+                    Misc.moveToLobbyOrKick(p, this, true);
                     return false;
                 }
                 int partySize = (int) getParty().getMembers(p).stream().filter(member -> {
@@ -713,6 +714,7 @@ public class Arena implements IArena {
 
                 if (partySize > maxInTeam * getTeams().size() - getPlayers().size()) {
                     p.sendMessage(getMsg(p, Messages.COMMAND_JOIN_DENIED_PARTY_TOO_BIG));
+                    Misc.moveToLobbyOrKick(p, this, true);
                     return false;
                 }
                 for (Player mem : getParty().getMembers(p)) {
@@ -738,7 +740,6 @@ public class Arena implements IArena {
                 TextComponent text = new TextComponent(getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL));
                 text.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, config.getYml().getString("storeLink")));
                 p.spigot().sendMessage(text);
-                p.performCommand("/bw playagain");
                 return false;
             } else if (players.size() >= maxPlayers && isVip(p)) {
                 boolean canJoin = false;
@@ -749,13 +750,11 @@ public class Arena implements IArena {
                         TextComponent vipKick = new TextComponent(getMsg(p, Messages.ARENA_JOIN_VIP_KICK));
                         vipKick.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, config.getYml().getString("storeLink")));
                         p.spigot().sendMessage(vipKick);
-                        p.performCommand("/bw playagain");
                         break;
                     }
                 }
                 if (!canJoin) {
                     p.sendMessage(getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL_OF_VIPS));
-                    p.performCommand("/bw playagain");
                     return false;
                 }
             }
