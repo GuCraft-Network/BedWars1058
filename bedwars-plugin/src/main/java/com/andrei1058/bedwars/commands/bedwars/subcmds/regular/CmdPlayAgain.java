@@ -42,7 +42,7 @@ public class CmdPlayAgain extends SubCommand {
         if (a == null) return true;
         if (getServerType() != ServerType.BUNGEE) return true;
 
-        if (Bukkit.getPluginManager().getPlugin("ServerJoiner") != null && !RefreshAvailableArenaTask.isArenaAvailable() || Arena.getArenas().get(RefreshAvailableArenaTask.availableArena).getStatus() == GameState.playing) {
+        if (Bukkit.getPluginManager().getPlugin("ServerJoiner") != null && !RefreshAvailableArenaTask.isArenaAvailable() || RefreshAvailableArenaTask.getAvailableArena() != -1 && Arena.getArenas().get(RefreshAvailableArenaTask.availableArena).getStatus() == GameState.playing) {
             switch (a.getGroup()) {
                 case "solo":
                     Group = "hyp1v";

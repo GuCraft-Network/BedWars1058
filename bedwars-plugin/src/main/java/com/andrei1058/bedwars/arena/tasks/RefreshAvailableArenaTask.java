@@ -39,13 +39,13 @@ public class RefreshAvailableArenaTask implements Runnable {
                     // 找到人数最多的竞技场
                     maxPlayers = numPlayers;
                     maxPlayersIndex = i;
+                } else {
+                    maxPlayersIndex = -1;
                 }
             }
         }
 
-        if (maxPlayersIndex != -1) {
-            // 执行人数最多的竞技场的相关操作
-            availableArena = maxPlayersIndex;
-        }
+        // 执行人数最多的竞技场的相关操作
+        availableArena = maxPlayersIndex;
     }
 }

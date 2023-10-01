@@ -2,6 +2,7 @@ package com.andrei1058.bedwars.listeners.bungee;
 
 import com.andrei1058.bedwars.api.arena.IArena;
 import com.andrei1058.bedwars.api.language.Language;
+import com.andrei1058.bedwars.api.language.Messages;
 import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.arena.tasks.RefreshAvailableArenaTask;
 import org.bukkit.event.EventHandler;
@@ -22,6 +23,8 @@ public class BungeePingListener implements Listener {
                         e.setMotd(a.getDisplayStatus(Language.getDefaultLanguage()));
                     }
                 }
+            } else {
+                e.setMotd(Language.getDefaultLanguage().m(Messages.MEANING_FULL));
             }
         }
     }
