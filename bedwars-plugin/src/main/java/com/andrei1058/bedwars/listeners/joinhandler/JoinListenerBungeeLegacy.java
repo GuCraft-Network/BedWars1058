@@ -35,6 +35,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.material.Bed;
 
 import static com.andrei1058.bedwars.BedWars.mainCmd;
 import static com.andrei1058.bedwars.api.language.Language.getMsg;
@@ -68,7 +69,7 @@ public class JoinListenerBungeeLegacy implements Listener {
 
             // Player logic
             if (arena.getStatus() == GameState.waiting || arena.getStatus() == GameState.starting && arena.getStartingTask().getCountdown() > 1) {
-                if (BedWars.getParty().hasParty(p) && !BedWars.getParty().getOwner(p).equals(p)) {
+                if (BedWars.getParty().hasParty(p) && !BedWars.getParty().getOwner(p).equals(p) && !arena.getPlayers().contains(BedWars.getParty().getOwner(p))) {
                     e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Language.getMsg(p, Messages.COMMAND_JOIN_DENIED_NOT_PARTY_LEADER));
                     return;
                 }
