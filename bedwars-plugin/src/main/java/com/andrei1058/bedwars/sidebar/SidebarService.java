@@ -195,7 +195,10 @@ public class SidebarService implements ISidebarService {
     public void handleReJoin(IArena arena, Player player) {
         this.sidebars.forEach((k, v) -> {
             if (null != v.getArena() && v.getArena().equals(arena)) {
-                v.giveUpdateTabFormat(player, false);
+                if (!v.getPlayer().equals(player)) {
+                    v.giveUpdateTabFormat(player, false);
+                }
+                Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> v.giveUpdateTabFormat(player, false),20L);
             }
         });
     }

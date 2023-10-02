@@ -57,12 +57,15 @@ public class JoinListenerBungee implements Listener {
 
         // If is NOT logging in trough BedWarsProxy
         if (proxyUser == null) {
-            int availableArena = RefreshAvailableArenaTask.getAvailableArena();
-            if (!p.hasPermission("bw.setup") && !p.hasPermission("group.zhiyuanzhe") && Arena.getArenas().isEmpty() && !RefreshAvailableArenaTask.isArenaAvailable() && availableArena != -1 && Arena.getArenas().get(availableArena).getStatus() != GameState.playing && Arena.getArenas().get(availableArena).getStatus() != GameState.restarting) {
+            if (!p.hasPermission("bw.setup") && !p.hasPermission("group.zhiyuanzhe") && Arena.getArenas().isEmpty() && !RefreshAvailableArenaTask.isArenaAvailable()) {
                 e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Language.getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL));
             }
-            IArena currentArena = Arena.getArenas().get(availableArena);
+            IArena currentArena = Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena());
             if (currentArena.getStatus() == GameState.starting && currentArena.getStartingTask().getCountdown() < 1) {
+                e.disallow(PlayerLoginEvent.Result.KICK_FULL, Language.getDefaultLanguage().m(Messages.ARENA_JOIN_DENIED_NO_TIME));
+                return;
+            }
+            if (currentArena.getStatus() == GameState.playing) {
                 e.disallow(PlayerLoginEvent.Result.KICK_FULL, Language.getDefaultLanguage().m(Messages.ARENA_JOIN_DENIED_NO_TIME));
                 return;
             }

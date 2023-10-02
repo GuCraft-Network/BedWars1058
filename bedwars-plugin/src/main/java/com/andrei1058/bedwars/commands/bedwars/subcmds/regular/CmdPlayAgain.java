@@ -42,7 +42,7 @@ public class CmdPlayAgain extends SubCommand {
         if (a == null) return true;
         if (getServerType() != ServerType.BUNGEE) return true;
 
-        if (Bukkit.getPluginManager().getPlugin("ServerJoiner") != null && !RefreshAvailableArenaTask.isArenaAvailable() || RefreshAvailableArenaTask.getAvailableArena() != -1 && Arena.getArenas().get(RefreshAvailableArenaTask.availableArena).getStatus() == GameState.playing) {
+        if (Bukkit.getPluginManager().getPlugin("ServerJoiner") != null && !RefreshAvailableArenaTask.isArenaAvailable() && Arena.getArenas().get(RefreshAvailableArenaTask.availableArena).getStatus() == GameState.playing) {
             switch (a.getGroup()) {
                 case "solo":
                     Group = "hyp1v";
@@ -65,7 +65,7 @@ public class CmdPlayAgain extends SubCommand {
                 case "swap_4v4v4v4":
                     Group = "shyp4v";
             }
-            p.performCommand("sj fastjoin" + Group);
+            p.performCommand("sj fastjoin " + Group);
         } else {
             p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1, false));
             p.setGameMode(GameMode.SPECTATOR);

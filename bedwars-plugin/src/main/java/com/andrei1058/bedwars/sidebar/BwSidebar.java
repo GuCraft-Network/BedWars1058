@@ -433,11 +433,10 @@ public class BwSidebar implements ISidebar {
             if (null == tab) {
                 prefix = getTabText(Messages.FORMATTING_SCOREBOARD_TAB_PREFIX_SPECTATOR, player, null);
                 suffix = getTabText(Messages.FORMATTING_SCOREBOARD_TAB_SUFFIX_SPECTATOR, player, null);
-                tab = handle.playerTabCreate(SPECTATOR_TAB, null, prefix, suffix, PlayerTab.PushingRule.NEVER);
+                tab = handle.playerTabCreate(SPECTATOR_TAB, player, prefix, suffix, PlayerTab.PushingRule.NEVER);
                 tabList.put(SPECTATOR_TAB, tab);
             }
             tab.add(player);
-
             return;
         }
 
@@ -481,13 +480,29 @@ public class BwSidebar implements ISidebar {
         ITeam team = arena.getTeam(player);
         if (null == team) {
             team = arena.getExTeam(player.getUniqueId());
+            if (null == team) {
+                if (arena.isSpectator(player)) {
+                    PlayerTab tab = tabList.get(SPECTATOR_TAB);
+                    if (null == tab) {
+                        prefix = getTabText(Messages.FORMATTING_SCOREBOARD_TAB_PREFIX_SPECTATOR, player, null);
+                        suffix = getTabText(Messages.FORMATTING_SCOREBOARD_TAB_SUFFIX_SPECTATOR, player, null);
+                        tab = handle.playerTabCreate(SPECTATOR_TAB, player, prefix, suffix, PlayerTab.PushingRule.NEVER);
+                        tabList.put(SPECTATOR_TAB, tab);
+                    }
+                    tab.add(player);
+                    return;
+                }
+            }
         }
 
-        String tabName = this.getTabName(team);
+        String tabName = null;
+        if (team != null) {
+            tabName = this.getTabName(team);
+        }
         String tabNameInvisible = tabName = tabName.substring(0, tabName.length() >= 16 ? 15 : tabName.length());
         tabNameInvisible += "^!";
 
-        if (player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+        if (player.hasPotionEffect(PotionEffectType.INVISIBILITY) || arena.isSpectator(player)) {
             if (!team.isMember(getPlayer())) {
                 // remove player from its tab group (if team tab group)
                 PlayerTab teamTab = tabList.getOrDefault(tabName, null);
@@ -521,7 +536,7 @@ public class BwSidebar implements ISidebar {
 
             teamTab = handle.playerTabCreate(tabName, null, prefix, suffix, PlayerTab.PushingRule.PUSH_OTHER_TEAMS);
             tabList.put(tabName, teamTab);
-            if (player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+            if (player.hasPotionEffect(PotionEffectType.INVISIBILITY) || arena.isSpectator(player)) {
                 teamTab.setNameTagVisibility(PlayerTab.NameTagVisibility.NEVER);
             }
         }

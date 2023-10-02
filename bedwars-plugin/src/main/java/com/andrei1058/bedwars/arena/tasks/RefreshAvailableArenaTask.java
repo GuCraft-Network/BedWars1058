@@ -34,18 +34,15 @@ public class RefreshAvailableArenaTask implements Runnable {
             IArena arena = arenas.get(i);
             int numPlayers = arena.getPlayers().size();
 
-            if (arena.getStatus() != GameState.playing && arena.getStatus() != GameState.restarting) {
+            if (arena.getStatus() == GameState.waiting || arena.getStatus() == GameState.starting && arena.getStartingTask().getCountdown() > 1) {
                 if (numPlayers > maxPlayers || numPlayers == maxPlayers && i < maxPlayersIndex) {
                     // 找到人数最多的竞技场
                     maxPlayers = numPlayers;
                     maxPlayersIndex = i;
-                } else {
-                    maxPlayersIndex = -1;
                 }
             }
         }
 
-        // 执行人数最多的竞技场的相关操作
         availableArena = maxPlayersIndex;
     }
 }
