@@ -178,7 +178,7 @@ public class JoinListenerBungee implements Listener {
                 p.sendMessage("§c§l由于架构变动，需要手动传送。§e使用/tp <玩家>即可加入玩家所在的地图。");
             } else {
                 // The player is not an admin and he joined using /server or equivalent
-                if (RefreshAvailableArenaTask.availableArena != -1) {
+                if (RefreshAvailableArenaTask.getAvailableArena() == -1) {
                     p.kickPlayer(getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL));
                     return;
                 }
