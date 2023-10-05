@@ -57,7 +57,7 @@ public class JoinListenerBungee implements Listener {
 
         // If is NOT logging in trough BedWarsProxy
         if (proxyUser == null) {
-            if (!p.hasPermission("bw.setup") && !p.hasPermission("group.zhiyuanzhe") && Arena.getArenas().isEmpty() && RefreshAvailableArenaTask.getAvailableArena() != -1) {
+            if (!p.hasPermission("bw.setup") && !p.hasPermission("group.zhiyuanzhe") && Arena.getArenas().isEmpty() && RefreshAvailableArenaTask.getAvailableArena() == -1) {
                 e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Language.getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL));
             }
             IArena currentArena = Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena());

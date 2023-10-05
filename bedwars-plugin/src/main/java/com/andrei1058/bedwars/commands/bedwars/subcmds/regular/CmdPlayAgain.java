@@ -47,6 +47,12 @@ public class CmdPlayAgain extends SubCommand {
 
         if (RefreshAvailableArenaTask.getAvailableArena() == -1 || Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena()).getStatus() == GameState.playing) {
             nextServer(p, a);
+            Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> {
+                if (Arena.getArenaByPlayer(p) == null) {
+                    Misc.moveToLobbyOrKick(p, null, a.isSpectator(p));
+                }
+            }, 20L);
+            return true;
         }
 
         IArena targetArena = Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena());
