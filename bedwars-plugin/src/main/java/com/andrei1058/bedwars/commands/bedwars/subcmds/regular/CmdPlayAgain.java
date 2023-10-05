@@ -42,7 +42,33 @@ public class CmdPlayAgain extends SubCommand {
         if (a == null) return true;
         if (getServerType() != ServerType.BUNGEE) return true;
 
-        if (Bukkit.getPluginManager().getPlugin("ServerJoiner") != null && !RefreshAvailableArenaTask.isArenaAvailable() && Arena.getArenas().get(RefreshAvailableArenaTask.availableArena).getStatus() == GameState.playing) {
+        p.setGameMode(GameMode.SPECTATOR);
+        p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1, false));
+
+        if (RefreshAvailableArenaTask.getAvailableArena() == -1 || Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena()).getStatus() == GameState.playing) {
+            nextServer(p, a);
+        }
+
+        IArena targetArena = Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena());
+        if (a.isPlayer(p)) {
+            a.removePlayer(p, false);
+        } else {
+            a.removeSpectator(p, false);
+        }
+        Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> targetArena.addPlayer(p, true), 10L);
+
+        Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> {
+            nextServer(p, a);
+            if (Arena.getArenaByPlayer(p) == null) {
+                Misc.moveToLobbyOrKick(p, null, a.isSpectator(p));
+            }
+        }, 20L);
+        return true;
+    }
+
+    public void nextServer(Player p, IArena a) {
+        if (Bukkit.getPluginManager().getPlugin("ServerJoiner") == null) return;
+        if (Arena.getArenaByPlayer(p) == null) {
             switch (a.getGroup()) {
                 case "solo":
                     Group = "hyp1v";
@@ -66,24 +92,9 @@ public class CmdPlayAgain extends SubCommand {
                     Group = "shyp4v";
             }
             p.performCommand("sj fastjoin " + Group);
-        } else {
-            p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1, false));
-            p.setGameMode(GameMode.SPECTATOR);
-            IArena targetArena = Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena());
-            if (a.isPlayer(p)) {
-                a.removePlayer(p, false);
-            } else {
-                a.removeSpectator(p, false);
-            }
-            Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> targetArena.addPlayer(p, true), 10L);
         }
-        Bukkit.getScheduler().runTaskLaterAsynchronously(BedWars.plugin, () -> {
-            if (Arena.getArenaByPlayer(p) == null) {
-                Misc.moveToLobbyOrKick(p, a, a.isSpectator(p));
-            }
-        }, 20L);
-        return true;
     }
+
 
     @Override
     public List<String> getTabComplete() {
