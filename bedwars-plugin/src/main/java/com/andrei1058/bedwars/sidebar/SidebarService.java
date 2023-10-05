@@ -30,10 +30,6 @@ public class SidebarService implements ISidebarService {
     private final HashMap<UUID, BwSidebar> sidebars = new HashMap<>();
 
 
-    private SidebarService() {
-        sidebarHandler = SidebarManager.init();
-    }
-
     public static boolean init() {
         if (null == instance) {
             instance = new SidebarService();
@@ -41,8 +37,8 @@ public class SidebarService implements ISidebarService {
         return instance.sidebarHandler != null;
     }
 
-    public static SidebarService getInstance() {
-        return instance;
+    private SidebarService() {
+        sidebarHandler = SidebarManager.init();
     }
 
     public void giveSidebar(@NotNull Player player, @Nullable IArena arena, boolean delay) {
@@ -140,6 +136,10 @@ public class SidebarService implements ISidebarService {
         }
     }
 
+    public static SidebarService getInstance() {
+        return instance;
+    }
+
     protected SidebarManager getSidebarHandler() {
         return sidebarHandler;
     }
@@ -167,12 +167,9 @@ public class SidebarService implements ISidebarService {
 
     public void refreshHealth() {
         this.sidebars.forEach((k, v) -> {
-            if (v != null && v.getArena() != null) {
+            if (null != v.getArena()) {
                 v.getHandle().playerHealthRefreshAnimation();
-                for (Player player : v.getArena().getPlayers()) {
-                    if (player == null) {
-                        continue;
-                    }
+                for (Player player : v.getArena().getPlayers()){
                     v.getHandle().setPlayerHealth(player, (int) Math.ceil(player.getHealth()));
                 }
             }
@@ -185,7 +182,7 @@ public class SidebarService implements ISidebarService {
     }
 
     public void refreshHealth(IArena arena, Player player, int health) {
-        this.sidebars.forEach((k, v) -> {
+        this.sidebars.forEach((k,v) -> {
             if (null != v.getArena() && v.getArena().equals(arena)) {
                 v.getHandle().setPlayerHealth(player, health);
             }
@@ -193,38 +190,15 @@ public class SidebarService implements ISidebarService {
     }
 
     public void handleReJoin(IArena arena, Player player) {
-        this.sidebars.forEach((k, v) -> {
+        this.sidebars.forEach((k,v) -> {
             if (null != v.getArena() && v.getArena().equals(arena)) {
-                if (!v.getPlayer().equals(player)) {
-                    v.giveUpdateTabFormat(player, false);
-                }
-                Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> v.giveUpdateTabFormat(player, false),120L);
-            }
-        });
-    }
-
-    public void handleJoin(IArena arena, Player player) {
-        this.sidebars.forEach((k, v) -> {
-            if (null != v.getArena() && v.getArena().equals(arena)) {
-                if (!v.getPlayer().equals(player)) {
-                    v.giveUpdateTabFormat(player, false);
-                }
-            }
-        });
-    }
-
-    public void applyLobbyTab(Player player) {
-        this.sidebars.forEach((k, v) -> {
-            if (null == v.getArena()) {
-                if (!v.getPlayer().equals(player)) {
-                    v.giveUpdateTabFormat(player, false);
-                }
+                v.giveUpdateTabFormat(player, false);
             }
         });
     }
 
     public void handleInvisibility(ITeam team, Player player, boolean toggle) {
-        this.sidebars.forEach((k, v) -> {
+        this.sidebars.forEach((k,v) -> {
             if (null != v.getArena() && v.getArena().equals(team.getArena())) {
                 v.handleInvisibilityPotion(player, toggle);
             }

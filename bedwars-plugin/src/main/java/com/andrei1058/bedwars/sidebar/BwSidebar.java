@@ -42,12 +42,13 @@ public class BwSidebar implements ISidebar {
     private static final String TEAM_PREFIX = "?_";
 
     private final Player player;
+    private IArena arena;
+    private Sidebar handle;
     private final SimpleDateFormat dateFormat;
     private final SimpleDateFormat nextEventDateFormat;
     private final HashMap<String, PlayerTab> tabList = new HashMap<>();
+
     private final List<PlaceholderProvider> persistentProviders = new ArrayList<>();
-    private IArena arena;
-    private Sidebar handle;
 
 
     protected BwSidebar(Player player) {
@@ -118,14 +119,13 @@ public class BwSidebar implements ISidebar {
             line = line.replace("{server_ip}", "{serverIp}");
 
             // generic team placeholder {team}
-            if (null != arena) {
+            if (arena != null) {
                 if (line.trim().equals("{team}")) {
                     if (arena.getTeams().size() > teamCount) {
                         ITeam team = arena.getTeams().get(teamCount++);
                         String teamName = team.getDisplayName(language);
-                        String teamLetter = String.valueOf(!teamName.isEmpty() ? teamName.charAt(0) : "");
                         line = genericTeamFormat
-                                .replace("{TeamLetter}", teamLetter)
+                                .replace("{TeamLetter}", String.valueOf(!teamName.isEmpty() ? teamName.charAt(0) : ""))
                                 .replace("{TeamColor}", team.getColor().chat().toString())
                                 .replace("{TeamName}", teamName)
                                 .replace("{TeamStatus}", "{Team" + team.getName() + "Status}");
@@ -142,25 +142,16 @@ public class BwSidebar implements ISidebar {
 
                 for (ITeam currentTeam : arena.getTeams()) {
                     final ChatColor color = currentTeam.getColor().chat();
-                    final String teamName = currentTeam.getDisplayName(language);
-                    final String teamLetter = String.valueOf(!teamName.isEmpty() ? teamName.charAt(0) : "");
                     // Static team placeholders
                     line = line
                             .replace("{Team" + currentTeam.getName() + "Color}", color.toString())
-                            .replace("{Team" + currentTeam.getName() + "Name}", teamName)
-                            .replace("{Team" + currentTeam.getName() + "Letter}", teamLetter);
-
-                    boolean isMember = currentTeam.isMember(getPlayer()) || currentTeam.wasMember(getPlayer().getUniqueId());
-                    if (isMember) {
-                        line = line.replace("{PlayerTeamName}", teamName)
-                                .replace("{PlayerTeamColor}", currentTeam.getColor().chat().toString())
-                                .replace("{PlayerTeamLetter}", teamLetter);
-                    }
+                            .replace("{Team" + currentTeam.getName() + "Name}", currentTeam.getDisplayName(language));
 
                 }
             }
 
             String serverName = (BedWars.getServerType() == ServerType.BUNGEE && !autoscale) ? GetCurServerName.getGameName(arena) : config.getString(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_SERVER_ID).replaceAll("(hyp|v|bw)", "").toUpperCase();
+
 
             // General static placeholders
             line = line
@@ -183,7 +174,6 @@ public class BwSidebar implements ISidebar {
         }
         return lines;
     }
-
 
     @Contract(pure = true)
     private @NotNull List<PlaceholderProvider> getPlaceholders() {
@@ -433,10 +423,11 @@ public class BwSidebar implements ISidebar {
             if (null == tab) {
                 prefix = getTabText(Messages.FORMATTING_SCOREBOARD_TAB_PREFIX_SPECTATOR, player, null);
                 suffix = getTabText(Messages.FORMATTING_SCOREBOARD_TAB_SUFFIX_SPECTATOR, player, null);
-                tab = handle.playerTabCreate(SPECTATOR_TAB, player, prefix, suffix, PlayerTab.PushingRule.NEVER);
+                tab = handle.playerTabCreate(SPECTATOR_TAB, null, prefix, suffix, PlayerTab.PushingRule.NEVER);
                 tabList.put(SPECTATOR_TAB, tab);
             }
             tab.add(player);
+
             return;
         }
 
@@ -480,29 +471,16 @@ public class BwSidebar implements ISidebar {
         ITeam team = arena.getTeam(player);
         if (null == team) {
             team = arena.getExTeam(player.getUniqueId());
-            if (null == team) {
-                if (arena.isSpectator(player)) {
-                    PlayerTab tab = tabList.get(SPECTATOR_TAB);
-                    if (null == tab) {
-                        prefix = getTabText(Messages.FORMATTING_SCOREBOARD_TAB_PREFIX_SPECTATOR, player, null);
-                        suffix = getTabText(Messages.FORMATTING_SCOREBOARD_TAB_SUFFIX_SPECTATOR, player, null);
-                        tab = handle.playerTabCreate(SPECTATOR_TAB, player, prefix, suffix, PlayerTab.PushingRule.NEVER);
-                        tabList.put(SPECTATOR_TAB, tab);
-                    }
-                    tab.add(player);
-                    return;
-                }
-            }
+        }
+        if (null == team) {
+            throw new RuntimeException("Wtf dude");
         }
 
-        String tabName = null;
-        if (team != null) {
-            tabName = this.getTabName(team);
-        }
+        String tabName = this.getTabName(team);
         String tabNameInvisible = tabName = tabName.substring(0, tabName.length() >= 16 ? 15 : tabName.length());
         tabNameInvisible += "^!";
 
-        if (player.hasPotionEffect(PotionEffectType.INVISIBILITY) || arena.isSpectator(player)) {
+        if (player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
             if (!team.isMember(getPlayer())) {
                 // remove player from its tab group (if team tab group)
                 PlayerTab teamTab = tabList.getOrDefault(tabName, null);
@@ -536,7 +514,7 @@ public class BwSidebar implements ISidebar {
 
             teamTab = handle.playerTabCreate(tabName, null, prefix, suffix, PlayerTab.PushingRule.PUSH_OTHER_TEAMS);
             tabList.put(tabName, teamTab);
-            if (player.hasPotionEffect(PotionEffectType.INVISIBILITY) || arena.isSpectator(player)) {
+            if (player.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
                 teamTab.setNameTagVisibility(PlayerTab.NameTagVisibility.NEVER);
             }
         }
@@ -567,8 +545,8 @@ public class BwSidebar implements ISidebar {
         }
 
 
-        String headerPath = null;
-        String footerPath = null;
+        String headerPath;
+        String footerPath;
 
         switch (arena.getStatus()) {
             case waiting:
@@ -621,7 +599,7 @@ public class BwSidebar implements ISidebar {
         strings = new ArrayList<>();
         for (String string : Language.getList(getPlayer(), path)) {
             String parsed = string.replace("{vPrefix}", BedWars.getChatSupport().getPrefix(targetPlayer))
-                    .replace("{vSuffix}", BedWars.getChatSupport().getSuffix(targetPlayer)).replace("{vPrefixColor}", BedWars.getChatSupport().getPrefixColor(targetPlayer));
+                    .replace("{vSuffix}", BedWars.getChatSupport().getSuffix(targetPlayer));
 
             if (null != replacements) {
                 for (Map.Entry<String, String> entry : replacements.entrySet()) {
