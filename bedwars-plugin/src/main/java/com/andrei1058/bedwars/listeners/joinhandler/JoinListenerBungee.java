@@ -57,7 +57,7 @@ public class JoinListenerBungee implements Listener {
 
         // If is NOT logging in trough BedWarsProxy
         if (proxyUser == null) {
-            if (!p.hasPermission("bw.setup") && !p.hasPermission("group.zhiyuanzhe") && Arena.getArenas().isEmpty() && !RefreshAvailableArenaTask.isArenaAvailable()) {
+            if (!p.hasPermission("bw.setup") && !p.hasPermission("group.zhiyuanzhe") && Arena.getArenas().isEmpty() && RefreshAvailableArenaTask.getAvailableArena() != -1) {
                 e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Language.getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL));
             }
             IArena currentArena = Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena());
@@ -178,8 +178,9 @@ public class JoinListenerBungee implements Listener {
                 p.sendMessage("§c§l由于架构变动，需要手动传送。§e使用/tp <玩家>即可加入玩家所在的地图。");
             } else {
                 // The player is not an admin and he joined using /server or equivalent
-                if (!RefreshAvailableArenaTask.isArenaAvailable()) {
+                if (RefreshAvailableArenaTask.availableArena != -1) {
                     p.kickPlayer(getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL));
+                    return;
                 }
                 IArena arena = Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena());
                 // Add player if the game is in waiting
@@ -187,7 +188,8 @@ public class JoinListenerBungee implements Listener {
                     if (arena.addPlayer(p, false)) {
                         Sounds.playSound("join-allowed", p);
                     } else {
-                        p.kickPlayer(getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL));
+                        arena.addSpectator(p, false, null);
+                        p.sendMessage(getMsg(p, Messages.ARENA_JOIN_DENIED_NO_TIME));
                     }
                 } else {
                     // Check ReJoin

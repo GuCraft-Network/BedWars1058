@@ -30,6 +30,7 @@ import com.andrei1058.bedwars.api.language.Language;
 import com.andrei1058.bedwars.api.language.Messages;
 import com.andrei1058.bedwars.api.tasks.PlayingTask;
 import com.andrei1058.bedwars.arena.Arena;
+import com.andrei1058.bedwars.arena.Misc;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -204,9 +205,9 @@ public class GamePlayingTask implements Runnable, PlayingTask {
                 }
                 if (current == 130) {
                     for (Player arenaPlayers : getArena().getPlayers()) {
-                        arenaPlayers.sendMessage(Arena.getArenaByPlayer(p).getTeam(p).getColor().chat() + p.getDisplayName() + "§7因挂机离开了游戏。");
+                        arenaPlayers.sendMessage(arena.getTeam(p).getColor().chat() + p.getDisplayName() + "§7因挂机离开了游戏。");
                     }
-                    p.kickPlayer("§c§l你因挂机超过130秒而被移出。");
+                    Misc.moveToLobbyOrKick(p, arena, arena.isSpectator(p));
                 }
             }
         }

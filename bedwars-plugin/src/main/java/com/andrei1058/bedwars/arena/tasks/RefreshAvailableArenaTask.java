@@ -8,11 +8,6 @@ import java.util.LinkedList;
 
 public class RefreshAvailableArenaTask implements Runnable {
     public static int availableArena = -1;
-
-    public static boolean isArenaAvailable() {
-        return availableArena != -1;
-    }
-
     public static int getAvailableArena() {
         return availableArena;
     }
