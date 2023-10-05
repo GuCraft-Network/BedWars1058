@@ -61,7 +61,7 @@ public class JoinListenerBungee implements Listener {
                 e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Language.getMsg(p, Messages.COMMAND_JOIN_DENIED_IS_FULL));
             }
             IArena currentArena = Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena());
-            if (currentArena.getStatus() == GameState.starting && currentArena.getStartingTask().getCountdown() < 1) {
+            if (currentArena.getStatus() == GameState.starting && currentArena.getStartingTask().getCountdown() <= 1) {
                 e.disallow(PlayerLoginEvent.Result.KICK_FULL, Language.getDefaultLanguage().m(Messages.ARENA_JOIN_DENIED_NO_TIME));
                 return;
             }
@@ -184,7 +184,7 @@ public class JoinListenerBungee implements Listener {
                 }
                 IArena arena = Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena());
                 // Add player if the game is in waiting
-                if (arena.getStatus() == GameState.waiting || arena.getStatus() == GameState.starting && arena.getStartingTask().getCountdown() < 1) {
+                if (arena.getStatus() == GameState.waiting || (arena.getStatus() == GameState.starting && (arena.getStartingTask() != null && arena.getStartingTask().getCountdown() > 1))) {
                     if (arena.addPlayer(p, false)) {
                         Sounds.playSound("join-allowed", p);
                     } else {
@@ -203,13 +203,9 @@ public class JoinListenerBungee implements Listener {
                             reJoin.destroy(true);
                         }
                     }
-
-                    // Add spectator
-                    if (arena.addSpectator(p, false, null)) {
-                        p.kickPlayer(getMsg(p, Messages.ARENA_JOIN_DENIED_NO_TIME));
-                        Sounds.playSound("spectate-allowed", p);
-                    } else {
-                        p.kickPlayer(getMsg(p, Messages.COMMAND_JOIN_SPECTATOR_DENIED_MSG));
+                    if (arena.getStatus() == GameState.playing || arena.getStatus() == GameState.starting && (arena.getStartingTask() != null && arena.getStartingTask().getCountdown() <= 1)) {
+                        arena.addSpectator(p, false, null);
+                        p.sendMessage(getMsg(p, Messages.ARENA_JOIN_DENIED_NO_TIME));
                     }
                 }
             }

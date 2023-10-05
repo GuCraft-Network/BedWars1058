@@ -198,7 +198,7 @@ public class SidebarService implements ISidebarService {
                 if (!v.getPlayer().equals(player)) {
                     v.giveUpdateTabFormat(player, false);
                 }
-                Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> v.giveUpdateTabFormat(player, false),20L);
+                Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> v.giveUpdateTabFormat(player, false),120L);
             }
         });
     }
