@@ -48,6 +48,7 @@ public class RemoveEffectAction implements TrapAction {
 
     @Override
     public void onTrigger(@NotNull Player player, ITeam playerTeam, ITeam targetTeam) {
+        if (playerTeam.isBedDestroyed()) return;
         player.removePotionEffect(potionEffectType);
         //如果有隐身效果，在触发报警陷阱时移除隐身效果以及脚印
         IArena a = Arena.getArenaByPlayer(player);

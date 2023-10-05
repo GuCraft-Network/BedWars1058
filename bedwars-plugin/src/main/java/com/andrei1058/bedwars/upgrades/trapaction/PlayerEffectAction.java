@@ -57,6 +57,7 @@ public class PlayerEffectAction implements TrapAction {
 
     @Override
     public void onTrigger(@NotNull Player player, ITeam playerTeam, ITeam targetTeam) {
+        if (playerTeam.isBedDestroyed()) return;
         if (type == ApplyType.TEAM) {
             for (Player p : targetTeam.getMembers()) {
                 p.addPotionEffect(new PotionEffect(potionEffectType, duration, amplifier), true);

@@ -45,6 +45,7 @@ public class DisenchantAction implements TrapAction {
 
     @Override
     public void onTrigger(@NotNull Player player, ITeam playerTeam, ITeam targetTeam) {
+        if (playerTeam.isBedDestroyed()) return;
         if (type == ApplyType.SWORD) {
             for (ItemStack i : player.getInventory()) {
                 if (BedWars.nms.isSword(i)) {

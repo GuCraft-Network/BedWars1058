@@ -279,7 +279,9 @@ public class MenuBaseTrap implements MenuContent, EnemyBaseEnterTrap, TeamUpgrad
         } else {
             BedWars.getAPI().getShopUtil().takeMoney(player, currency, cost);
         }
-        Sounds.playSound(ConfigPath.SOUNDS_BOUGHT, player);
+        for (Player p : team.getMembers()) {
+            Sounds.playSound(ConfigPath.SOUNDS_BOUGHT, p);
+        }
         team.getActiveTraps().add(this);
         // when a new trap is bought check for enemies on the island #646
         for (Player arenaPlayer : team.getArena().getPlayers()) {
@@ -325,6 +327,7 @@ public class MenuBaseTrap implements MenuContent, EnemyBaseEnterTrap, TeamUpgrad
 
     @Override
     public void trigger(ITeam trapTeam, Player player) {
+        if (trapTeam.isBedDestroyed()) return;
 
         Sound sound = null;
         if (UpgradesManager.getConfiguration().getYml().get(name + ".sound") != null) {
