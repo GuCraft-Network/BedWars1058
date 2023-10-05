@@ -30,6 +30,7 @@ import com.andrei1058.bedwars.api.upgrades.EnemyBaseEnterTrap;
 import com.andrei1058.bedwars.api.upgrades.MenuContent;
 import com.andrei1058.bedwars.api.upgrades.TeamUpgrade;
 import com.andrei1058.bedwars.api.upgrades.TrapAction;
+import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.configuration.Sounds;
 import com.andrei1058.bedwars.upgrades.UpgradesManager;
 import com.andrei1058.bedwars.upgrades.trapaction.DisenchantAction;
@@ -287,6 +288,7 @@ public class MenuBaseTrap implements MenuContent, EnemyBaseEnterTrap, TeamUpgrad
         for (Player arenaPlayer : team.getArena().getPlayers()) {
             if (team.isMember(arenaPlayer)) continue;
             if (team.getArena().isReSpawning(arenaPlayer)) continue;
+            if (Arena.magicMilk.containsKey(arenaPlayer.getUniqueId())) continue;
             if (arenaPlayer.getLocation().distance(team.getBed()) <= team.getArena().getIslandRadius()) {
                 team.getActiveTraps().remove(0).trigger(team, arenaPlayer);
                 break;
@@ -327,7 +329,6 @@ public class MenuBaseTrap implements MenuContent, EnemyBaseEnterTrap, TeamUpgrad
 
     @Override
     public void trigger(ITeam trapTeam, Player player) {
-        if (trapTeam.isBedDestroyed()) return;
 
         Sound sound = null;
         if (UpgradesManager.getConfiguration().getYml().get(name + ".sound") != null) {

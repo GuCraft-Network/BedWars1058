@@ -48,36 +48,48 @@ public class BaseListener implements Listener {
     /**
      * Check the Enter/ Leave events and call them
      */
-    private static void checkEvents(Player p, IArena a) {
-        if (p == null || a == null) return;
-        if (a.isSpectator(p)) return;
-        if (a.isReSpawning(p)) return;
+    private static void checkEvents(Player player, IArena arena) {
+        if (player == null || arena == null || arena.isSpectator(player) || arena.isReSpawning(player)) {
+            return;
+        }
+
         boolean notOnBase = true;
-        for (ITeam bwt : a.getTeams()) {
-            /* BaseEnterEvent */
-            if (p.getLocation().distance(bwt.getBed()) <= a.getIslandRadius()) {
+
+        for (ITeam team : arena.getTeams()) {
+            if (player.getLocation().distance(team.getBed()) <= arena.getIslandRadius()) {
                 notOnBase = false;
-                if (isOnABase.containsKey(p)) {
-                    if (isOnABase.get(p) != bwt) {
-                        Bukkit.getPluginManager().callEvent(new PlayerBaseLeaveEvent(p, isOnABase.get(p)));
-                        if (!Arena.magicMilk.containsKey(p.getUniqueId())) {
-                            Bukkit.getPluginManager().callEvent(new PlayerBaseEnterEvent(p, bwt));
+
+                if (isOnABase.containsKey(player)) {
+                    ITeam previousTeam = isOnABase.get(player);
+
+                    if (previousTeam != team) {
+                        // Player is switching bases, trigger leave event.
+                        Bukkit.getPluginManager().callEvent(new PlayerBaseLeaveEvent(player, previousTeam));
+
+                        if (!Arena.magicMilk.containsKey(player.getUniqueId())) {
+                            // Player doesn't have magic milk, trigger enter event.
+                            Bukkit.getPluginManager().callEvent(new PlayerBaseEnterEvent(player, team));
                         }
-                        isOnABase.replace(p, bwt);
+
+                        // Update the player's current base.
+                        isOnABase.replace(player, team);
                     }
                 } else {
-                    if (!Arena.magicMilk.containsKey(p.getUniqueId())) {
-                        Bukkit.getPluginManager().callEvent(new PlayerBaseEnterEvent(p, bwt));
-                        isOnABase.put(p, bwt);
+                    // Player was not on any island, trigger enter event
+                    if (!Arena.magicMilk.containsKey(player.getUniqueId())) {
+                        Bukkit.getPluginManager().callEvent(new PlayerBaseEnterEvent(player, team));
+                        isOnABase.put(player, team);
                     }
                 }
             }
         }
-        /* BaseLeaveEvent */
+
+        // Player has left all bases, trigger leave event if needed.
         if (notOnBase) {
-            if (isOnABase.containsKey(p)) {
-                Bukkit.getPluginManager().callEvent(new PlayerBaseLeaveEvent(p, isOnABase.get(p)));
-                isOnABase.remove(p);
+            if (isOnABase.containsKey(player)) {
+                ITeam previousTeam = isOnABase.get(player);
+                Bukkit.getPluginManager().callEvent(new PlayerBaseLeaveEvent(player, previousTeam));
+                isOnABase.remove(player);
             }
         }
     }

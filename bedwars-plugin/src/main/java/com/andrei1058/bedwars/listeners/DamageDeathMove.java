@@ -700,7 +700,7 @@ public class DamageDeathMove implements Listener {
                     // if the moving player has invisible armor
                     if (a.getShowTime().containsKey(e.getPlayer())) {
                         for (Player p : a.getPlayers()) {
-                            if (a.getTeam(e.getPlayer()).equals(a.getTeam(p))) return;
+                            if (a.getTeam(e.getPlayer()).equals(a.getTeam(p))) continue;
                             nms.hideArmor(e.getPlayer(), p);
                         }
                     }
