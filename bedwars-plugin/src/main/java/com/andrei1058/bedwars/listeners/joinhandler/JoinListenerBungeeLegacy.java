@@ -35,7 +35,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.material.Bed;
 
 import static com.andrei1058.bedwars.BedWars.mainCmd;
 import static com.andrei1058.bedwars.api.language.Language.getMsg;

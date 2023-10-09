@@ -57,13 +57,13 @@ public class ItemDropPickListener {
         }
         IArena a = api.getArenaUtil().getArenaByPlayer((Player) player);
         if (a == null) return false;
-        if (!a.isPlayer((Player) player)) {
-            return true;
-        }
         if (a.getStatus() != GameState.playing) {
             return true;
         }
-        if (a.getRespawnSessions().containsKey(player)) {
+        if (!a.isPlayer((Player) player)) {
+            return true;
+        }
+        if (a.isReSpawning(player.getUniqueId())) {
             return true;
         }
         if (item.getItemStack().getType() == Material.ARROW) {
@@ -74,7 +74,8 @@ public class ItemDropPickListener {
         if (item.getItemStack().getType().toString().equals("BED")) {
             item.remove();
             return true;
-        } else if (item.getItemStack().hasItemMeta()) {
+        }
+            if (item.getItemStack().hasItemMeta()) {
             //noinspection ConstantConditions
             if (item.getItemStack().getItemMeta().hasDisplayName()) {
                 if (item.getItemStack().getItemMeta().getDisplayName().contains("custom")) {

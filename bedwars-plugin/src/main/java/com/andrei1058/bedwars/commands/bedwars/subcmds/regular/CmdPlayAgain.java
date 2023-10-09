@@ -1,7 +1,6 @@
 package com.andrei1058.bedwars.commands.bedwars.subcmds.regular;
 
 import com.andrei1058.bedwars.BedWars;
-import com.andrei1058.bedwars.api.arena.GameState;
 import com.andrei1058.bedwars.api.arena.IArena;
 import com.andrei1058.bedwars.api.command.ParentCommand;
 import com.andrei1058.bedwars.api.command.SubCommand;
@@ -45,28 +44,34 @@ public class CmdPlayAgain extends SubCommand {
         p.setGameMode(GameMode.SPECTATOR);
         p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1, false));
 
-        if (RefreshAvailableArenaTask.getAvailableArena() == -1 || Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena()).getStatus() == GameState.playing) {
+        boolean isAvailable;
+        if (RefreshAvailableArenaTask.getAvailableArena() == -1) {
             nextServer(p, a);
-            Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> {
-                if (Arena.getArenaByPlayer(p) == null) {
-                    Misc.moveToLobbyOrKick(p, null, a.isSpectator(p));
-                }
-            }, 20L);
-            return true;
+            isAvailable = false;
+        } else {
+            isAvailable = true;
         }
 
-        IArena targetArena = Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena());
-        if (a.isPlayer(p)) {
-            a.removePlayer(p, false);
-        } else {
-            a.removeSpectator(p, false);
+        if (isAvailable) {
+            if (a.isPlayer(p)) {
+                a.removePlayer(p, false);
+            } else {
+                a.removeSpectator(p, false);
+            }
+
+            IArena targetArena = Arena.getArenas().get(RefreshAvailableArenaTask.getAvailableArena());
+
+            Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> {
+                if (!targetArena.addPlayer(p, false)) {
+                    nextServer(p, a);
+                }
+            }, 10L);
         }
-        Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> targetArena.addPlayer(p, true), 10L);
 
         Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> {
-            nextServer(p, a);
-            if (Arena.getArenaByPlayer(p) == null) {
-                Misc.moveToLobbyOrKick(p, null, a.isSpectator(p));
+            if (!isAvailable || Arena.getArenaByPlayer(p) == null || p.getWorld().getName().equals(Bukkit.getWorlds().get(0).getName())) {
+                nextServer(p, a);
+                Misc.moveToLobbyOrKick(p, null, true);
             }
         }, 20L);
         return true;
@@ -74,7 +79,7 @@ public class CmdPlayAgain extends SubCommand {
 
     public void nextServer(Player p, IArena a) {
         if (Bukkit.getPluginManager().getPlugin("ServerJoiner") == null) return;
-        if (Arena.getArenaByPlayer(p) == null) {
+        if (a != null) {
             switch (a.getGroup()) {
                 case "solo":
                     Group = "hyp1v";
@@ -98,6 +103,8 @@ public class CmdPlayAgain extends SubCommand {
                     Group = "shyp4v";
             }
             p.performCommand("sj fastjoin " + Group);
+        } else {
+            Misc.moveToLobbyOrKick(p, null, true);
         }
     }
 

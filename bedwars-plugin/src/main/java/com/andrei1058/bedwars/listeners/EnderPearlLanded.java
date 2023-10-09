@@ -33,8 +33,8 @@ public class EnderPearlLanded implements Listener {
         Player p = e.getPlayer();
         if (p == null) return;
         if (e.getCause() != PlayerTeleportEvent.TeleportCause.ENDER_PEARL) return;
-        IArena iArena = Arena.getArenaByPlayer(p);
-        if (iArena.isSpectator(p) || iArena.isReSpawning(p)) e.setCancelled(true);
+        IArena a = Arena.getArenaByPlayer(p);
+        if (a.isSpectator(p) || a.isReSpawning(p)) e.setCancelled(true);
     }
 
 }
