@@ -39,6 +39,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Map;
 
+import static com.andrei1058.bedwars.BedWars.getChatSupport;
 import static com.andrei1058.bedwars.BedWars.nms;
 import static com.andrei1058.bedwars.api.language.Language.getMsg;
 
@@ -151,13 +152,17 @@ public class GamePlayingTask implements Runnable, PlayingTask {
                 }
                 break;
         }
-        /*
-        int distance = 0;
         for (ITeam t : getArena().getTeams()) {
+            // spawn items
+            for (IGenerator o : t.getGenerators()) {
+                o.spawn();
+            }
+            /*
+        int distance = 0;
             if (t.getSize() > 1) {
                 for (Player p : t.getMembers()) {
                     for (Player p2 : t.getMembers()) {
-                        if (p2 == p || p2.getLocation() == null) continue;
+                        if (!getMsg(p,Messages.FORMATTING_ACTION_BAR_TRACKING).isEmpty() || p2 == p || !p.getLocation().getWorld().equals(p2.getLocation().getWorld())) continue;
                         if (distance == 0) {
                             distance = (int) p.getLocation().distance(p2.getLocation());
                         } else if ((int) p.getLocation().distance(p2.getLocation()) < distance) {
@@ -167,13 +172,7 @@ public class GamePlayingTask implements Runnable, PlayingTask {
                     nms.playAction(p, getMsg(p, Messages.FORMATTING_ACTION_BAR_TRACKING).replace("{team}", t.getColor().chat() + t.getDisplayName(Language.getPlayerLanguage(p)))
                             .replace("{distance}", t.getColor().chat().toString() + distance).replace("&", "§"));
                 }
-            }
-*/
-        for (ITeam t : getArena().getTeams()) {
-            // spawn items
-            for (IGenerator o : t.getGenerators()) {
-                o.spawn();
-            }
+            }*/
         }
 
         /* AFK SYSTEM FOR PLAYERS */
@@ -188,24 +187,19 @@ public class GamePlayingTask implements Runnable, PlayingTask {
                 if (current == 45) {
                     BedWars.getAPI().getAFKUtil().setPlayerAFK(p, true);
                 }
-                if (current == 120) {
+                if (current >= 120) {
                     for (int i = 0; i < 10; i++) {
                         final int ticks = i * 2;
                         Bukkit.getScheduler().runTaskLaterAsynchronously(BedWars.plugin,
                                 () -> p.playSound(p.getLocation(), Sound.NOTE_PLING, 1.0F, 1.0F), ticks);
                     }
-                    p.sendMessage("§c你将因挂机而被移出游戏。");
-                }
-                if (current >= 121) {
-                    for (int i = 0; i < 10; i++) {
-                        final int ticks = i * 2;
-                        Bukkit.getScheduler().runTaskLaterAsynchronously(BedWars.plugin,
-                                () -> p.playSound(p.getLocation(), Sound.NOTE_PLING, 1.0F, 1.0F), ticks);
+                    if (current == 120) {
+                        p.sendMessage("§c你将因挂机而被移出游戏。");
                     }
                 }
                 if (current == 130) {
                     for (Player arenaPlayers : getArena().getPlayers()) {
-                        arenaPlayers.sendMessage(arena.getTeam(p).getColor().chat() + p.getDisplayName() + "§7因挂机离开了游戏。");
+                        arenaPlayers.sendMessage(arena.getTeam(p).getColor().chat() + p.getDisplayName() + getChatSupport().getSuffix(p) + "§7因挂机离开了游戏。");
                     }
                     Misc.moveToLobbyOrKick(p, arena, arena.isSpectator(p));
                 }

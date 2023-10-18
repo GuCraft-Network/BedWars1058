@@ -30,6 +30,7 @@ import com.andrei1058.bedwars.api.events.spectator.SpectatorTeleportToPlayerEven
 import com.andrei1058.bedwars.api.language.Messages;
 import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.configuration.Sounds;
+import com.andrei1058.bedwars.support.paper.TeleportManager;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -115,7 +116,7 @@ public class SpectatorListeners implements Listener {
                     SpectatorTeleportToPlayerEvent event = new SpectatorTeleportToPlayerEvent(p, target, a);
                     Bukkit.getPluginManager().callEvent(event);
                     if (!event.isCancelled()) {
-                        p.teleport(target);
+                        TeleportManager.teleport(p,target.getLocation());
                     }
                     Sounds.playSound("spectator-gui-click", p);
                     p.closeInventory();

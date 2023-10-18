@@ -5,7 +5,7 @@ import com.andrei1058.bedwars.api.arena.GameState;
 import com.andrei1058.bedwars.api.arena.IArena;
 import com.andrei1058.bedwars.arena.Arena;
 import com.andrei1058.bedwars.configuration.Permissions;
-import com.andrei1058.bedwars.support.paper.PaperSupport;
+import com.andrei1058.bedwars.support.paper.TeleportManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -63,11 +63,11 @@ public class StaffListener implements Listener {
                 arena.removeSpectator(player, false);
             }
             Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> targetArena.addSpectator(player, false, null), 10L);
-            Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> PaperSupport.teleportC(player, targetPlayer.getLocation(), PlayerTeleportEvent.TeleportCause.COMMAND), 15L);
+            Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> TeleportManager.teleportC(player, targetPlayer.getLocation(), PlayerTeleportEvent.TeleportCause.COMMAND), 15L);
             return;
         }
         targetArena.addSpectator(player, false, null);
-        Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> PaperSupport.teleportC(player, targetPlayer.getLocation(), PlayerTeleportEvent.TeleportCause.COMMAND), 15L);
+        Bukkit.getScheduler().runTaskLater(BedWars.plugin, () -> TeleportManager.teleportC(player, targetPlayer.getLocation(), PlayerTeleportEvent.TeleportCause.COMMAND), 15L);
     }
 
 }

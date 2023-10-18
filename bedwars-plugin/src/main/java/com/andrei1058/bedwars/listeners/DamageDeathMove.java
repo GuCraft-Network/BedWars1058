@@ -40,7 +40,7 @@ import com.andrei1058.bedwars.arena.SetupSession;
 import com.andrei1058.bedwars.arena.team.BedWarsTeam;
 import com.andrei1058.bedwars.configuration.Sounds;
 import com.andrei1058.bedwars.listeners.dropshandler.PlayerDrops;
-import com.andrei1058.bedwars.support.paper.PaperSupport;
+import com.andrei1058.bedwars.support.paper.TeleportManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -55,7 +55,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
@@ -164,9 +163,8 @@ public class DamageDeathMove implements Listener {
             e.setDamage(0);
 
             //掉落物
-            PlayerInventory inventory = p.getInventory();
             List<ItemStack> items = new ArrayList<>();
-            for (ItemStack item : inventory.getContents()) {
+            for (ItemStack item : p.getInventory().getContents()) {
                 if (item != null) {
                     items.add(item);
                 }
@@ -215,7 +213,8 @@ public class DamageDeathMove implements Listener {
         IArena a = Arena.getArenaByPlayer(p);
         if (a == null) return;
         if (a.getStatus() != GameState.playing) return;
-        if (e.getDamager().getType() == EntityType.ENDER_PEARL || e.getDamager().getType() == EntityType.FIREBALL)
+        EntityType damagerType = e.getEntityType();
+        if (damagerType == EntityType.ENDER_PEARL || damagerType == EntityType.FIREBALL)
             return; // 如果是末影珍珠或火球造成的伤害则返回
 
         // projectile hit message #696, #711
@@ -714,7 +713,7 @@ public class DamageDeathMove implements Listener {
 
             if (a.isSpectator(e.getPlayer()) || a.isReSpawning(e.getPlayer())) {
                 if (e.getTo().getY() < 0) {
-                    PaperSupport.teleportC(e.getPlayer(), a.isSpectator(e.getPlayer()) ? a.getSpectatorLocation() : a.getReSpawnLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
+                    TeleportManager.teleportC(e.getPlayer(), a.isSpectator(e.getPlayer()) ? a.getSpectatorLocation() : a.getReSpawnLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
                     e.getPlayer().setAllowFlight(true);
                     e.getPlayer().setFlying(true);
                     // how to remove fall velocity?
@@ -749,9 +748,9 @@ public class DamageDeathMove implements Listener {
                     if (e.getPlayer().getLocation().getBlockY() <= 0) {
                         ITeam bwt = a.getTeam(e.getPlayer());
                         if (bwt != null) {
-                            PaperSupport.teleport(e.getPlayer(), bwt.getSpawn());
+                            TeleportManager.teleport(e.getPlayer(), bwt.getSpawn());
                         } else {
-                            PaperSupport.teleport(e.getPlayer(), a.getSpectatorLocation());
+                            TeleportManager.teleport(e.getPlayer(), a.getSpectatorLocation());
                         }
                     }
                 }
@@ -759,7 +758,7 @@ public class DamageDeathMove implements Listener {
         } else {
             if (config.getBoolean(ConfigPath.LOBBY_VOID_TELEPORT_ENABLED) && e.getPlayer().getWorld().getName().equalsIgnoreCase(config.getLobbyWorldName()) && BedWars.getServerType() == ServerType.MULTIARENA) {
                 if (e.getTo().getY() < config.getInt(ConfigPath.LOBBY_VOID_TELEPORT_HEIGHT)) {
-                    PaperSupport.teleportC(e.getPlayer(), config.getConfigLoc("lobbyLoc"), PlayerTeleportEvent.TeleportCause.PLUGIN);
+                    TeleportManager.teleportC(e.getPlayer(), config.getConfigLoc("lobbyLoc"), PlayerTeleportEvent.TeleportCause.PLUGIN);
                 }
             }
         }

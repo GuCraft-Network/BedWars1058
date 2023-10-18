@@ -205,7 +205,7 @@ public class GameStartingTask implements Runnable, StartingTask {
         for (String tut : getList(p, Messages.ARENA_STATUS_START_PLAYER_TUTORIAL)) {
             p.sendMessage(SupportPAPI.getSupportPAPI().replace(p, tut));
         }
-        if (arena.getGroup().contains("P") || arena.getGroup().contains("M") || NoRecordMap.NoRecordMap.contains(getArena().getWorldName())) {
+        if (group.contains("P") || group.contains("M") || NoRecordMap.NoRecordMap.contains(getArena().getWorldName())) {
             p.sendMessage("§c§l本场游戏不记录战绩！");
             NoRecordMap.NoRecordMap.add(getArena().getWorldName());
         }

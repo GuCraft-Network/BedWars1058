@@ -32,6 +32,7 @@ import com.andrei1058.bedwars.api.region.Region;
 import com.andrei1058.bedwars.api.server.ServerType;
 import com.andrei1058.bedwars.configuration.Sounds;
 import com.andrei1058.bedwars.stats.PlayerStats;
+import com.andrei1058.bedwars.support.paper.TeleportManager;
 import com.andrei1058.bedwars.support.papi.SupportPAPI;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -72,7 +73,7 @@ public class Misc {
                 Location loc = config.getConfigLoc("lobbyLoc");
                 if (loc != null) { // Can happen when location is not set in config
                     try {
-                        p.teleport(loc);
+                        TeleportManager.teleport(p,loc);
                     } catch (Exception ignored) {
                         Bukkit.getLogger().severe("Could not teleport player to lobby! Try setting the lobby again with /bw setLobby");
                     }

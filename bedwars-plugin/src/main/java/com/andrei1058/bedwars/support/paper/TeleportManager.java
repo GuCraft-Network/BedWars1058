@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import static com.andrei1058.bedwars.BedWars.config;
 import static com.andrei1058.bedwars.BedWars.isPaper;
 
-public final class PaperSupport {
+public final class TeleportManager {
 
     public static void teleport(Entity entity, Location location) {
         if (isPaper && config.getBoolean(ConfigPath.GENERAL_CONFIGURATION_PERFORMANCE_PAPER_FEATURES)) {
@@ -20,7 +20,7 @@ public final class PaperSupport {
     }
 
     public static void teleportC(Entity entity, Location location, PlayerTeleportEvent.TeleportCause cause) {
-        if (isPaper) {
+        if (isPaper && config.getBoolean(ConfigPath.GENERAL_CONFIGURATION_PERFORMANCE_PAPER_FEATURES)) {
             PaperLib.teleportAsync(entity, location, cause);
         } else {
             entity.teleport(location, cause);

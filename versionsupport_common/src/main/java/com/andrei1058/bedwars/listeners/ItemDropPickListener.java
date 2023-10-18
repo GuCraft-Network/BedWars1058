@@ -24,6 +24,7 @@ import com.andrei1058.bedwars.api.arena.GameState;
 import com.andrei1058.bedwars.api.arena.IArena;
 import com.andrei1058.bedwars.api.events.player.PlayerGeneratorCollectEvent;
 import com.andrei1058.bedwars.api.server.ServerType;
+import com.andrei1058.bedwars.api.server.VersionSupport;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -43,6 +44,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import static com.andrei1058.bedwars.support.version.common.VersionCommon.api;
 
 public class ItemDropPickListener {
+    public static VersionSupport nms;
 
     /**
      * @return true if event should be cancelled
@@ -66,20 +68,23 @@ public class ItemDropPickListener {
         if (a.isReSpawning(player.getUniqueId())) {
             return true;
         }
-        if (item.getItemStack().getType() == Material.ARROW) {
-            item.setItemStack(api.getVersionSupport().createItemStack(item.getItemStack().getType().toString(), item.getItemStack().getAmount(), (short) 0));
+        ItemStack i = item.getItemStack().clone();
+        i = nms.addCustomData(i, "");
+        item.setItemStack(i);
+        if (i.getType() == Material.ARROW) {
+            item.setItemStack(api.getVersionSupport().createItemStack(i.getType().toString(), i.getAmount(), (short) 0));
             return false;
         }
 
-        if (item.getItemStack().getType().toString().equals("BED")) {
+        if (i.getType().toString().equals("BED")) {
             item.remove();
             return true;
         }
-            if (item.getItemStack().hasItemMeta()) {
+        if (i.hasItemMeta()) {
             //noinspection ConstantConditions
-            if (item.getItemStack().getItemMeta().hasDisplayName()) {
+            if (i.getItemMeta().hasDisplayName()) {
                 if (item.getItemStack().getItemMeta().getDisplayName().contains("custom")) {
-                    Material material = item.getItemStack().getType();
+                    Material material = i.getType();
                     ItemMeta itemMeta = new ItemStack(material).getItemMeta();
 
                     //Call ore pick up event
@@ -89,7 +94,7 @@ public class ItemDropPickListener {
                         if (event.isCancelled()) {
                             return true;
                         } else {
-                            item.getItemStack().setItemMeta(itemMeta);
+                            i.setItemMeta(itemMeta);
                         }
                     } else return true; //Cancel event if player is afk
                 }

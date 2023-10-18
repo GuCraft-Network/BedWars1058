@@ -31,6 +31,9 @@ public class NoRecordMap implements Listener {
                 for (Player p : a.getPlayers()) {
                     p.sendMessage("§c§l本场游戏不记录战绩！");
                 }
+                for (Player p : a.getSpectators()) {
+                    p.sendMessage("§c§l本场游戏不记录战绩！");
+                }
             }
         }
     }
