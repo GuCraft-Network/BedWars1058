@@ -39,8 +39,8 @@ import java.util.List;
 
 public class MenuTrapSlot implements MenuContent {
 
-    private ItemStack displayItem;
-    private String name;
+    private final ItemStack displayItem;
+    private final String name;
     private int trap;
 
     /**

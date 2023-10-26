@@ -26,8 +26,8 @@ import com.andrei1058.bedwars.shop.main.ShopCategory;
 
 public class QuickBuyElement {
 
-    private int slot;
-    private CategoryContent categoryContent;
+    private final int slot;
+    private final CategoryContent categoryContent;
     private boolean loaded = false;
 
 

@@ -51,15 +51,15 @@ import static com.andrei1058.bedwars.api.language.Language.getMsg;
 @SuppressWarnings("WeakerAccess")
 public class CategoryContent implements ICategoryContent {
 
+    private final List<IContentTier> contentTiers = new ArrayList<>();
+    private final String contentName;
+    private final ShopCategory father;
     private int slot;
     private boolean loaded = false;
-    private List<IContentTier> contentTiers = new ArrayList<>();
-    private String contentName;
     private String itemNamePath, itemLorePath;
     private String identifier;
     private boolean permanent = false, downgradable = false, unbreakable = false;
     private byte weight = 0;
-    private ShopCategory father;
 
     /**
      * Load a new category

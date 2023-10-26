@@ -33,8 +33,8 @@ import java.util.*;
 
 public class ShopCache {
 
-    private static List<ShopCache> shopCaches = new ArrayList<>();
-    private UUID player;
+    private static final List<ShopCache> shopCaches = new ArrayList<>();
+    private final UUID player;
     private List<CachedItem> cachedItems = new LinkedList<>();
     private int selectedCategory;
     private HashMap<ShopCategory, Byte> categoryWeight = new HashMap<>();
@@ -171,7 +171,7 @@ public class ShopCache {
      */
     @SuppressWarnings("WeakerAccess")
     public class CachedItem {
-        private CategoryContent cc;
+        private final CategoryContent cc;
         private int tier = 1;
 
         public CachedItem(CategoryContent cc) {

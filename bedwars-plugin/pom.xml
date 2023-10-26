@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>BedWars1058</artifactId>
@@ -174,6 +174,12 @@
             <version>2.11.2</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.andrei1058.vipfeatures</groupId>
+            <artifactId>vipfeatures-api</artifactId>
+            <version>[1.0,)</version>
+            <optional>true</optional>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
         <dependency>
             <groupId>commons-io</groupId>
@@ -206,55 +212,55 @@
         <dependency>
             <groupId>com.andrei1058.spigot.sidebar</groupId>
             <artifactId>sidebar-base</artifactId>
-            <version>23.9</version>
+            <version>23.10</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.andrei1058.spigot.sidebar</groupId>
             <artifactId>sidebar-v1_8_R3</artifactId>
-            <version>23.9</version>
+            <version>23.10</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.andrei1058.spigot.sidebar</groupId>
             <artifactId>sidebar-v1_12_R1</artifactId>
-            <version>23.9</version>
+            <version>23.10</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.andrei1058.spigot.sidebar</groupId>
             <artifactId>sidebar-v1_16_R1</artifactId>
-            <version>23.9</version>
+            <version>23.10</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.andrei1058.spigot.sidebar</groupId>
             <artifactId>sidebar-v1_17_R1</artifactId>
-            <version>23.9</version>
+            <version>23.10</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.andrei1058.spigot.sidebar</groupId>
             <artifactId>sidebar-v1_18_R2</artifactId>
-            <version>23.9</version>
+            <version>23.10</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.andrei1058.spigot.sidebar</groupId>
             <artifactId>sidebar-v1_19_R2</artifactId>
-            <version>23.9</version>
+            <version>23.10</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.andrei1058.spigot.sidebar</groupId>
             <artifactId>sidebar-v1_19_R3</artifactId>
-            <version>23.9</version>
+            <version>23.10</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.andrei1058.spigot.sidebar</groupId>
             <artifactId>sidebar-v1_20_R1</artifactId>
-            <version>23.9</version>
+            <version>23.10</version>
             <scope>compile</scope>
         </dependency>
         <!--        End of Sidebar LIB-->
@@ -271,6 +277,13 @@
             <version>${project.version}</version>
         </dependency>
         <!-- End of Slime Paper -->
+
+        <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-chat</artifactId>
+            <version>1.18-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>

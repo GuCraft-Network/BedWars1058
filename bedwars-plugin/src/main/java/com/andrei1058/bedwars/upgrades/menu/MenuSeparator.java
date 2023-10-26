@@ -39,9 +39,10 @@ import java.util.List;
 
 public class MenuSeparator implements MenuContent {
 
+    private final List<String> playerCommands = new ArrayList<>();
+    private final List<String> consoleCommands = new ArrayList<>();
     private ItemStack displayItem;
     private String name;
-    private List<String> playerCommands = new ArrayList<>(), consoleCommands = new ArrayList<>();
 
     /**
      * Create a separator.

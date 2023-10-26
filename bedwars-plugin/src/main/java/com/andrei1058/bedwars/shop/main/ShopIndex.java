@@ -40,11 +40,13 @@ import java.util.UUID;
 public class ShopIndex {
 
     public static List<UUID> indexViewers = new ArrayList<>();
+    private final int invSize = 54;
+    private final String namePath;
+    private final String separatorNamePath;
+    private final String separatorLorePath;
+    private final List<ShopCategory> categoryList = new ArrayList<>();
+    private final QuickBuyButton quickBuyButton;
     public ItemStack separatorSelected, separatorStandard;
-    private int invSize = 54;
-    private String namePath, separatorNamePath, separatorLorePath;
-    private List<ShopCategory> categoryList = new ArrayList<>();
-    private QuickBuyButton quickBuyButton;
 
 
     /**

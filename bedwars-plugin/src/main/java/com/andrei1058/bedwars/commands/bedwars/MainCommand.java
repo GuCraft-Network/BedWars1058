@@ -61,7 +61,7 @@ public class MainCommand extends BukkitCommand implements ParentCommand {
 
     public MainCommand(String name) {
         super(name);
-        setAliases(Arrays.asList("bedwars"));
+        setAliases(List.of("bedwars"));
         instance = this;
         new CmdJoin(this, "join");
         new CmdLeave(this, "leave");

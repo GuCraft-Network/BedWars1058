@@ -213,9 +213,8 @@ public class DamageDeathMove implements Listener {
         IArena a = Arena.getArenaByPlayer(p);
         if (a == null) return;
         if (a.getStatus() != GameState.playing) return;
-        EntityType damagerType = e.getEntityType();
-        if (damagerType == EntityType.ENDER_PEARL || damagerType == EntityType.FIREBALL)
-            return; // 如果是末影珍珠或火球造成的伤害则返回
+        if (e.getEntityType() == EntityType.ARROW)
+            return; // 如果不是弓箭造成的伤害则不执行
 
         // projectile hit message #696, #711
         ITeam team = a.getTeam(p);
@@ -246,7 +245,6 @@ public class DamageDeathMove implements Listener {
                 }
 
                 Player damager = null;
-                boolean projectile = false;
                 if (e.getDamager() instanceof Player) {
                     damager = (Player) e.getDamager();
                 } else if (e.getDamager() instanceof Projectile) {
@@ -254,7 +252,6 @@ public class DamageDeathMove implements Listener {
                     if (shooter instanceof Player) {
                         damager = (Player) shooter;
                     } else return;
-                    projectile = true;
                 } else if (e.getDamager() instanceof Player) {
                     damager = (Player) e.getDamager();
                     if (a.isReSpawning(damager)) {

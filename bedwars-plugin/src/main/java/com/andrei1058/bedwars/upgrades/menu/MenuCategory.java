@@ -40,10 +40,10 @@ import java.util.Map;
 
 public class MenuCategory implements MenuContent {
 
-    private ItemStack displayItem;
-    private String name;
+    private final ItemStack displayItem;
+    private final String name;
 
-    private HashMap<Integer, MenuContent> menuContentBySlot = new HashMap<>();
+    private final HashMap<Integer, MenuContent> menuContentBySlot = new HashMap<>();
 
     public MenuCategory(String name, ItemStack displayItem) {
         this.name = name;

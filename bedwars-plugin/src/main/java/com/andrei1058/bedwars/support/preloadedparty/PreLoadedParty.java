@@ -30,9 +30,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PreLoadedParty {
 
-    private static ConcurrentHashMap<String, PreLoadedParty> preLoadedParties = new ConcurrentHashMap<>();
-    private String owner;
-    private List<Player> members = new ArrayList<>();
+    private static final ConcurrentHashMap<String, PreLoadedParty> preLoadedParties = new ConcurrentHashMap<>();
+    private final String owner;
+    private final List<Player> members = new ArrayList<>();
 
     public PreLoadedParty(String owner) {
         PreLoadedParty plp = getPartyByOwner(owner);

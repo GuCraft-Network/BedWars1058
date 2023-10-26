@@ -37,11 +37,11 @@ import java.util.List;
 
 public class UpgradeTier {
 
-    private ItemStack displayItem;
-    private String name;
-    private List<UpgradeAction> upgradeActions = new ArrayList<>();
-    private int cost;
-    private Material currency;
+    private final ItemStack displayItem;
+    private final String name;
+    private final List<UpgradeAction> upgradeActions = new ArrayList<>();
+    private final int cost;
+    private final Material currency;
 
     /**
      * @param parentName is the parent name.

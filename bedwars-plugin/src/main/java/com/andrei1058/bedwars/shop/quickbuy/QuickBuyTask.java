@@ -35,7 +35,7 @@ import java.util.UUID;
 @SuppressWarnings("WeakerAccess")
 public class QuickBuyTask extends BukkitRunnable {
 
-    private UUID uuid;
+    private final UUID uuid;
 
 
     public QuickBuyTask(UUID uuid) {

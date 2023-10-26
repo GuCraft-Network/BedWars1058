@@ -47,8 +47,8 @@ import java.util.*;
 
 public class MenuUpgrade implements MenuContent, TeamUpgrade {
 
-    private String name;
-    private List<UpgradeTier> tiers = new LinkedList<>();
+    private final String name;
+    private final List<UpgradeTier> tiers = new LinkedList<>();
 
     /**
      * Create a new upgrade element.

@@ -116,7 +116,7 @@ public class SpectatorListeners implements Listener {
                     SpectatorTeleportToPlayerEvent event = new SpectatorTeleportToPlayerEvent(p, target, a);
                     Bukkit.getPluginManager().callEvent(event);
                     if (!event.isCancelled()) {
-                        TeleportManager.teleport(p,target.getLocation());
+                        TeleportManager.teleport(p, target.getLocation());
                     }
                     Sounds.playSound("spectator-gui-click", p);
                     p.closeInventory();

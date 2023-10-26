@@ -41,8 +41,8 @@ import java.util.Map;
 
 public class InternalMenu implements UpgradesIndex {
 
-    private String name;
-    private HashMap<Integer, MenuContent> menuContentBySlot = new HashMap<>();
+    private final String name;
+    private final HashMap<Integer, MenuContent> menuContentBySlot = new HashMap<>();
 
     /**
      * Create an upgrade menu for an arena group.

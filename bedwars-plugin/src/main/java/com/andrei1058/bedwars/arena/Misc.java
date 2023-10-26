@@ -73,7 +73,7 @@ public class Misc {
                 Location loc = config.getConfigLoc("lobbyLoc");
                 if (loc != null) { // Can happen when location is not set in config
                     try {
-                        TeleportManager.teleport(p,loc);
+                        TeleportManager.teleport(p, loc);
                     } catch (Exception ignored) {
                         Bukkit.getLogger().severe("Could not teleport player to lobby! Try setting the lobby again with /bw setLobby");
                     }

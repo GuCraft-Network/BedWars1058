@@ -34,8 +34,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings("WeakerAccess")
 public class PlayerLevel {
 
-    private static ConcurrentHashMap<UUID, PlayerLevel> levelByPlayer = new ConcurrentHashMap<>();
-    private UUID uuid;
+    private static final ConcurrentHashMap<UUID, PlayerLevel> levelByPlayer = new ConcurrentHashMap<>();
+    private final UUID uuid;
     private int level;
     private int nextLevelCost;
     private String levelName;

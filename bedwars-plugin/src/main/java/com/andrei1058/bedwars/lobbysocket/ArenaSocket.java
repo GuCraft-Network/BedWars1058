@@ -104,10 +104,10 @@ public class ArenaSocket {
     }
 
     private static class RemoteLobby {
-        private Socket socket;
+        private final Socket socket;
+        private final String lobby;
         private PrintWriter out;
         private Scanner in;
-        private String lobby;
         private boolean compute = true;
 
         private RemoteLobby(Socket socket, String lobby) {
@@ -126,7 +126,7 @@ public class ArenaSocket {
                 return;
             }
 
-            BedWars.debug("RemoteLobby created: " + lobby + " " + socket.toString());
+            BedWars.debug("RemoteLobby created: " + lobby + " " + socket);
             Bukkit.getScheduler().runTaskAsynchronously(BedWars.plugin, () -> {
                 while (compute) {
                     if (in.hasNext()) {
@@ -159,7 +159,7 @@ public class ArenaSocket {
                                         jo.addProperty("requester", json.get("requester").getAsString());
                                         jo.addProperty("server_name", BedWars.config.getString(ConfigPath.GENERAL_CONFIGURATION_BUNGEE_OPTION_SERVER_ID));
                                         jo.addProperty("arena_id", a.getWorldName());
-                                        out.println(jo.toString());
+                                        out.println(jo);
                                     }
                                 }
                                 break;

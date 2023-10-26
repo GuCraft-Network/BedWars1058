@@ -21,9 +21,7 @@ public class GetCurServerName implements Listener, PluginMessageListener {
 
     public static String getGameName(IArena a) {
         if (gamename.equals("Null")) {
-            Bukkit.getScheduler().runTaskLaterAsynchronously(BedWars.plugin, () -> {
-                SidebarService.getInstance().refreshPlaceholders(a);
-            }, 40L);
+            Bukkit.getScheduler().runTaskLaterAsynchronously(BedWars.plugin, () -> SidebarService.getInstance().refreshPlaceholders(a), 40L);
         }
         return gamename;
     }

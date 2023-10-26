@@ -27,9 +27,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class QuickBuyButton {
 
-    private int slot;
-    private ItemStack itemStack;
-    private String namePath, lorePath;
+    private final int slot;
+    private final ItemStack itemStack;
+    private final String namePath;
+    private final String lorePath;
 
     /**
      * Create a new quick buy button

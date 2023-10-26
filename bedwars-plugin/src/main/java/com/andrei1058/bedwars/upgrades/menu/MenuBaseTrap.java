@@ -54,11 +54,11 @@ import java.util.List;
 
 public class MenuBaseTrap implements MenuContent, EnemyBaseEnterTrap, TeamUpgrade {
 
-    private ItemStack displayItem;
-    private String name;
-    private int cost;
-    private Material currency;
-    private List<TrapAction> trapActions = new ArrayList<>();
+    private final ItemStack displayItem;
+    private final String name;
+    private final int cost;
+    private final Material currency;
+    private final List<TrapAction> trapActions = new ArrayList<>();
 
     /**
      * @param name        is the trap identifier.
