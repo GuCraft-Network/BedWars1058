@@ -69,8 +69,8 @@ public class JoinListenerBungee implements Listener {
                 e.disallow(PlayerLoginEvent.Result.KICK_FULL, Language.getDefaultLanguage().m(Messages.ARENA_JOIN_DENIED_NO_TIME));
                 return;
             }
-            if (BedWars.getParty().hasParty(p)) {
-                if (!BedWars.getParty().getOwner(p).equals(p) && !currentArena.getPlayers().contains(BedWars.getParty().getOwner(p))) {
+            if (BedWars.getParty() != null && BedWars.getParty().hasParty(p)) {
+                if (!BedWars.getParty().getOwner(p).equals(p) && BedWars.getParty().getOwner(p) != null) {
                     e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Language.getMsg(p, Messages.COMMAND_JOIN_DENIED_NOT_PARTY_LEADER));
                     return;
                 }
