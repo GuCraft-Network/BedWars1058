@@ -21,7 +21,6 @@
 package com.andrei1058.bedwars.configuration;
 
 import com.andrei1058.bedwars.BedWars;
-import com.andrei1058.bedwars.api.arena.stats.DefaultStatistics;
 import com.andrei1058.bedwars.api.configuration.ConfigManager;
 import com.andrei1058.bedwars.api.configuration.ConfigPath;
 import com.andrei1058.bedwars.api.language.Language;
@@ -71,7 +70,6 @@ public class MainConfig extends ConfigManager {
         yml.addDefault(ConfigPath.SB_CONFIG_SIDEBAR_LIST_FORMAT_PLAYING, true);
         yml.addDefault(ConfigPath.SB_CONFIG_SIDEBAR_LIST_FORMAT_RESTARTING, true);
         yml.addDefault(ConfigPath.SB_CONFIG_SIDEBAR_LIST_REFRESH, 1200);
-        yml.addDefault(ConfigPath.SB_CONFIG_SIDEBAR_HEALTH_ENABLE, true);
         yml.addDefault(ConfigPath.SB_CONFIG_SIDEBAR_HEALTH_IN_TAB, true);
         yml.addDefault(ConfigPath.SB_CONFIG_SIDEBAR_HEALTH_REFRESH, 300);
         yml.addDefault(ConfigPath.GENERAL_CONFIGURATION_REJOIN_TIME, 60 * 5);
@@ -199,13 +197,6 @@ public class MainConfig extends ConfigManager {
 
         yml.addDefault(ConfigPath.LOBBY_VOID_TELEPORT_ENABLED, true);
         yml.addDefault(ConfigPath.LOBBY_VOID_TELEPORT_HEIGHT, 0);
-        yml.addDefault(ConfigPath.LOBBY_VOID_TELEPORT_ENABLED, true);
-        yml.addDefault(ConfigPath.LOBBY_VOID_TELEPORT_HEIGHT, 0);
-        yml.addDefault(ConfigPath.GENERAL_GAME_END_CHAT_TOP_STATISTIC, DefaultStatistics.KILLS.toString());
-        yml.addDefault(ConfigPath.GENERAL_GAME_END_CHAT_TOP_HIDE_MISSING, true);
-
-        yml.addDefault(ConfigPath.GENERAL_GAME_END_SB_TOP_STATISTIC, DefaultStatistics.KILLS.toString());
-        yml.addDefault(ConfigPath.GENERAL_GAME_END_SB_TOP_HIDE_MISSING, true);
         yml.options().copyDefaults(true);
         save();
 

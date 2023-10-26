@@ -21,7 +21,6 @@
 package com.andrei1058.bedwars.api.arena;
 
 import com.andrei1058.bedwars.api.arena.generator.IGenerator;
-import com.andrei1058.bedwars.api.arena.stats.GameStatsHolder;
 import com.andrei1058.bedwars.api.arena.team.ITeam;
 import com.andrei1058.bedwars.api.arena.team.ITeamAssigner;
 import com.andrei1058.bedwars.api.configuration.ConfigManager;
@@ -275,12 +274,6 @@ public interface IArena {
     int getPlayerKills(Player p, boolean finalKills);
 
     /**
-     * Session stats.
-     * @return stats container for this game.
-     */
-    GameStatsHolder getStatsHolder();
-
-    /**
      * Get the player beds destroyed count
      *
      * @param p Target player
@@ -499,10 +492,9 @@ public interface IArena {
     boolean isAllowMapBreak();
 
     /**
-     * Provides the winner team.
-     * This is populated on restarting phase.
+     * Toggle map block break rule.
      */
-    @Nullable ITeam getWinner();
+    void setAllowMapBreak(boolean allowMapBreak);
 
     /**
      * Check if there is a player bed at given location.

@@ -51,8 +51,8 @@ public class Language extends ConfigManager {
     /**
      * Get scoreboard strings.
      */
-    public static List<String> getScoreboard(Player player, String path, String alternative) {
-        Language language = getPlayerLanguage(player);
+    public static List<String> getScoreboard(Player p, String path, String alternative) {
+        Language language = getPlayerLanguage(p);
         if (language.exists(path)) {
             return language.l(path);
         } else {
