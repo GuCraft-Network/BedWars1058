@@ -70,7 +70,7 @@ public class JoinListenerBungee implements Listener {
                 return;
             }
             if (BedWars.getParty() != null && BedWars.getParty().hasParty(p)) {
-                if (!BedWars.getParty().getOwner(p).equals(p) && BedWars.getParty().getOwner(p) != null) {
+                if (!BedWars.getParty().getOwner(p).equals(p)) {
                     e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Language.getMsg(p, Messages.COMMAND_JOIN_DENIED_NOT_PARTY_LEADER));
                     return;
                 }
