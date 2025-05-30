@@ -31,6 +31,14 @@ public class CmdPlayAgain extends SubCommand {
                 "/" + getParent().getName() + " " + getSubCommandName(), "§f再来一局。"));
     }
 
+    /**
+     * 这个东西没什么用, 挺弱智的, 容易匹不到一块
+     * 仅在BUNGEE(不是_LEGACY!) 模式时使用
+     * 背景: 大概当时某人说机子不够, 我就压到两个子服
+     * 作用是如果当前子服没有其他符合条件的地图, 就sj传走 顺带移回大厅
+     * 25/5/30
+     */
+
     @Override
     public boolean execute(String[] args, CommandSender s) {
         if (!(s instanceof Player)) return true;

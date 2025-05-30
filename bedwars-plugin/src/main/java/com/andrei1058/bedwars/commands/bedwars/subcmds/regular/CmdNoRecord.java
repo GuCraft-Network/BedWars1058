@@ -13,6 +13,11 @@ import java.util.List;
 
 public class CmdNoRecord extends SubCommand {
 
+    /**
+     * 顾名思义
+     * 25/5/30
+     */
+
     public CmdNoRecord(ParentCommand parent, String name) {
         super(parent, name);
         setPermission("bw.norecord");

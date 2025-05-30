@@ -183,6 +183,10 @@ public class GameStartingTask implements Runnable, StartingTask {
         task.cancel();
     }
 
+    /**
+     * 分组开局消息 自用写死一下, 方便一点
+     * 25/5/30
+     */
     private void sendTut(Player p, String group) {
         if (group.startsWith("rush_")) {
             for (String tut : getList(p, Messages.ARENA_STATUS_START_PLAYER_TUTORIAL_RUSH)) {

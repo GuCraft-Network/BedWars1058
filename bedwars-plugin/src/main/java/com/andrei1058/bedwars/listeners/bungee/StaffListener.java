@@ -15,6 +15,15 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class StaffListener implements Listener {
 
+    /**
+     * 这个东西没什么用, 挺弱智的, 容易匹不到一块
+     * 仅在BUNGEE(不是_LEGACY!) 模式时使用
+     * 背景: 大概当时某人说机子不够, 我就压到两个子服
+     * 作用是把如果STAFF绕过bw1058proxy进服子服后
+     * 有一个方式 传送至被举报玩家
+     * 25/5/30
+     */
+
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent e) {
         if (e.isCancelled()) return;

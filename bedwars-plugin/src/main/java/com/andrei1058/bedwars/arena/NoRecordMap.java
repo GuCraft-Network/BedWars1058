@@ -12,6 +12,12 @@ import java.util.List;
 
 public class NoRecordMap implements Listener {
 
+    /**
+     * 学习某SkyWars插件, 不过不知道有没有用?
+     * 顾名思义 在管理进行某些操作后 不记录 这场游戏 在 管理某些操作之后的 战绩数据
+     * 25/5/30
+     */
+
     public static List<String> NoRecordMap = new ArrayList<>();
 
     @EventHandler

@@ -40,6 +40,11 @@ import java.util.UUID;
 
 public class FireballListener implements Listener {
 
+    /**
+     * https://github.com/tomkeuper/BedWars2023/blob/development/bedwars-plugin/src/main/java/com/tomkeuper/bedwars/listeners/FireballListener.java
+     * 25/5/30
+     */
+
     private final double fireballExplosionSize, fireballHorizontal, fireballVertical;
     private final double damageSelf, damageEnemy, damageTeammates;
     private final double fireballSpeedMultiplier, fireballCooldown;

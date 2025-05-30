@@ -38,7 +38,8 @@ public class BwSidebar implements ISidebar {
         }
     };
 
-    private static final String SPECTATOR_TAB = "spectators010101";
+    private static final String SPECTATOR_PREFIX = "z";
+
     private static final String TEAM_PREFIX = "?_";
 
     private final Player player;
@@ -347,6 +348,7 @@ public class BwSidebar implements ISidebar {
     private void handlePlayerList() {
         if (null != handle) {
             tabList.forEach((k, v) -> handle.removeTab(k));
+            handle.removeTabs();
         }
 
         handleHealthIcon();
@@ -387,7 +389,7 @@ public class BwSidebar implements ISidebar {
         }
 
         // unique tab list name
-        String tabListName = player.getName();
+        String tabListName = player.getDisplayName();
 
         if (tabList.containsKey(tabListName)) {
             handle.removeTab(tabListName);
@@ -417,16 +419,13 @@ public class BwSidebar implements ISidebar {
         }
 
         // in-game tab has a special treatment
-        if (arena.isSpectator(player)) {
-            PlayerTab tab = tabList.get(SPECTATOR_TAB);
-            if (null == tab) {
-                prefix = getTabText(Messages.FORMATTING_SCOREBOARD_TAB_PREFIX_SPECTATOR, player, null);
-                suffix = getTabText(Messages.FORMATTING_SCOREBOARD_TAB_SUFFIX_SPECTATOR, player, null);
-                tab = handle.playerTabCreate(SPECTATOR_TAB, null, prefix, suffix, PlayerTab.PushingRule.NEVER);
-                tabList.put(SPECTATOR_TAB, tab);
-            }
+        if (arena.isSpectator(player) || (arena.getStatus() != GameState.waiting && arena.getStatus() == GameState.starting) && arena.getTeam(player) == null) {
+            PlayerTab tab;
+            prefix = getTabText(Messages.FORMATTING_SCOREBOARD_TAB_PREFIX_SPECTATOR, player, null);
+            suffix = getTabText(Messages.FORMATTING_SCOREBOARD_TAB_SUFFIX_SPECTATOR, player, null);
+            tab = handle.playerTabCreate(tabListName, player, prefix, suffix, PlayerTab.PushingRule.NEVER);
             tab.add(player);
-
+            tabList.put(tabListName, tab);
             return;
         }
 
@@ -470,9 +469,6 @@ public class BwSidebar implements ISidebar {
         ITeam team = arena.getTeam(player);
         if (null == team) {
             team = arena.getExTeam(player.getUniqueId());
-        }
-        if (null == team) {
-            throw new RuntimeException("Wtf dude");
         }
 
         String tabName = this.getTabName(team);

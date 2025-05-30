@@ -16,6 +16,11 @@ import java.io.DataInputStream;
 
 public class GetCurServerName implements Listener, PluginMessageListener {
 
+    /**
+     * BUNGEE_LEGACY 当前子服名称
+     * 25/5/30
+     */
+
     private static String gamename = "Null";
     private String servername = "Null";
 

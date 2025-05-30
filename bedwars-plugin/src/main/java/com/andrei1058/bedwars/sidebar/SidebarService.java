@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 import static com.andrei1058.bedwars.BedWars.config;
+import static com.andrei1058.bedwars.BedWars.plugin;
 import static com.andrei1058.bedwars.api.language.Language.getScoreboard;
 
 public class SidebarService implements ISidebarService {
@@ -193,6 +194,10 @@ public class SidebarService implements ISidebarService {
         this.sidebars.forEach((k, v) -> {
             if (null != v.getArena() && v.getArena().equals(arena)) {
                 v.giveUpdateTabFormat(player, false);
+                Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                    SidebarService.getInstance().remove(player);
+                    SidebarService.getInstance().giveSidebar(player, arena, false);
+                }, 100L);
             }
         });
     }

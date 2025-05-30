@@ -138,6 +138,14 @@ public class DamageDeathMove implements Listener {
         }
     }
 
+
+    /**
+     * 顾名思义 快速死亡
+     * 加上重写重生倒计时任务 嘎嘎丝滑 就是这么久了大家还是没做到这种效果 可惜.
+     * 应该是skid的@TheRamU BedwarsScoreAddon
+     * 25/5/30
+     */
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onDamageToFastDie(EntityDamageEvent e) {
         if (!(e.getEntity() instanceof Player)) return;
@@ -159,6 +167,15 @@ public class DamageDeathMove implements Listener {
             if (e.getDamage() >= p.getHealthScale() && e.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)) {
                 return;
             }
+            // 帮忙修点弱智东西吧
+            p.setFallDistance(0);
+            if (e.getCause().equals(EntityDamageEvent.DamageCause.FALL) && e.getFinalDamage() >= p.getHealthScale()) {
+                return;
+            }
+            if (BedWarsTeam.reSpawnInvulnerability.containsKey(p.getUniqueId())) {
+                return;
+            }
+            // 25.5.30
             e.setCancelled(true);
             e.setDamage(0);
 

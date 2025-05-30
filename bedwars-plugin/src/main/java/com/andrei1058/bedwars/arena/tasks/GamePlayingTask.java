@@ -157,6 +157,11 @@ public class GamePlayingTask implements Runnable, PlayingTask {
             for (IGenerator o : t.getGenerators()) {
                 o.spawn();
             }
+
+            /**
+             * 移除这个是因为在魔改后的BUNGEE模式会炸, 并且我们不用本插件自带的的指南针.
+             * 25/5/30
+             */
             /*
         int distance = 0;
             if (t.getSize() > 1) {
@@ -175,6 +180,12 @@ public class GamePlayingTask implements Runnable, PlayingTask {
             }*/
         }
 
+
+        /**
+         * 所以没有必要外挂一个AfkCheck
+         * 之前外挂是因为神秘魔改, 原版的AfkCheck会导致资源的meta错误
+         * 25/5/30
+         */
         /* AFK SYSTEM FOR PLAYERS */
         int current = 0;
         for (Player p : getArena().getPlayers()) {

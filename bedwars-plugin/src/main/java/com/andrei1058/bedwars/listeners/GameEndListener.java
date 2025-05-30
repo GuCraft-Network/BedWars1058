@@ -40,6 +40,10 @@ public class GameEndListener implements Listener {
         NoRecordMap.NoRecordMap.remove(event.getArena().getWorldName());
     }
 
+    /**
+     * 顾名思义
+     * 25/5/30
+     */
     @EventHandler
     public void sendPlayerAgainMessage(@NotNull GameEndEvent event) {
         IArena a = event.getArena();
@@ -59,28 +63,34 @@ public class GameEndListener implements Listener {
         }, 40L);
     }
 
-    @EventHandler
-    public void setAllPlayersAllowFlight(@NotNull GameEndEvent event) {
-        IArena a = event.getArena();
-        if (a.getPlayers().isEmpty()) {
-            return;
-        }
 
-        for (Player p : a.getPlayers()) {
-            p.setAllowFlight(true);
-        }
-    }
+    /**
+     * 防止反作弊误判来着 不过建议还是设置allow-flight: true
+     * 25/5/30
+     */
 
-    @EventHandler
-    public void onPlayerToggleFlight(PlayerToggleFlightEvent event) {
-        Player player = event.getPlayer();
-
-        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
-
-        if (Arena.getArenaByPlayer(player).getStatus() != GameState.restarting) return;
-
-        if (player.getAllowFlight()) {
-            event.setCancelled(true);
-        }
-    }
+//    @EventHandler
+//    public void setAllPlayersAllowFlight(@NotNull GameEndEvent event) {
+//        IArena a = event.getArena();
+//        if (a.getPlayers().isEmpty()) {
+//            return;
+//        }
+//
+//        for (Player p : a.getPlayers()) {
+//            p.setAllowFlight(true);
+//        }
+//    }
+//
+//    @EventHandler
+//    public void onPlayerToggleFlight(PlayerToggleFlightEvent event) {
+//        Player player = event.getPlayer();
+//
+//        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) return;
+//
+//        if (Arena.getArenaByPlayer(player).getStatus() != GameState.restarting) return;
+//
+//        if (player.getAllowFlight()) {
+//            event.setCancelled(true);
+//        }
+//    }
 }

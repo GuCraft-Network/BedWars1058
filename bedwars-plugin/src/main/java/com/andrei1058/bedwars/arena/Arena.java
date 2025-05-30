@@ -933,10 +933,9 @@ public class Arena implements IArena {
                 }
             }
 
-            p.setGameMode(GameMode.SURVIVAL);
-
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 if (leaving.contains(p)) return;
+                p.setGameMode(GameMode.SURVIVAL);
                 p.setAllowFlight(true);
                 p.setFlying(true);
             }, 5L);
@@ -960,7 +959,6 @@ public class Arena implements IArena {
                     }
                 }
 
-
                 if (!playerBefore) {
                     if (staffTeleport == null) {
                         TeleportManager.teleportC(p, getSpectatorLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
@@ -971,9 +969,6 @@ public class Arena implements IArena {
                     TeleportManager.teleport(p, getSpectatorLocation());
                 }
 
-                p.setAllowFlight(true);
-                p.setFlying(true);
-
                 /* Spectator items */
                 sendSpectatorCommandItems(p);
                 // make invisible because it is annoying whene there are many spectators around the map
@@ -981,8 +976,6 @@ public class Arena implements IArena {
 
                 p.getInventory().setArmorContents(null);
             });
-
-            leaving.remove(p);
 
             p.sendMessage(getMsg(p, Messages.COMMAND_JOIN_SPECTATOR_MSG).replace("{arena}", this.getDisplayName()));
 
@@ -1998,6 +1991,10 @@ public class Arena implements IArena {
                     String thirdName = null;
                     StringBuilder winners = new StringBuilder();
                     //noinspection deprecation
+
+                    // 借鉴了BedWars2023 支持了结算排行榜 玩家前后缀显示, 计算击杀+最终击杀排行
+                    // 25.5.30
+
                     for (int i = 0; i < winner.getMembers().size(); i++) {
                         Player p = winner.getMembers().get(i);
                         if (p.getWorld().equals(getWorld())) {
@@ -2534,6 +2531,11 @@ public class Arena implements IArena {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1, false)); // 隐身效果
 
                 // 创建并保存重生倒计时任务
+                /**
+                 * 这段好像是有点问题的 好像会NPE? MOC CN时期修掉了
+                 * 不过至今为此还没见到有服务器这样搞
+                 * 25/5/30
+                 */
                 int taskId = Bukkit.getScheduler().runTaskTimer(plugin, new BukkitRunnable() {
                     int countdown = seconds;
 

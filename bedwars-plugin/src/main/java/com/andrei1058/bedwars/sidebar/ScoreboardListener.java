@@ -37,7 +37,7 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 
 public class ScoreboardListener implements Listener {
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler
     public void onPlayerDamage(EntityDamageEvent e) {
         if (e == null) return;
         if (e.isCancelled()) return;
@@ -51,7 +51,7 @@ public class ScoreboardListener implements Listener {
         SidebarService.getInstance().refreshHealth(arena, player, health);
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler
     public void onRegain(EntityRegainHealthEvent e) {
         if (e == null) return;
         if (e.isCancelled()) return;
@@ -65,7 +65,7 @@ public class ScoreboardListener implements Listener {
         SidebarService.getInstance().refreshHealth(arena, player, health);
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler
     public void onReSpawn(PlayerReSpawnEvent e) {
         if (e == null) return;
         final IArena arena = e.getArena();
